@@ -53,7 +53,7 @@ model User {
   sessions      Session[]
 
   is_verified Boolean @default(false)
-  is_admin    Boolean @default(false)
+  role          String  @default("")
 
   transactions Transaction[]
 
