@@ -14,15 +14,40 @@
     justify-content: space-between;
 }
 
-.name {
+.name, .totalDue {
     font-size: var(--text-size-large);
+}
+
+.name {
     font-weight: bold;
 }
 
-.gradYear {
+.gradYear, .totalDueContainer {
     font-size: var(--text-size-medium);
 }
 
 .totalDue {
     font-size: var(--text-size-large);
+}
+
+.gradYear, .totalDue {
+    margin-left: 10px;
+}
+
+.totalDueContainer {
+    display: inline-block;
+}
+
+.userActions {
+    display: flex;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.newTransaction {
+    margin-left: auto;
+    color: white;
+    background-color: grey;
+    padding: .5rem 1rem;
+    border-radius: 8px;
 }

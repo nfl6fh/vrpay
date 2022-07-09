@@ -9,8 +9,6 @@ export default function CustomNavbar(props) {
     return (
         <div className={styles.navbar}>
             <a className={styles.brand_no_directory} href="/">VRPay</a>
-            
-            <div classname={styles.directory}></div>
 
             <div className={styles.navbarRight}>
                 {session?.user &&
