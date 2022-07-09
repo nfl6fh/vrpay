@@ -27,13 +27,14 @@ const options = {
     async jwt({ token, user, account, profile, isNewUser }) {
         if (account) {
           token.is_verified = account?.is_verified;
+          token.role = account?.role;
         }
         return token;
       },
     async session({ session, user, token }) {
         session.is_verified = user?.is_verified;
         session.uid = user?.id;
-        session.is_admin = user?.is_admin;
+        session.role = user?.role;
 
         //this is not ideal
         session.user_info = user

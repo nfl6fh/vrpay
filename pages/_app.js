@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import { SessionProvider } from 'next-auth/react'
+import Layout from '../components/Layout'
 import Head from 'next/head'
 
 function MyApp({ Component, pageProps }) {
@@ -8,7 +9,9 @@ function MyApp({ Component, pageProps }) {
       <Head>
           <title>VRPay</title>
       </Head>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </SessionProvider>
   )
 }

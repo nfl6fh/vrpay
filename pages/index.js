@@ -3,37 +3,36 @@ import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { userInfo } from "os"
-import { Router } from "next/router"
 import Loading from "../components/Loading";
+import Router from "next/router";
+import { useEffect } from "react"
 
 export default function Home() {
    const { data: session, status } = useSession()
+
+   useEffect(() => {
+      console.log("session:", session);
+   }, [session])
 
    if (status === "loading") {
       return <Loading />;
    }
 
    if (session) {
-      // user is logged in
-      // check if user is treasurer or admin
-      //    if true, show dashboard
-      //    if false, show user page
-      return (
-         <div>
-            <p>User Page</p>
-            <a
-               href={`/api/auth/signout`}
-               onClick={(e) => {
-                  e.preventDefault()
-                  signOut({
-                     callbackUrl: `${window.location.origin}`,
-                  })
-               }}
-            >
-               Sign Out
-            </a>
-         </div>
-      )
+      if (session.is_verified) {
+         if (session.role && session.role !== "") {
+            // redirect to dashboard/show dashboard
+            return <>User is admin/treasurer</>
+         } else {
+            Router.push("/u/[id]", `/u/${session.uid}`)
+            return (<></>)
+         }
+      } else {
+         // pending page
+         return <>Account pending. user is not verified</>
+      }
+
+      
    } else {
       // user is not logged in
       return (

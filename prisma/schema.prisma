@@ -53,9 +53,10 @@ model User {
   sessions      Session[]
 
   is_verified Boolean @default(false)
-  role          String  @default("")
+  role        String  @default("")
 
   transactions Transaction[]
+  total_due    Int           @default(0)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
