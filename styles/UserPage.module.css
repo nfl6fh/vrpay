@@ -1,53 +1,108 @@
 .container {
-    width: 80vw;
-    margin-left: auto;
-    margin-right: auto;
+   width: 90vw;
+   margin-left: auto;
+   margin-right: auto;
 
-    margin-top: var(--top-margin);
-    align-items: flex-end;
+   margin-top: var(--top-margin);
+   align-items: flex-end;
 }
 
 .header {
-    width: 100%;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: space-between;
+   width: 100%;
+   display: inline-flex;
+   flex-direction: row;
+   justify-content: space-between;
 }
 
-.name, .totalDue {
-    font-size: var(--text-size-large);
+.name,
+.totalDue {
+   font-size: var(--text-size-large);
 }
 
 .name {
-    font-weight: bold;
+   font-weight: bold;
 }
 
-.gradYear, .totalDueContainer {
-    font-size: var(--text-size-medium);
+.gradYear,
+.totalDueContainer {
+   font-size: var(--text-size-medium);
 }
 
 .totalDue {
-    font-size: var(--text-size-large);
+   font-size: var(--text-size-large);
 }
 
-.gradYear, .totalDue {
-    margin-left: 10px;
+.gradYear,
+.totalDue {
+   margin-left: 10px;
 }
 
 .totalDueContainer {
-    display: inline-block;
+   display: inline-block;
 }
 
 .userActions {
-    display: flex;
-    margin-top: 8px;
-    margin-bottom: 8px;
+   display: flex;
+   margin-top: 8px;
+   margin-bottom: 8px;
 }
 
 .newTransaction {
-    margin-left: auto;
-    color: white;
-    background-color: grey;
-    padding: .5rem 1rem;
-    border-radius: 8px;
+   margin-left: auto;
+   color: white;
+   background-color: grey;
+   padding: 0.5rem 1rem;
+   border-radius: 8px;
+}
+
+.table {
+   table-layout: fixed;
+   display: table;
+
+   border-collapse: collapse;
+   font-size: 16px;
+   width: 100%;
+   margin-bottom: 40px;
+}
+
+.table th {
+   border: 1px solid black;
+   padding-left: 8px;
+}
+
+.table td {
+   border: 1px solid grey;
+   align-items: vertical;
+   padding-left: 8px;
+   flex-grow: 1;
+
+   padding-top: .2rem;
+   padding-bottom: .2rem;
+}
+
+.table th {
+   padding-top: .7rem;
+   padding-bottom: .7rem;
+   text-align: left;
+   background-color: black;
+   color: white;
+
+   font-weight: bold;
+   font-size: 12px;
+}
+
+.table tr:hover {
+   background-color: #eee;
+}
+
+.updatedCol {
+    width: 100px!important;
+}
+
+.amountCol {
+    width: 85px!important;
+}
+
+.typeCol {
+    width: 100px!important;
 }

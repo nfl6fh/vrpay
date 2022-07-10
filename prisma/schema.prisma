@@ -49,6 +49,7 @@ model User {
   image         String?
   emailVerified DateTime? @map("email_verified")
   grad_year     String?
+  is_rookie     Boolean  @default(false)
   accounts      Account[]
   sessions      Session[]
 

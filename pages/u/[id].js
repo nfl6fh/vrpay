@@ -13,6 +13,7 @@ export const getServerSideProps = async ({ params }) => {
          transactions: {
             select: {
                id: true,
+               updatedAt: true,
                amount: true,
                status: true,
                type: true,
@@ -34,7 +35,11 @@ export const getServerSideProps = async ({ params }) => {
       user.updatedAt = user.updatedAt.toISOString()
    }
    if (user.transactions !== null) {
-      console.log("transactions!")
+      for (const transaction of user.transactions) {
+         if (transaction.updatedAt !== null) {
+            transaction.updatedAt = transaction.updatedAt.toISOString()
+         }
+      }
    }
 
    console.log("transactions:", user.transactions)
@@ -62,6 +67,18 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
+   function getDateFormatting(isoDate) {
+      var date = new Date(isoDate)
+      var year = date.getFullYear()
+      var day = date.getDate()
+      var month = date.getMonth() + 1
+      return month + "/" + day + "/" + year
+   }
+
+  function formatCurrency(num) {
+    return "$" + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+  }
+
    return (
       <div className={styles.container}>
          <div className={styles.header}>
@@ -77,13 +94,39 @@ export default function UserPage(props) {
             </p>
          </div>
          <div className={styles.userActions}>
-          <button className={styles.newTransaction}>Add a RaR or payment</button>
+            <button className={styles.newTransaction}>
+               Add a RaR or payment
+            </button>
          </div>
          <p>Transactions:</p>
 
-         {(!props.transactions || props.transactions.length === 0) && <div>No transactions found</div>}
-         {props.transactions?.length !== 0 &&
-            props.transactions.map((transaction) => <div>{transaction.description}</div>)}
+         {(!props.transactions || props.transactions.length === 0) && (
+            <div>No transactions found</div>
+         )}
+         <div>
+            {props.transactions?.length !== 0 && (
+               <table className={styles.table}>
+                  <thead>
+                     <tr>
+                        <th className={styles.updatedCol}>Updated</th>
+                        <th className={styles.amountCol}>Amount</th>
+                        <th className={styles.typeCol}>Type</th>
+                        <th className={styles.descriptionCol}>Description</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {props.transactions.map((transaction) => (
+                        <tr>
+                           <td>{getDateFormatting(transaction.updatedAt)}</td>
+                           <td>{formatCurrency(transaction.amount)}</td>
+                           <td>{transaction.type}</td>
+                           <td>{transaction.description}</td>
+                        </tr>
+                     ))}
+                  </tbody>
+               </table>
+            )}
+         </div>
       </div>
    )
 }
