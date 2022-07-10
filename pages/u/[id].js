@@ -79,6 +79,26 @@ export default function UserPage(props) {
     return "$" + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
   }
 
+  function toSentenceCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
+
+  function getStatusStyle(status) {
+    const obj = {
+      "color": status === "pending" ? "red" : "green",
+      "fontStyle": status === "pending" ? "italic" : "normal",
+    }
+    return obj
+  }
+
+  function getItemStyle(status) {
+    const obj = {
+      "color": status === "pending" ? "grey" : "black",
+      "fontStyle": status === "pending" ? "italic" : "normal",
+    }
+    return obj
+  }
+
    return (
       <div className={styles.container}>
          <div className={styles.header}>
@@ -94,7 +114,7 @@ export default function UserPage(props) {
             </p>
          </div>
          <div className={styles.userActions}>
-            <button className={styles.newTransaction}>
+            <button className={styles.newTransaction} onClick={() => props.handleNewTransactionClick()}>
                Add a RaR or payment
             </button>
          </div>
@@ -112,15 +132,17 @@ export default function UserPage(props) {
                         <th className={styles.amountCol}>Amount</th>
                         <th className={styles.typeCol}>Type</th>
                         <th className={styles.descriptionCol}>Description</th>
+                        <th className={styles.statusCol}>Status</th>
                      </tr>
                   </thead>
                   <tbody>
                      {props.transactions.map((transaction) => (
                         <tr>
-                           <td>{getDateFormatting(transaction.updatedAt)}</td>
-                           <td>{formatCurrency(transaction.amount)}</td>
-                           <td>{transaction.type}</td>
-                           <td>{transaction.description}</td>
+                           <td style={getItemStyle(transaction.status)}>{getDateFormatting(transaction.updatedAt)}</td>
+                           <td style={getItemStyle(transaction.status)}>{formatCurrency(transaction.amount)}</td>
+                           <td style={getItemStyle(transaction.status)}>{transaction.type}</td>
+                           <td style={getItemStyle(transaction.status)}>{transaction.description}</td>
+                           <td style={getStatusStyle(transaction.status)}>{toSentenceCase(transaction.status)}</td>
                         </tr>
                      ))}
                   </tbody>
