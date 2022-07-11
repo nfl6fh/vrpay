@@ -115,7 +115,7 @@ export default function UserPage(props) {
          </div>
          <div className={styles.userActions}>
             <button className={styles.newTransaction} onClick={() => props.handleNewTransactionClick()}>
-               Add a RaR or payment
+               + Add a RaR or payment
             </button>
          </div>
          <p>Transactions:</p>

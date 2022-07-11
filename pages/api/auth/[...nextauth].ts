@@ -35,6 +35,7 @@ const options = {
         session.is_verified = user?.is_verified;
         session.uid = user?.id;
         session.role = user?.role;
+        session.name = user?.name;
 
         //this is not ideal
         session.user_info = user

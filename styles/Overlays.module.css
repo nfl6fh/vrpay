@@ -1,164 +1,92 @@
-.winOverlayContainer, .statsOverlayContainer, .directionsOverlayContainer, .faqOverlayContainer {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255,255,255,0.5);
-    position: absolute;
-    z-index: 1;
-    opacity:1;
-    font-size: 14px;
-  }
-  
-  .winOverlayContainer {
-    animation: 2.5s ease 0s normal forwards 1 fadein;
-    -webkit-animation: 2.5s ease 0s normal forwards 1 fadein;
-  }
-  
-  .statsOverlayContainer, .directionsOverlayContainer, .faqOverlayContainer {
-    animation: 0.1s ease 0s normal forwards 1 fadein;
-    -webkit-animation: 0.1s ease 0s normal forwards 1 fadein;
-  }
-  
-  .winContainer, .statsContainer, .directionsContainer, .faqContainer {
-      display: flex;
-      flex-direction: column;
-      background-color: white;
-      max-height: 90%;
-      width: 500px;
-      padding: 16px;
-      box-shadow: 0 4px 23px 0 rgb(0 0 0 / 20%);
-      border-radius: 8px;
-  
-      text-align: center;
-  }
-  
-  .winContainer {
-      animation: flip 0.8s ease-in-out;
-      animation-delay: 3s;
-  }
-  
-  .header, .congratsHeader{
-      text-transform: uppercase;
-      font-size: 16px;
-  }
-  
-  .congratsHeader {
-      font-size: 24px;
-      margin-bottom: 2px;
-  }
-  
-  .congrats {
-      font-size: 18px;
-  }
-  
-  .shareButton {
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 20px;
-      text-transform: uppercase;
-      font-size: 16px;
-      padding: .5rem 1rem;
-      background-color: var(--green);
-      /* max-width: 100px; */
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-      border-radius: 4px;
-  }
-  
-  .image {
-      max-width: 66%;
-      border: 1px solid #D3D6DA;
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 10px;
-  }
-  
-  .directionsContainer > p {
-    text-align: left;
-    margin-top: 1em;
-    margin-bottom: .4em;
-    font-size: 14px;
-  }
-  
-  .faqContainer > p, .faqContainer > b, .statsContainer > p {
-    text-align: left;
-  }
-  
-  .playButton {
-    color: white;
-    padding: .5rem 1rem;
-    background-color: var(--green);
-    border-radius: 4px;
-    margin-left: auto;
-    margin-right: auto;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  .playButton:active {
-    filter: brightness(0.8);
-  }
-  
-  .faqContainer > p {
-    margin-top: 6px;
-    margin-bottom: 18px;
-  }
-  
-  .stat > span {
-    color: var(--green);
-  }
-  
-  .videoDiv {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-  }
-  
-  .instructionVideo {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .videoDiv, .instructionImage {
-    border: 1px solid #D3D6DA;
-  }
-  
-  @media (max-width: 550px) {
-      .winContainer, .statsContainer, .directionsContainer, .faqContainer {
-          max-width: 90vw;
-      }
-  }
-  
-  @keyframes flip {
-      0% {
-        transform: rotateX(0deg);
-        opacity: 0;
-      }
-      1% {
-         opacity: 1;
-      }
-      45% {
-        transform: rotateX(15deg);
-      }
-      55% {
-        transform: rotateX(15deg);
-      }
-      100% {
-        transform: rotateX(0deg);
-      }
-  }
-  
-  .closeButton {
-    padding: .5rem 1rem;
-    cursor: pointer;
-  }
-  
-  .watermark {
-    margin-top: 8px;
-    color: #ccc;
-  }
+.newTransactionOverlayContainer {
+   display: flex;
+   height: 100vh;
+   width: 100vw;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   background-color: rgba(0, 0, 0, 0.4);
+   position: absolute;
+   z-index: 1;
+   opacity: 1;
+   font-size: 14px;
+
+   text-align: left;
+}
+
+.newTransactionContainer {
+   display: flex;
+   flex-direction: column;
+   background-color: white;
+   max-height: 90%;
+   padding: 16px;
+   border: 1px solid lightGrey;
+   border-radius: 8px;
+}
+
+.newTransactionContainer > p {
+   text-align: left;
+   margin-top: 1em;
+   margin-bottom: 0.4em;
+   font-size: 14px;
+}
+
+.cancelButton {
+   margin-left: auto;
+   margin-right: auto;
+   color: white;
+   color: lightGray;
+   padding: 0.5rem 1rem;
+   border-radius: 8px;
+}
+
+.overlayHeader {
+  font-size: var(--text-size-small);
+}
+
+/* For forms */
+.inputSection {
+   display: flex;
+   flex-direction: row;
+   margin-bottom: 4px;
+}
+
+.inputGroup {
+   display: flex;
+   flex-direction: column;
+}
+
+.inputGroup:not(:first-child) {
+  border-color: red;
+  margin-left: 20px;
+}
+
+.formInput {
+   padding: 10px 15px;
+   border: 1px solid rgb(213, 213, 212);
+   border-radius: 4px !important;
+   font-size: 14px !important;
+}
+
+.inputLabel {
+   margin-bottom: 8px;
+   margin-top: 12px;
+}
+
+#description {
+  flex-grow: 1;
+}
+
+@media (max-width: 750px) {
+   .inputSection {
+      flex-direction: column !important;
+   }
+
+   .formInput {
+      width: 100% !important;
+   }
+
+   .inputGroup {
+      margin-left: 0 !important;
+   }
+}
