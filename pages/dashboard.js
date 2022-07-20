@@ -85,7 +85,6 @@ export default function Admin(props) {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Company</th>
                 <th className={styles.createdSection}>Created</th>
                 <th className={styles.verifySection}></th>
               </tr>
@@ -104,11 +103,6 @@ export default function Admin(props) {
                           : "None"}
                       </p>
                     </div>
-                  </td>
-                  <td>
-                    {user.company && user.company !== ""
-                      ? user.company
-                      : "None"}
                   </td>
                   <td>{getDateFormatting(user.createdAt)}</td>
                   <td className={styles.verifyTD}>

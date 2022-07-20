@@ -11,7 +11,7 @@ export default function CustomNavbar(props) {
             <a className={styles.brand_no_directory} href="/">VRPay</a>
 
             {session?.is_verified &&
-                <div className={styles.verifiedSessionButtons}>
+                <div align='left' className={styles.verifiedSessionButtons}>
                     <a href={`/u/${session.uid}`}>
                         My Dues
                     </a>
