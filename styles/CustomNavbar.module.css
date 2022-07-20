@@ -4,7 +4,6 @@
    background-color: #000;
    margin: 0;
 
-   line-height: 1.5;
    padding-top: 0.5rem;
    padding-bottom: 0.5rem;
    padding-right: 1rem;
@@ -16,9 +15,14 @@
    flex-wrap: nowrap;
 }
 
+.navbar > * {
+   display: flex;
+   justify-content: center;
+   cursor: pointer;
+}
+
 .navbar p,
 .navbar a {
-   line-height: 1.5;
    padding: 0.5rem 1rem;
    margin-top: 0;
    margin-bottom: 0;
@@ -26,53 +30,38 @@
 
 .navbarRight {
    margin-left: auto;
+   align-items: center;
+   justify-content: center;
 }
 
-.verifiedSessionButtons {
-   margin-right: 95rem !important;
-   flex-grow: 1;
-   display: flex;
-   flex-direction: row;
-}
-
-.adminOptions {
+.adminButton {
+   margin-right: auto;
    color: red !important;
 }
 
-.adminOptions:hover {
+.adminButton:hover, .navButton:hover {
    filter: brightness(0.8);
 }
 
-.navButton,
-.directory,
-.brand_no_directory,
-.adminOptions {
-   color: white;
-   text-decoration: none;
-   cursor: pointer;
-}
-
-.navButton:hover,
-.directory:hover,
-.adminOptions:hover {
-   color: #ccc;
-}
-
-.brand,
-.brand_no_directory {
+.brand {
    color: white;
    font-weight: 800;
    text-decoration: none;
+
+   margin-right: auto;
 }
 
-.brand:hover,
-.brand_no_directory:hover {
+.brand:hover {
    color: #ccc;
 }
 
-.brand_no_directory {
-   margin-right: auto;
+.verifiedSessionButtons {
    flex-grow: 1;
+   cursor: default;
+}
+
+.verifiedSessionButtons > * {
+   flex-grow: 0;
 }
 
 @media (max-width: 600px) {
@@ -85,15 +74,14 @@
       padding: 4px 8px !important;
    }
 
-   .brand,
-   .brand_no_directory {
+   .brand {
       padding: 4px 8px !important;
       width: 0px;
       display: none;
    }
 
    .directory,
-   .adminOptions {
+   .adminButton {
       padding-left: 8px !important;
    }
 }
