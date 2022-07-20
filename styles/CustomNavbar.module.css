@@ -11,7 +11,7 @@
    padding-left: 1rem;
 
    display: flex;
-   align-items: center;
+   align-items: left;
    flex-direction: row;
    flex-wrap: nowrap;
 }

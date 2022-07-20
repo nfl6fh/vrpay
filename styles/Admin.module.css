@@ -1,0 +1,97 @@
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 32px;
+  width: 60%;
+}
+
+.unverifiedUsersContainer {
+  width: 100%;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 32px;
+  margin-bottom: 0px;
+}
+
+.table {
+  table-layout: fixed;
+  display: table;
+
+  border-collapse: collapse;
+  font-size: 16px;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.table th {
+  border: 1px solid black;
+  padding-left: 8px;
+}
+
+.table td {
+  border: 1px solid grey;
+  align-items: vertical;
+  padding-left: 8px;
+  flex-grow: 1;
+}
+
+.table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #aaa;
+  color: black;
+}
+
+.table tr:hover {
+  background-color: #eee;
+}
+
+.verifySection {
+  width: 70px !important;
+  text-align: center !important;
+}
+
+.createdSection {
+  width: 120px !important;
+}
+
+.verifyTD {
+  text-align: center;
+}
+
+.sectionHeading {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.verifyButton {
+  text-decoration: underline #ef5701;
+  cursor: pointer;
+}
+
+.verifyButton:hover {
+  color: #ef5701;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (max-width: 1100px) {
+  .container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 600px) {
+  .table td {
+    font-size: 12px;
+  }
+
+  .table tr {
+    height: 40px;
+  }
+}

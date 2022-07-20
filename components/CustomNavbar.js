@@ -10,6 +10,19 @@ export default function CustomNavbar(props) {
         <div className={styles.navbar}>
             <a className={styles.brand_no_directory} href="/">VRPay</a>
 
+            {session?.is_verified &&
+                <div className={styles.verifiedSessionButtons}>
+                    <a href={`/u/${session.uid}`}>
+                        My Dues
+                    </a>
+                    {session.role == "admin" &&
+                        <a href="/dashboard" className={styles.adminOptions}>
+                            Admin
+                        </a>
+                    }
+                </div>
+            }
+
             <div className={styles.navbarRight}>
                 {session?.user &&
                     <div>

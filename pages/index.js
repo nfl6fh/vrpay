@@ -21,7 +21,7 @@ export default function Home() {
    if (session) {
       if (session.is_verified) {
          if (session.role && session.role !== "") {
-            // redirect to dashboard/show dashboard
+            Router.push("/dashboard")
             return <>User is admin/treasurer</>
          } else {
             Router.push("/u/[id]", `/u/${session.uid}`)
