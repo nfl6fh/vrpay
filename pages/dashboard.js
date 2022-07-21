@@ -50,6 +50,36 @@ export default function Admin(props) {
       return <Loading />
    }
 
+   const deleteUser = async (user_id) => {
+    const body = { user_id }
+
+    try {
+      console.log(user_id)
+      await fetch("/api/delete_user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.log("error deleting user:", error)
+    }
+  }
+
+  const verifyUser = async (user_id) => {
+    const body = { user_id }
+
+    try {
+      console.log(user_id)
+      await fetch("/api/verify_user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.log("error verifying user:", error)
+    }
+  }
+
    if (session?.is_verified && session.role === "admin") {
       return (
          <div className={styles.container}>
@@ -78,13 +108,13 @@ export default function Admin(props) {
                               <td>{user.email}</td>
                               <td className={styles.verifyTD}>
                                  <a
-                                    // onClick={() => verifyUser(user.id)}
+                                    onClick={() => verifyUser(user.id)}
                                     className={styles.verifyButton}
                                  >
                                     Verify
                                  </a>
                                  <a
-                                    // onClick={() => verifyUser(user.id)}
+                                    onClick={() => deleteUser(user.id)}
                                     className={styles.verifyButton}
                                  >
                                     Delete
@@ -102,7 +132,7 @@ export default function Admin(props) {
                <thead>
                   <tr className={styles.verifiedUsersTR}>
                      <th>Name</th>
-                     <th className={styles.emailSection}>Email</th>
+                     <th className={styles.emailSection}>Total Due</th>
                   </tr>
                </thead>
                <tbody>
@@ -115,7 +145,7 @@ export default function Admin(props) {
                               </a>
                            </div>
                         </td>
-                        <td>{user.email}</td>
+                        <td>{user.total_due}</td>
                      </tr>
                   ))}
                </tbody>
