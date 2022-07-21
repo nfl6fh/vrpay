@@ -103,7 +103,6 @@ export default function Admin(props) {
                   <tr className={styles.verifiedUsersTR}>
                      <th>Name</th>
                      <th className={styles.emailSection}>Email</th>
-                     <th className={styles.verifySection}>Actions</th>
                   </tr>
                </thead>
                <tbody>
@@ -117,20 +116,6 @@ export default function Admin(props) {
                            </div>
                         </td>
                         <td>{user.email}</td>
-                        <td className={styles.verifyTD}>
-                           <a
-                              // onClick={() => verifyUser(user.id)}
-                              className={styles.verifyButton}
-                           >
-                              Verify
-                           </a>
-                           <a
-                              // onClick={() => verifyUser(user.id)}
-                              className={styles.verifyButton}
-                           >
-                              Delete
-                           </a>
-                        </td>
                      </tr>
                   ))}
                </tbody>
