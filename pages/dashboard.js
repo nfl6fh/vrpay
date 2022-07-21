@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
+import Router from "next/router.js"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -70,9 +71,7 @@ export default function Admin(props) {
                               <td>
                                  <div className={styles.nameSection}>
                                     <p className={styles.tableName}>
-                                       {user.name && user.name !== ""
-                                          ? user.name
-                                          : "None"}
+                                       {user.name}
                                     </p>
                                  </div>
                               </td>
@@ -112,11 +111,9 @@ export default function Admin(props) {
                      <tr>
                         <td>
                            <div className={styles.nameSection}>
-                              <p className={styles.tableName}>
-                                 {user.name && user.name !== ""
-                                    ? user.name
-                                    : "None"}
-                              </p>
+                              <a className={styles.tableName} onClick={() => {Router.push("/u/[id]", `/u/${user.id}`)}}>
+                                 {user.name}
+                              </a>
                            </div>
                         </td>
                         <td>{user.email}</td>
