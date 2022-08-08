@@ -5,6 +5,16 @@ import Loading from "../components/Loading"
 import { useState } from "react"
 import Router from "next/router.js"
 
+// Create our number formatter.
+var formatter = new Intl.NumberFormat('en-US', {
+   style: 'currency',
+   currency: 'USD',
+ 
+   // These options are needed to round to whole numbers if that's what you want.
+   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+ });
+
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
       where: { is_verified: false },
@@ -145,7 +155,7 @@ export default function Admin(props) {
                               </a>
                            </div>
                         </td>
-                        <td>{user.total_due}</td>
+                        <td>{formatter.format(user.total_due)}</td>
                      </tr>
                   ))}
                </tbody>
