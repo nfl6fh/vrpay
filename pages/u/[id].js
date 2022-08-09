@@ -4,6 +4,15 @@ import { useEffect } from "react"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
 
+var formatter = new Intl.NumberFormat('en-US', {
+   style: 'currency',
+   currency: 'USD',
+ 
+   // These options are needed to round to whole numbers if that's what you want.
+   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+ });
+
 export const getServerSideProps = async ({ params }) => {
    const user = await prisma.user.findUnique({
       where: {
@@ -110,7 +119,7 @@ export default function UserPage(props) {
             </div>
             <p className={styles.totalDueContainer}>
                Total due:{" "}
-               <span className={styles.totalDue}>${props.total_due}</span>
+               <span className={styles.totalDue}>{formatter.format(props.total_due)}</span>
             </p>
          </div>
          <div className={styles.userActions}>
@@ -139,7 +148,7 @@ export default function UserPage(props) {
                      {props.transactions.map((transaction) => (
                         <tr>
                            <td style={getItemStyle(transaction.status)}>{getDateFormatting(transaction.updatedAt)}</td>
-                           <td style={getItemStyle(transaction.status)}>{formatCurrency(transaction.amount)}</td>
+                           <td style={getItemStyle(transaction.status)}>{formatter.format(transaction.amount)}</td>
                            <td style={getItemStyle(transaction.status)}>{transaction.type}</td>
                            <td style={getItemStyle(transaction.status)}>{transaction.description}</td>
                            <td style={getStatusStyle(transaction.status)}>{toSentenceCase(transaction.status)}</td>
