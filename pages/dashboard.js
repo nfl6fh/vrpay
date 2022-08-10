@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
+import { getDateFormatting, toSentenceCase } from "../utils.js"
 import Router from "next/router.js"
 
 // Create our number formatter.
@@ -18,6 +19,17 @@ var formatter = new Intl.NumberFormat("en-US", {
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
       where: { is_verified: false },
+   })
+
+   var pending_transactions = await prisma.transaction.findMany({
+      where: { status: "pending" },
+      include: {
+         user: {
+            select: {
+               name: true,
+            }
+         }
+      }
    })
 
    var verified_users = await prisma.user.findMany({
@@ -42,6 +54,15 @@ export const getServerSideProps = async () => {
       }
    })
 
+   pending_transactions.map((transaction) => {
+      if (transaction.createdAt !== null) {
+         transaction.createdAt = transaction.createdAt.toString()
+      }
+      if (transaction.updatedAt !== null) {
+         transaction.updatedAt = transaction.updatedAt.toString()
+      }
+   })
+
    unverified_users = unverified_users?.sort((a, b) =>
       a.name.localeCompare(b.name)
    )
@@ -49,8 +70,9 @@ export const getServerSideProps = async () => {
 
    console.log("unverified_users:", unverified_users)
    console.log("verified_users:", verified_users)
+   console.log("pending_transactions:", pending_transactions)
 
-   return { props: { unverified_users, verified_users } }
+   return { props: { unverified_users, verified_users, pending_transactions } }
 }
 
 export default function Admin(props) {
@@ -129,6 +151,46 @@ export default function Admin(props) {
                                  >
                                     Delete
                                  </a>
+                              </td>
+                           </tr>
+                        ))}
+                     </tbody>
+                  </table>
+               </div>
+            )}
+
+            {props.pending_transactions?.length > 0 && (
+               <div className={styles.table}>
+                  <h2 className={styles.sectionHeading}>
+                     Pending Transactions
+                  </h2>
+                  <table className={styles.table}>
+                     <thead>
+                        <tr>
+                           <th className={styles.updatedCol}>User</th>
+                           <th className={styles.amountCol}>Amount</th>
+                           <th className={styles.typeCol}>Type</th>
+                           <th className={styles.descriptionCol}>Description</th>
+                           <th className={styles.statusCol}>ACTION</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {props.pending_transactions.map((transaction) => (
+                           <tr>
+                              <td>
+                                 {transaction?.user?.name}
+                              </td>
+                              <td>
+                                 {formatter.format(transaction.amount)}
+                              </td>
+                              <td>
+                                 {transaction.type}
+                              </td>
+                              <td>
+                                 {transaction.description}
+                              </td>
+                              <td>
+                                 ACTIONS
                               </td>
                            </tr>
                         ))}

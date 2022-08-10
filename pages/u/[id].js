@@ -1,6 +1,7 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect } from "react"
+import { toSentenceCase, getDateFormatting } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
 
@@ -74,24 +75,6 @@ export default function UserPage(props) {
          return ""
       }
       return "('" + gy.slice(gy.length - 2) + ")"
-   }
-
-   function getDateFormatting(isoDate) {
-      var date = new Date(isoDate)
-      var year = date.getFullYear()
-      var day = date.getDate()
-      var month = date.getMonth() + 1
-      return month + "/" + day + "/" + year
-   }
-
-   function formatCurrency(num) {
-      return "$" + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-   }
-
-   function toSentenceCase(str) {
-      return str.replace(/\w\S*/g, function (txt) {
-         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-      })
    }
 
    function getStatusStyle(status) {
