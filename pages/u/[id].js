@@ -126,8 +126,7 @@ export default function UserPage(props) {
          </div>
 
          <div className={styles.userActions}>
-            {session?.role === "admin" && (
-               //todo: disable if user (from props) is already an admin
+            {session?.role == "admin" && props.role != "admin" && (
                   <button
                      onClick={() => makeAdmin(props.id)}
                      className={styles.makeAdmin}
