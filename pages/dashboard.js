@@ -5,6 +5,16 @@ import Loading from "../components/Loading"
 import { useState } from "react"
 import Router from "next/router.js"
 
+// Create our number formatter.
+var formatter = new Intl.NumberFormat('en-US', {
+   style: 'currency',
+   currency: 'USD',
+ 
+   // These options are needed to round to whole numbers if that's what you want.
+   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+ });
+
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
       where: { is_verified: false },
@@ -80,6 +90,21 @@ export default function Admin(props) {
     }
   }
 
+  const makeAdmin = async (user_id) => {
+   const body = { user_id }
+
+   try {
+     console.log(user_id)
+     await fetch("/api/make_admin", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(body),
+     });
+   } catch (error) {
+     console.log("error making user admin:", error)
+   }
+ }
+
    if (session?.is_verified && session.role === "admin") {
       return (
          <div className={styles.container}>
@@ -133,6 +158,7 @@ export default function Admin(props) {
                   <tr className={styles.verifiedUsersTR}>
                      <th>Name</th>
                      <th className={styles.emailSection}>Total Due</th>
+                     <th className={styles.adminSelect}>Make Admin</th>
                   </tr>
                </thead>
                <tbody>
@@ -145,7 +171,15 @@ export default function Admin(props) {
                               </a>
                            </div>
                         </td>
-                        <td>{user.total_due}</td>
+                        <td>{formatter.format(user.total_due)}</td>
+                        <td>
+                        <a
+                                    onClick={() => makeAdmin(user.id)}
+                                    className={styles.verifyButton}
+                                 >
+                                    Make Admin
+                                 </a>
+                        </td>
                      </tr>
                   ))}
                </tbody>
