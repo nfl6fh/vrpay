@@ -112,6 +112,38 @@ export default function Admin(props) {
       }
    }
 
+   const approveTransaction = async (trans_id) => {
+      const body = { trans_id }
+      // console.log("approving ", trans_id)
+
+      try {
+         console.log(trans_id)
+         await fetch("/api/approve_transaction", {
+            method: "POST",
+            headers: { "content-Type": "application/json"},
+            body: JSON.stringify(body),
+         })
+      } catch (error) {
+         console.log("error approving transaction:", error)
+      }
+   }
+
+   const denyTransaction = async (trans_id) => {
+      const body = { trans_id }
+      // console.log("approving ", trans_id)
+
+      try {
+         console.log(trans_id)
+         await fetch("/api/deny_transaction", {
+            method: "POST",
+            headers: { "content-Type": "application/json"},
+            body: JSON.stringify(body),
+         })
+      } catch (error) {
+         console.log("error denying transaction:", error)
+      }
+   }
+
    if (session?.is_verified && session.role === "admin") {
       return (
          <div className={styles.container}>
@@ -171,7 +203,7 @@ export default function Admin(props) {
                            <th className={styles.amountCol}>Amount</th>
                            <th className={styles.typeCol}>Type</th>
                            <th className={styles.descriptionCol}>Description</th>
-                           <th className={styles.statusCol}>ACTION</th>
+                           <th className={styles.statusCol}>Actions</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -189,8 +221,24 @@ export default function Admin(props) {
                               <td>
                                  {transaction.description}
                               </td>
-                              <td>
-                                 ACTIONS
+                              <td className={styles.verifyTD}>
+                                 <a 
+                                    className={styles.verifyButton}
+                                    onClick={() => approveTransaction(transaction?.id)}
+                                 >
+                                    Approve
+                                 </a>
+                                 <a 
+                                    className={styles.verifyButton}
+                                    onClick={() => denyTransaction(transaction.id)}
+                                 >
+                                    Deny
+                                 </a>
+                                 <a
+                                    className={styles.verifyButton}
+                                 >
+                                    View Details
+                                 </a>
                               </td>
                            </tr>
                         ))}

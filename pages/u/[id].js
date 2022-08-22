@@ -14,6 +14,11 @@ var formatter = new Intl.NumberFormat("en-US", {
    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
 
+const tmap = new Map();
+tmap.set('pending', 0)
+tmap.set('approved', 1)
+tmap.set('denied', 2)
+
 export const getServerSideProps = async ({ params }) => {
    const user = await prisma.user.findUnique({
       where: {
@@ -77,9 +82,13 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
+   function transactionSorter(a, b) {
+      return tmap.get(a.status) - tmap.get(b.status)
+   }
+
    function getStatusStyle(status) {
       const obj = {
-         color: status === "pending" ? "red" : "green",
+         color: status === "pending" ? "red" : (status === "denied" ? "Black" : "green"),
          fontStyle: status === "pending" ? "italic" : "normal",
       }
       return obj
@@ -159,7 +168,7 @@ export default function UserPage(props) {
                      </tr>
                   </thead>
                   <tbody>
-                     {props.transactions.map((transaction) => (
+                     {props.transactions.sort(transactionSorter).map((transaction) => (
                         <tr>
                            <td style={getItemStyle(transaction.status)}>
                               {getDateFormatting(transaction.updatedAt)}
