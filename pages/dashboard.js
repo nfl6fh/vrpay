@@ -224,7 +224,7 @@ export default function Admin(props) {
                               <td className={styles.verifyTD}>
                                  <a 
                                     className={styles.verifyButton}
-                                    onClick={() => approveTransaction(transaction?.id)}
+                                    onClick={() => approveTransaction(transaction.id)}
                                  >
                                     Approve
                                  </a>
