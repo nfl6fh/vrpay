@@ -1,7 +1,7 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect } from "react"
-import { toSentenceCase, getDateFormatting } from "../../utils"
+import { toSentenceCase, getDateFormatting, approveTransaction, denyTransaction } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
 

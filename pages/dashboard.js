@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { getDateFormatting, toSentenceCase } from "../utils.js"
+import { approveTransaction, denyTransaction } from "../utils.js"
 import Router from "next/router.js"
 
 // Create our number formatter.
@@ -109,38 +109,6 @@ export default function Admin(props) {
          })
       } catch (error) {
          console.log("error verifying user:", error)
-      }
-   }
-
-   const approveTransaction = async (trans_id) => {
-      const body = { trans_id }
-      // console.log("approving ", trans_id)
-
-      try {
-         console.log(trans_id)
-         await fetch("/api/approve_transaction", {
-            method: "POST",
-            headers: { "content-Type": "application/json"},
-            body: JSON.stringify(body),
-         })
-      } catch (error) {
-         console.log("error approving transaction:", error)
-      }
-   }
-
-   const denyTransaction = async (trans_id) => {
-      const body = { trans_id }
-      // console.log("approving ", trans_id)
-
-      try {
-         console.log(trans_id)
-         await fetch("/api/deny_transaction", {
-            method: "POST",
-            headers: { "content-Type": "application/json"},
-            body: JSON.stringify(body),
-         })
-      } catch (error) {
-         console.log("error denying transaction:", error)
       }
    }
 
