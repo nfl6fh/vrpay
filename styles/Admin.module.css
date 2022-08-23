@@ -79,6 +79,10 @@
   background-color: black!important;
 }
 
+.adminSelect {
+  width: 140px;
+}
+
 @media (max-width: 1100px) {
   .container {
     width: 90%;

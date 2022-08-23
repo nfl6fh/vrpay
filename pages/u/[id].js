@@ -1,8 +1,23 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect } from "react"
+import { toSentenceCase, getDateFormatting } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
+
+var formatter = new Intl.NumberFormat("en-US", {
+   style: "currency",
+   currency: "USD",
+
+   // These options are needed to round to whole numbers if that's what you want.
+   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+})
+
+const tmap = new Map();
+tmap.set('pending', 0)
+tmap.set('approved', 1)
+tmap.set('denied', 2)
 
 export const getServerSideProps = async ({ params }) => {
    const user = await prisma.user.findUnique({
@@ -67,37 +82,40 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
-   function getDateFormatting(isoDate) {
-      var date = new Date(isoDate)
-      var year = date.getFullYear()
-      var day = date.getDate()
-      var month = date.getMonth() + 1
-      return month + "/" + day + "/" + year
+   function transactionSorter(a, b) {
+      return tmap.get(a.status) - tmap.get(b.status)
    }
 
-  function formatCurrency(num) {
-    return "$" + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-  }
+   function getStatusStyle(status) {
+      const obj = {
+         color: status === "pending" ? "red" : (status === "denied" ? "Black" : "green"),
+         fontStyle: status === "pending" ? "italic" : "normal",
+      }
+      return obj
+   }
 
-  function toSentenceCase(str) {
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  }
+   function getItemStyle(status) {
+      const obj = {
+         color: status === "pending" ? "grey" : "black",
+         fontStyle: status === "pending" ? "italic" : "normal",
+      }
+      return obj
+   }
 
-  function getStatusStyle(status) {
-    const obj = {
-      "color": status === "pending" ? "red" : "green",
-      "fontStyle": status === "pending" ? "italic" : "normal",
-    }
-    return obj
-  }
+   const makeAdmin = async (user_id) => {
+      const body = { user_id }
 
-  function getItemStyle(status) {
-    const obj = {
-      "color": status === "pending" ? "grey" : "black",
-      "fontStyle": status === "pending" ? "italic" : "normal",
-    }
-    return obj
-  }
+      try {
+         console.log(user_id)
+         await fetch("/api/make_admin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+         })
+      } catch (error) {
+         console.log("error making user admin:", error)
+      }
+   }
 
    return (
       <div className={styles.container}>
@@ -110,11 +128,25 @@ export default function UserPage(props) {
             </div>
             <p className={styles.totalDueContainer}>
                Total due:{" "}
-               <span className={styles.totalDue}>${props.total_due}</span>
+               <span className={styles.totalDue}>
+                  {formatter.format(props.total_due)}
+               </span>
             </p>
          </div>
+
          <div className={styles.userActions}>
-            <button className={styles.newTransaction} onClick={() => props.handleNewTransactionClick()}>
+            {session?.role == "admin" && props.role != "admin" && (
+                  <button
+                     onClick={() => makeAdmin(props.id)}
+                     className={styles.makeAdmin}
+                  >
+                     Make Admin
+                  </button>
+            )}
+            <button
+               className={styles.newTransaction}
+               onClick={() => props.handleNewTransactionClick()}
+            >
                + Add a RaR or payment
             </button>
          </div>
@@ -136,13 +168,23 @@ export default function UserPage(props) {
                      </tr>
                   </thead>
                   <tbody>
-                     {props.transactions.map((transaction) => (
+                     {props.transactions.sort(transactionSorter).map((transaction) => (
                         <tr>
-                           <td style={getItemStyle(transaction.status)}>{getDateFormatting(transaction.updatedAt)}</td>
-                           <td style={getItemStyle(transaction.status)}>{formatCurrency(transaction.amount)}</td>
-                           <td style={getItemStyle(transaction.status)}>{transaction.type}</td>
-                           <td style={getItemStyle(transaction.status)}>{transaction.description}</td>
-                           <td style={getStatusStyle(transaction.status)}>{toSentenceCase(transaction.status)}</td>
+                           <td style={getItemStyle(transaction.status)}>
+                              {getDateFormatting(transaction.updatedAt)}
+                           </td>
+                           <td style={getItemStyle(transaction.status)}>
+                              {formatter.format(transaction.amount)}
+                           </td>
+                           <td style={getItemStyle(transaction.status)}>
+                              {transaction.type}
+                           </td>
+                           <td style={getItemStyle(transaction.status)}>
+                              {transaction.description}
+                           </td>
+                           <td style={getStatusStyle(transaction.status)}>
+                              {toSentenceCase(transaction.status)}
+                           </td>
                         </tr>
                      ))}
                   </tbody>
