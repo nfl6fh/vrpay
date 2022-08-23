@@ -6,10 +6,14 @@ export default function Layout({ children }) {
    const [newTransactionOverlayVisible, setNewTransactionOverlayVisible] =
       useState(false)
    const [overlayVisible, setOverlayVisible] = useState(false)
+   const [newTransactionForUID, setNewTransactionForUID] = useState('')
+   const [newTransactionForName, setNewTransactionForName] = useState('')
 
-   function handleNewTransactionClick() {
+   function handleNewTransactionClick(uid, name) {
       setOverlayVisible(true)
       setNewTransactionOverlayVisible(true)
+      setNewTransactionForUID(uid)
+      setNewTransactionForName(name)
    }
 
    function dismissNewTransactionOverlay() {
@@ -27,7 +31,7 @@ export default function Layout({ children }) {
       <>
          {overlayVisible && (
             <div>
-               {newTransactionOverlayVisible && <NewTransactionOverlay dismiss={dismissNewTransactionOverlay}/>}
+               {newTransactionOverlayVisible && <NewTransactionOverlay uid={newTransactionForUID} name={newTransactionForName} dismiss={dismissNewTransactionOverlay}/>}
             </div>
          )}
          <CustomNavbar />
