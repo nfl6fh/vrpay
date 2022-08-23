@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { getDateFormatting, toSentenceCase } from "../utils.js"
+import { approveTransaction, denyTransaction } from "../utils.js"
 import Router from "next/router.js"
 
 // Create our number formatter.
@@ -171,7 +171,7 @@ export default function Admin(props) {
                            <th className={styles.amountCol}>Amount</th>
                            <th className={styles.typeCol}>Type</th>
                            <th className={styles.descriptionCol}>Description</th>
-                           <th className={styles.statusCol}>ACTION</th>
+                           <th className={styles.statusCol}>Actions</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -189,8 +189,24 @@ export default function Admin(props) {
                               <td>
                                  {transaction.description}
                               </td>
-                              <td>
-                                 ACTIONS
+                              <td className={styles.verifyTD}>
+                                 <a 
+                                    className={styles.verifyButton}
+                                    onClick={() => approveTransaction(transaction.id)}
+                                 >
+                                    Approve
+                                 </a>
+                                 <a 
+                                    className={styles.verifyButton}
+                                    onClick={() => denyTransaction(transaction.id)}
+                                 >
+                                    Deny
+                                 </a>
+                                 <a
+                                    className={styles.verifyButton}
+                                 >
+                                    View Details
+                                 </a>
                               </td>
                            </tr>
                         ))}

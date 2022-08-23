@@ -1,7 +1,7 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect } from "react"
-import { toSentenceCase, getDateFormatting } from "../../utils"
+import { toSentenceCase, getDateFormatting, approveTransaction, denyTransaction } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
 
@@ -13,6 +13,11 @@ var formatter = new Intl.NumberFormat("en-US", {
    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
+
+const tmap = new Map();
+tmap.set('pending', 0)
+tmap.set('approved', 1)
+tmap.set('denied', 2)
 
 export const getServerSideProps = async ({ params }) => {
    const user = await prisma.user.findUnique({
@@ -77,9 +82,13 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
+   function transactionSorter(a, b) {
+      return tmap.get(a.status) - tmap.get(b.status)
+   }
+
    function getStatusStyle(status) {
       const obj = {
-         color: status === "pending" ? "red" : "green",
+         color: status === "pending" ? "red" : (status === "denied" ? "Black" : "green"),
          fontStyle: status === "pending" ? "italic" : "normal",
       }
       return obj
@@ -126,8 +135,7 @@ export default function UserPage(props) {
          </div>
 
          <div className={styles.userActions}>
-            {session?.role === "admin" && (
-               //todo: disable if user (from props) is already an admin
+            {session?.role == "admin" && props.role != "admin" && (
                   <button
                      onClick={() => makeAdmin(props.id)}
                      className={styles.makeAdmin}
@@ -160,7 +168,7 @@ export default function UserPage(props) {
                      </tr>
                   </thead>
                   <tbody>
-                     {props.transactions.map((transaction) => (
+                     {props.transactions.sort(transactionSorter).map((transaction) => (
                         <tr>
                            <td style={getItemStyle(transaction.status)}>
                               {getDateFormatting(transaction.updatedAt)}
