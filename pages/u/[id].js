@@ -165,6 +165,7 @@ export default function UserPage(props) {
                         <th className={styles.typeCol}>Type</th>
                         <th className={styles.descriptionCol}>Description</th>
                         <th className={styles.statusCol}>Status</th>
+								<th className={styles.actionCol}>Actions</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -184,6 +185,22 @@ export default function UserPage(props) {
                            </td>
                            <td style={getStatusStyle(transaction.status)}>
                               {toSentenceCase(transaction.status)}
+                           </td>
+									<td>
+                              {(transaction.status === "pending") && 
+                                 <a
+												onClick={() => displayTransactionOverlay(transaction.id)}
+                                 >
+                                    Edit/Approve
+                                 </a>
+                              }
+										{(transaction.status === "approved") &&
+											<a
+												onClick={() => displayTransactionOverlay(transaction.id)}
+											>
+												Edit
+											</a>
+										}
                            </td>
                         </tr>
                      ))}
