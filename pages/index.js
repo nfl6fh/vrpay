@@ -3,19 +3,19 @@ import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { userInfo } from "os"
-import Loading from "../components/Loading";
-import Router from "next/router";
+import Loading from "../components/Loading"
+import Router from "next/router"
 import { useEffect } from "react"
 
 export default function Home() {
    const { data: session, status } = useSession()
 
    useEffect(() => {
-      console.log("session:", session);
+      console.log("session:", session)
    }, [session])
 
    if (status === "loading") {
-      return <Loading />;
+      return <Loading />
    }
 
    if (session) {
@@ -25,14 +25,12 @@ export default function Home() {
             return <>User is admin/treasurer</>
          } else {
             Router.push("/u/[id]", `/u/${session.uid}`)
-            return (<></>)
+            return <></>
          }
       } else {
          // pending page
          return <>Account pending. user is not verified</>
       }
-
-      
    } else {
       // user is not logged in
       return (
