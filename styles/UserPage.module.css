@@ -120,3 +120,7 @@
 .statusCol {
     width: 100px!important;
 }
+
+.actionCol {
+   width: 120px!important;
+}

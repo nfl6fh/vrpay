@@ -10,5 +10,30 @@ export default async function handle(req, res) {
             status: "approved"
         },
     });
-    res.json(post);
+
+    var currTransaction = await prisma.transaction.findUnique({
+        where: { id: trans_id},
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    total_due: true
+                }
+            }
+        },
+    });
+
+    // console.log(currTransaction.id)
+    var currDue = currTransaction.user.total_due
+    var currAmount = currTransaction.amount
+    const due = currDue - currAmount
+    console.log(currDue)
+    const post1 = await prisma.user.update({
+        where: { id: currTransaction.user.id},
+        data: {
+            total_due: parseFloat(due)
+        },
+    });
+    // console.log(currTransaction.user.total_due)
+    res.json(post1);
 }
