@@ -48,21 +48,17 @@
    justify-content: flex-end;
 }
 
-.newTransaction {
-   color: white;
-   background-color: grey;
+.userActions > * {
+   margin-left: 8px!important;
+}
+
+.adminActions > * {
+   margin-left: 8px!important;
 }
 
 .makeAdmin {
    color: white;
    background-color: red;
-}
-
-
-.newTransaction, .makeAdmin {
-   padding: 0.5rem 1rem;
-   border-radius: 8px;
-   margin-left: 8px;
 }
 
 .table {

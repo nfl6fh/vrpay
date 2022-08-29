@@ -1,9 +1,16 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useEffect } from "react"
-import { toSentenceCase, getDateFormatting, approveTransaction, denyTransaction } from "../../utils"
+import {
+   toSentenceCase,
+   getDateFormatting,
+   approveTransaction,
+   denyTransaction,
+} from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
+import { Button, Text } from "@geist-ui/core"
+import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 
 var formatter = new Intl.NumberFormat("en-US", {
    style: "currency",
@@ -14,10 +21,10 @@ var formatter = new Intl.NumberFormat("en-US", {
    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
 
-const tmap = new Map();
-tmap.set('pending', 0)
-tmap.set('approved', 1)
-tmap.set('denied', 2)
+const tmap = new Map()
+tmap.set("pending", 0)
+tmap.set("approved", 1)
+tmap.set("denied", 2)
 
 export const getServerSideProps = async ({ params }) => {
    const user = await prisma.user.findUnique({
@@ -88,7 +95,12 @@ export default function UserPage(props) {
 
    function getStatusStyle(status) {
       const obj = {
-         color: status === "pending" ? "red" : (status === "denied" ? "Black" : "green"),
+         color:
+            status === "pending"
+               ? "red"
+               : status === "denied"
+               ? "Black"
+               : "green",
          fontStyle: status === "pending" ? "italic" : "normal",
       }
       return obj
@@ -136,19 +148,31 @@ export default function UserPage(props) {
 
          <div className={styles.userActions}>
             {session?.role == "admin" && props.role != "admin" && (
-                  <button
+               <div className={styles.adminActions}>
+                  <Button
+                     icon={<ArrowUp />}
                      onClick={() => makeAdmin(props.id)}
-                     className={styles.makeAdmin}
                   >
                      Make Admin
-                  </button>
+                  </Button>
+                  <Button icon={<UserX />} type="error" ghost>
+                     Remove User
+                  </Button>
+                  
+               </div>
             )}
-            <button
+            <Button
+               // style={{minWidth: "calc(14.5 * 16px)"}}
+               icon={<Plus />}
+               onClick={() =>
+                  props.handleNewTransactionClick(props.id, props.name)
+               }
+               auto
                className={styles.newTransaction}
-               onClick={() => props.handleNewTransactionClick(props.id, props.name)}
+               type="success"
             >
-               + Add a RaR or payment
-            </button>
+               New RaR or Transaction
+            </Button>
          </div>
          <p>Transactions:</p>
 
@@ -165,45 +189,55 @@ export default function UserPage(props) {
                         <th className={styles.typeCol}>Type</th>
                         <th className={styles.descriptionCol}>Description</th>
                         <th className={styles.statusCol}>Status</th>
-								<th className={styles.actionCol}>Actions</th>
+                        <th className={styles.actionCol}>Actions</th>
                      </tr>
                   </thead>
                   <tbody>
-                     {props.transactions.sort(transactionSorter).map((transaction) => (
-                        <tr>
-                           <td style={getItemStyle(transaction.status)}>
-                              {getDateFormatting(transaction.updatedAt)}
-                           </td>
-                           <td style={getItemStyle(transaction.status)}>
-                              {formatter.format(transaction.amount)}
-                           </td>
-                           <td style={getItemStyle(transaction.status)}>
-                              {transaction.type}
-                           </td>
-                           <td style={getItemStyle(transaction.status)}>
-                              {transaction.description}
-                           </td>
-                           <td style={getStatusStyle(transaction.status)}>
-                              {toSentenceCase(transaction.status)}
-                           </td>
-									<td>
-                              {(transaction.status === "pending") && 
-                                 <a
-												onClick={() => displayTransactionOverlay(transaction.id)}
-                                 >
-                                    Edit/Approve
-                                 </a>
-                              }
-										{(transaction.status === "approved") &&
-											<a
-												onClick={() => displayTransactionOverlay(transaction.id)}
-											>
-												Edit
-											</a>
-										}
-                           </td>
-                        </tr>
-                     ))}
+                     {props.transactions
+                        .sort(transactionSorter)
+                        .map((transaction) => (
+                           <tr>
+                              <td style={getItemStyle(transaction.status)}>
+                                 {getDateFormatting(transaction.updatedAt)}
+                              </td>
+                              <td style={getItemStyle(transaction.status)}>
+                                 {formatter.format(transaction.amount)}
+                              </td>
+                              <td style={getItemStyle(transaction.status)}>
+                                 {transaction.type}
+                              </td>
+                              <td style={getItemStyle(transaction.status)}>
+                                 {transaction.description}
+                              </td>
+                              <td style={getStatusStyle(transaction.status)}>
+                                 {toSentenceCase(transaction.status)}
+                              </td>
+                              <td>
+                                 {transaction.status === "pending" && (
+                                    <a
+                                       onClick={() =>
+                                          displayTransactionOverlay(
+                                             transaction.id
+                                          )
+                                       }
+                                    >
+                                       Edit/Approve
+                                    </a>
+                                 )}
+                                 {transaction.status === "approved" && (
+                                    <a
+                                       onClick={() =>
+                                          displayTransactionOverlay(
+                                             transaction.id
+                                          )
+                                       }
+                                    >
+                                       Edit
+                                    </a>
+                                 )}
+                              </td>
+                           </tr>
+                        ))}
                   </tbody>
                </table>
             )}

@@ -7,6 +7,8 @@ import Loading from "../components/Loading"
 import Router from "next/router"
 import { useEffect } from "react"
 
+import { Button, Text } from "@geist-ui/core"
+
 export default function Home() {
    const { data: session, status } = useSession()
 
@@ -34,9 +36,18 @@ export default function Home() {
    } else {
       // user is not logged in
       return (
-         <div>
-            <p>Homepage (Sign in page)</p>
-            <button onClick={() => signIn("google")}>Sign in</button>
+         <div className={styles.hasBackground}>
+            <main className={styles.main}>
+               <Text h1 className={styles.title}>VRPay</Text>
+               <Text h4 className={styles.subtitle}>Cool name, huh?</Text>
+               <br />
+               <Button
+                  className={styles.signInButton}
+                  onClick={() => signIn("google")}
+               >
+                  Sign in with Google
+               </Button>
+            </main>
          </div>
       )
    }
