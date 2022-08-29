@@ -36,12 +36,11 @@
    margin-right: auto;
    color: white;
    color: lightGray;
-   padding: 0.5rem 1rem;
-   border-radius: 8px;
 }
 
 .overlayHeader {
   font-size: var(--text-size-small);
+  margin-bottom: 8px;
 }
 
 /* For forms */
@@ -61,20 +60,17 @@
   margin-left: 20px;
 }
 
-.formInput {
-   padding: 10px 15px;
-   border: 1px solid rgb(213, 213, 212);
-   border-radius: 4px !important;
-   font-size: 14px !important;
+.actionButtons {
+   margin-top: 1em;
+   width: 100%;
 }
 
-.inputLabel {
-   margin-bottom: 8px;
-   margin-top: 12px;
+.actionButtons > * {
+   margin-right: 8px!important;
 }
 
 #description {
-  flex-grow: 1;
+   flex-grow: 1;
 }
 
 @media (max-width: 750px) {

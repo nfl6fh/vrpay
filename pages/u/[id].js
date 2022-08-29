@@ -99,8 +99,7 @@ export default function UserPage(props) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-         })
-         .then((res) => {
+         }).then((res) => {
             Router.push("/dashboard/")
          })
       } catch (error) {
@@ -169,16 +168,21 @@ export default function UserPage(props) {
             {session?.role == "admin" && props.role != "admin" && (
                <div className={styles.adminActions}>
                   <Button
+                     auto
                      icon={<ArrowUp />}
                      onClick={() => makeAdmin(props.id)}
                   >
                      Make Admin
                   </Button>
-                  <Button icon={<UserX />} type="error" ghost
-                  onClick={() => removeUser(props.id)}>
+                  <Button
+                     icon={<UserX />}
+                     type="error"
+                     ghost
+                     auto
+                     onClick={() => removeUser(props.id)}
+                  >
                      Remove User
                   </Button>
-                  
                </div>
             )}
             <Button
