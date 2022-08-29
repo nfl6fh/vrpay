@@ -2,6 +2,7 @@ import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { createTransactionForUser } from "../utils"
+import { Input, Button } from "@geist-ui/core"
 
 export default function NewTransactionOverlay(props) {
    const { data: session, status } = useSession()
@@ -18,45 +19,40 @@ export default function NewTransactionOverlay(props) {
             </div>
             <div className={styles.inputSection}>
                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>
-                     <b>Amount</b>
-                  </label>
-                  <input
+                  <Input
                      className={styles.formInput}
                      onChange={(e) => setAmount(e.target.value)}
-                  ></input>
+                  >
+                     <b>Amount</b>
+                  </Input>
                </div>
                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>
-                     <b>Type</b>
-                  </label>
-                  <input
+                  <Input
                      className={styles.formInput}
                      onChange={(e) => setType(e.target.value)}
-                  ></input>
+                  >
+                     <b>Type</b>
+                  </Input>
                </div>
             </div>
             <div className={styles.inputSection}>
                <div className={styles.inputGroup} id={styles.description}>
-                  <label className={styles.inputLabel}>
-                     <b>Description</b>
-                  </label>
-                  <input
+                  <Input
                      className={styles.formInput}
                      onChange={(e) => setDescription(e.target.value)}
-                  ></input>
+                     width={"100%"}
+                  >
+                     <b>Description</b>
+                  </Input>
                </div>
             </div>
 
             <div className={styles.actionButtons}>
                {/* TODO: error handling) */}
-               <button
+               <Button
+                  type={"success"}
+                  auto
                   onClick={() => {
-                     console.log("what's good")
-                     console.log("uid:", props.uid)
-                     console.log("amount: ", amount)
-                     console.log("type: ", type)
-                     console.log("description: ", description)
                      createTransactionForUser(
                         props.uid,
                         parseInt(amount),
@@ -66,14 +62,16 @@ export default function NewTransactionOverlay(props) {
                   }}
                >
                   Submit
-               </button>
-               <button
-                  className={styles.cancelButton}
+               </Button>
+               <Button
+                  type="abort"
+                  auto
+                  ghost
                   onClick={() => props.dismiss()}
                >
                   {" "}
                   Cancel{" "}
-               </button>
+               </Button>
             </div>
          </div>
       </div>
