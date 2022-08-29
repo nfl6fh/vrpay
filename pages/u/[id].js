@@ -11,6 +11,7 @@ import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
 import { Button, Text } from "@geist-ui/core"
 import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
+import Router from "next/router"
 
 var formatter = new Intl.NumberFormat("en-US", {
    style: "currency",
@@ -89,6 +90,24 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
+   const removeUser = async (user_id) => {
+      const body = { user_id }
+
+      try {
+         console.log(user_id)
+         await fetch("/api/remove_user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+         })
+         .then((res) => {
+            Router.push("/dashboard/")
+         })
+      } catch (error) {
+         console.log("error removing user:", error)
+      }
+   }
+
    function transactionSorter(a, b) {
       return tmap.get(a.status) - tmap.get(b.status)
    }
@@ -155,7 +174,8 @@ export default function UserPage(props) {
                   >
                      Make Admin
                   </Button>
-                  <Button icon={<UserX />} type="error" ghost>
+                  <Button icon={<UserX />} type="error" ghost
+                  onClick={() => removeUser(props.id)}>
                      Remove User
                   </Button>
                   
