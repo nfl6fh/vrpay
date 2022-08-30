@@ -5,12 +5,24 @@ import { signIn, signOut, useSession } from "next-auth/react"
 import { userInfo } from "os"
 import Loading from "../components/Loading"
 import Router from "next/router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
-import { Button, Text } from "@geist-ui/core"
+import { Button, Text, Input, Select } from "@geist-ui/core"
 
 export default function Home() {
    const { data: session, status } = useSession()
+   const [role, setRole] = useState("1")
+   const [gradYear, setGradYear] = useState("")
+
+   const handleRoleChange = (val) => {
+      setRole(val)
+      console.log(val)
+   }
+
+   const handleGradYearChange = (val) => {
+      setGradyear(val)
+      console.log(val)
+   }
 
    useEffect(() => {
       console.log("session:", session)
@@ -24,22 +36,42 @@ export default function Home() {
       if (session.is_verified) {
          if (session.role && session.role !== "") {
             Router.push("/dashboard")
-            return <>User is admin/treasurer</>
+            return <Loading />
          } else {
             Router.push("/u/[id]", `/u/${session.uid}`)
-            return <></>
+            return <Loading />
          }
       } else {
          // pending page
-         return <>Account pending. user is not verified</>
+         return (
+            <div className={styles.container}>
+               <main className={styles.main}>
+                  <Text h1>Your account is getting verified</Text>
+                  <Text p>Confirm the info below is correct (you cannot change this)</Text>
+                  <div>
+                     I am a{' '}
+                  <Select placeholder="Role" auto onChange={handleRoleChange} initialValue={'1'}>
+                     <Select.Option value="1">rookie athlete</Select.Option>
+                     <Select.Option value="2">varsity athlete</Select.Option>
+                     <Select.Option value="3">coach</Select.Option>
+                  </Select>
+                  </div>
+                  <Button>Save</Button>
+               </main>
+            </div>
+         )
       }
    } else {
       // user is not logged in
       return (
          <div className={styles.hasBackground}>
             <main className={styles.main}>
-               <Text h1 className={styles.title}>VRPay</Text>
-               <Text h4 className={styles.subtitle}>Cool name, huh?</Text>
+               <Text h1 className={styles.title}>
+                  VRPay
+               </Text>
+               <Text h4 className={styles.subtitle}>
+                  Cool name, huh?
+               </Text>
                <br />
                <Button
                   className={styles.signInButton}
