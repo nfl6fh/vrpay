@@ -92,6 +92,9 @@ export default function Admin(props) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
          })
+         .then((res) => {
+            Router.reload()
+         })
       } catch (error) {
          console.log("error deleting user:", error)
       }
@@ -106,6 +109,9 @@ export default function Admin(props) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
+         })
+         .then((res) => {
+            Router.reload()
          })
       } catch (error) {
          console.log("error verifying user:", error)
