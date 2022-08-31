@@ -1,5 +1,15 @@
 .container {
-   padding: 0 2rem;
+   width: 40%;
+   margin-left: auto;
+   margin-right: auto;
+
+   text-align: left!important;
+   align-items: left!important;
+   justify-content: flex-start!important;
+}
+
+.container > * {
+   justify-content: flex-start;
 }
 
 .hasBackground {
@@ -9,7 +19,9 @@
    background-repeat: no-repeat;
    background-size: cover;
    background-blend-mode: saturation;
+}
 
+.container, .hasBackground {
    height: calc(100vh - 51px);
 }
 
