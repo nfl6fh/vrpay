@@ -100,6 +100,10 @@ export default function Admin(props) {
       }
    }
 
+   function userSorter(a, b) {
+      return b.total_due - a.total_due
+   }
+
    const verifyUser = async (user_id) => {
       const body = { user_id }
 
@@ -230,7 +234,9 @@ export default function Admin(props) {
                   </tr>
                </thead>
                <tbody>
-                  {props.verified_users?.map((user) => (
+                  {props.verified_users
+                     .sort(userSorter)
+                     .map((user) => (
                      <tr>
                         <td>
                            <div className={styles.nameSection}>
