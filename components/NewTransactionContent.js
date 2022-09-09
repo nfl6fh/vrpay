@@ -7,8 +7,9 @@ export default function NewTransactionContent(props) {
    const [amount, setAmount] = useState()
    const [type, setType] = useState()
    const [description, setDescription] = useState()
+   const [applyTo, setApplyTo] = useState(props.uid ? "na" : "all users")
 
-   const handler = val => console.log(val)
+   const handleDropdown = val => setApplyTo(val)
 
    return (
       <div className={styles.container}>
@@ -46,9 +47,9 @@ export default function NewTransactionContent(props) {
          </div>
          {!props.uid && (
             <div className={styles.inputSection}>
-               <Select placeholder="Choose one" onChange={handler} width={"100%"}>
-                  <Select.Option value="1">Apply transaction to all users</Select.Option>
-                  <Select.Option value="2">Apply transaction to all rookies</Select.Option>
+               <Select placeholder="Choose one" onChange={handleDropdown} width={"100%"} initialValue={props.uid ? "na" : "all users"}>
+                  <Select.Option value="all users">Apply transaction to all users</Select.Option>
+                  <Select.Option value="all rookies">Apply transaction to all rookies</Select.Option>
                </Select>
             </div>
          )}
@@ -70,7 +71,8 @@ export default function NewTransactionContent(props) {
                      props.uid,
                      parseInt(amount),
                      type,
-                     description
+                     description,
+                     applyTo
                   )
                }}
             >

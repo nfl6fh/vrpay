@@ -49,8 +49,8 @@ export const approveTransaction = async (trans_id) => {
     }
  }
 
- export const createTransactionForUser = async ( uid, amount, type, description ) => {
-    const body = { uid, amount, type, description }
+ export const createTransactionForUser = async ( uid, amount, type, description, applyTo ) => {
+    const body = { uid, amount, type, description, applyTo }
 
     try {
        await fetch("/api/create_transaction_for_user", {
@@ -64,4 +64,21 @@ export const approveTransaction = async (trans_id) => {
     } catch (error) {
        console.log("error denying transaction:", error)
     }
+ }
+
+ export const updateBalance = async ( uid, amount ) => {
+      const body = { uid, amount }
+   
+      try {
+         await fetch("/api/update_balance", {
+            method: "POST",
+            headers: { "content-Type": "application/json"},
+            body: JSON.stringify(body),
+         })
+         .then((res) => {
+            Router.reload()
+         })
+      } catch (error) {
+         console.log("error updating balance:", error)
+      }
  }
