@@ -108,7 +108,14 @@ export default function UserPage(props) {
    }
 
    function transactionSorter(a, b) {
-      return tmap.get(a.status) - tmap.get(b.status)
+      var statusComp = tmap.get(a.status) - tmap.get(b.status)
+      if (statusComp !== 0) {
+         return statusComp
+      }
+      
+      const date1 = new Date(a.updatedAt)
+      const date2 = new Date(b.updatedAt)
+      return date2.getTime() - date1.getTime()
    }
 
    function getStatusStyle(status) {
