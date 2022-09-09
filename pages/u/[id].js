@@ -90,6 +90,13 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
+   function getRoleFormatting(r) {
+      if (r === null) {
+         return ""
+      }
+      return r[0].toUpperCase() + r.slice(1) 
+   }
+
    const removeUser = async (user_id) => {
       const body = { user_id }
 
@@ -161,6 +168,9 @@ export default function UserPage(props) {
                <p className={styles.name}>{props.name}</p>
                <p className={styles.gradYear}>
                   {getGradYearFormatting(props.grad_year)}
+               </p>
+               <p className={styles.role}>
+                  {getRoleFormatting(props.role)}
                </p>
             </div>
             <p className={styles.totalDueContainer}>
