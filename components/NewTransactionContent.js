@@ -1,6 +1,6 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
-import { Input, Button, Modal, useModal } from "@geist-ui/core"
+import { Input, Button, Modal, Select } from "@geist-ui/core"
 import { createTransactionForUser } from "../utils"
 
 export default function NewTransactionContent(props) {
@@ -8,9 +8,13 @@ export default function NewTransactionContent(props) {
    const [type, setType] = useState()
    const [description, setDescription] = useState()
 
+   const handler = val => console.log(val)
+
    return (
       <div className={styles.container}>
-         <Modal.Title style={{textTransform: "None"}}>New Transaction {props.name ? "for " + props.name : ""}</Modal.Title>
+         <Modal.Title style={{ textTransform: "None" }}>
+            New Transaction {props.name ? "for " + props.name : ""}
+         </Modal.Title>
          <div className={styles.inputSection}>
             <div className={styles.inputGroup}>
                <Input
@@ -40,6 +44,15 @@ export default function NewTransactionContent(props) {
                <b className={styles.desc}>Description</b>
             </Input>
          </div>
+         {!props.uid && (
+            <div className={styles.inputSection}>
+               <Select placeholder="Choose one" onChange={handler} width={"100%"}>
+                  <Select.Option value="1">Apply transaction to all users</Select.Option>
+                  <Select.Option value="2">Apply transaction to all rookies</Select.Option>
+               </Select>
+            </div>
+         )}
+
          <div className={styles.actions}>
             <Button
                passive
