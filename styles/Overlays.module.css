@@ -1,76 +1,30 @@
-.newTransactionOverlayContainer {
-   display: flex;
-   height: 100vh;
-   width: 100vw;
-   justify-content: center;
-   align-items: center;
-   flex-direction: column;
-   background-color: rgba(0, 0, 0, 0.4);
-   position: absolute;
-   z-index: 1;
-   opacity: 1;
-   font-size: 14px;
-
+.container {
    text-align: left;
 }
 
-.newTransactionContainer {
-   display: flex;
-   flex-direction: column;
-   background-color: white;
-   max-height: 90%;
-   padding: 16px;
-   border: 1px solid lightGrey;
-   border-radius: 8px;
-}
-
-.newTransactionContainer > p {
-   text-align: left;
-   margin-top: 1em;
-   margin-bottom: 0.4em;
-   font-size: 14px;
-}
-
-.cancelButton {
-   margin-left: auto;
-   margin-right: auto;
-   color: white;
-   color: lightGray;
-}
-
-.overlayHeader {
-  font-size: var(--text-size-small);
-  margin-bottom: 8px;
-}
-
-/* For forms */
 .inputSection {
    display: flex;
    flex-direction: row;
-   margin-bottom: 4px;
+   margin-top: 16px;
 }
 
 .inputGroup {
    display: flex;
    flex-direction: column;
-}
-
-.inputGroup:not(:first-child) {
-  border-color: red;
-  margin-left: 20px;
-}
-
-.actionButtons {
-   margin-top: 1em;
    width: 100%;
 }
 
-.actionButtons > * {
-   margin-right: 8px!important;
+/* selects the second child in inputSection */
+.inputSection > *:nth-child(2) {
+   margin-left: 8px;
 }
 
-#description {
-   flex-grow: 1;
+.actions {
+   display: flex;
+   flex-direction: row;
+   margin-top: 16px;
+   width: 100%;
+   justify-content: right;
 }
 
 @media (max-width: 750px) {

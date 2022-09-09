@@ -5,6 +5,8 @@ import Loading from "../components/Loading"
 import { useState } from "react"
 import { approveTransaction, denyTransaction } from "../utils.js"
 import Router from "next/router.js"
+import { Input, Button, Modal, useModal } from "@geist-ui/core"
+import NewTransactionContent from "../components/NewTransactionContent.js"
 
 // Create our number formatter.
 var formatter = new Intl.NumberFormat("en-US", {
@@ -27,9 +29,9 @@ export const getServerSideProps = async () => {
          user: {
             select: {
                name: true,
-            }
-         }
-      }
+            },
+         },
+      },
    })
 
    var verified_users = await prisma.user.findMany({
@@ -77,6 +79,7 @@ export const getServerSideProps = async () => {
 
 export default function Admin(props) {
    const { data: session, status } = useSession()
+   const { visible, setVisible, bindings } = useModal()
 
    if (status === "loading") {
       return <Loading />
@@ -91,8 +94,7 @@ export default function Admin(props) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-         })
-         .then((res) => {
+         }).then((res) => {
             Router.reload()
          })
       } catch (error) {
@@ -109,8 +111,7 @@ export default function Admin(props) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-         })
-         .then((res) => {
+         }).then((res) => {
             Router.reload()
          })
       } catch (error) {
@@ -122,6 +123,12 @@ export default function Admin(props) {
       return (
          <div className={styles.container}>
             <h1 className={styles.title}>Dashboard</h1>
+            <Button auto onClick={() => setVisible(true)}>
+               New transaction
+            </Button>
+            <Modal {...bindings}>
+               <NewTransactionContent setVisible={setVisible} />
+            </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>
                   <h2 className={styles.sectionHeading}>Unverified Users</h2>
@@ -176,41 +183,37 @@ export default function Admin(props) {
                            <th className={styles.updatedCol}>User</th>
                            <th className={styles.amountCol}>Amount</th>
                            <th className={styles.typeCol}>Type</th>
-                           <th className={styles.descriptionCol}>Description</th>
+                           <th className={styles.descriptionCol}>
+                              Description
+                           </th>
                            <th className={styles.statusCol}>Actions</th>
                         </tr>
                      </thead>
                      <tbody>
                         {props.pending_transactions.map((transaction) => (
                            <tr>
-                              <td>
-                                 {transaction?.user?.name}
-                              </td>
-                              <td>
-                                 {formatter.format(transaction.amount)}
-                              </td>
-                              <td>
-                                 {transaction.type}
-                              </td>
-                              <td>
-                                 {transaction.description}
-                              </td>
+                              <td>{transaction?.user?.name}</td>
+                              <td>{formatter.format(transaction.amount)}</td>
+                              <td>{transaction.type}</td>
+                              <td>{transaction.description}</td>
                               <td className={styles.verifyTD}>
-                                 <a 
+                                 <a
                                     className={styles.verifyButton}
-                                    onClick={() => approveTransaction(transaction.id)}
+                                    onClick={() =>
+                                       approveTransaction(transaction.id)
+                                    }
                                  >
                                     Approve
                                  </a>
-                                 <a 
+                                 <a
                                     className={styles.verifyButton}
-                                    onClick={() => denyTransaction(transaction.id)}
+                                    onClick={() =>
+                                       denyTransaction(transaction.id)
+                                    }
                                  >
                                     Deny
                                  </a>
-                                 <a
-                                    className={styles.verifyButton}
-                                 >
+                                 <a className={styles.verifyButton}>
                                     View Details
                                  </a>
                               </td>
