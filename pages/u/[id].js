@@ -92,13 +92,24 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
-   function getRoleFormatting(r) {
-      if (r === null) {
+   function getRoleFormatting(role, is_rookie) {
+      var toReturn = ""
+
+      if (!role && !is_rookie) {
          return ""
-      } else if (r === "") {
-         return "Athlete"
       }
-      return r[0].toUpperCase() + r.slice(1) 
+
+      if (is_rookie) {
+         toReturn += "Rookie "
+      }
+      if (role === "") {
+         toReturn += "Athlete"
+      }
+      if (role === "admin") {
+         toReturn += "Admin"
+      }
+
+      return toReturn
    }
 
    const removeUser = async (user_id) => {
@@ -174,7 +185,7 @@ export default function UserPage(props) {
                   {getGradYearFormatting(props.grad_year)}
                </p>
                <p className={styles.role}>
-                  {getRoleFormatting(props.role)}
+                  {getRoleFormatting(props.role, props.is_rookie)}
                </p>
             </div>
             <p className={styles.totalDueContainer}>
