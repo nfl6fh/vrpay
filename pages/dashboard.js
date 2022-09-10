@@ -246,6 +246,7 @@ export default function Admin(props) {
                         label="Description"
                         render={cellText}
                      />
+                     {}
                      <Table.Column
                         prop="actions"
                         label="Actions"

@@ -132,7 +132,6 @@ export default function UserPage(props) {
    }
 
    function transactionSorter(a, b) {
-
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
       return date1.getTime() - date2.getTime()
@@ -141,10 +140,8 @@ export default function UserPage(props) {
    function getStatusStyle(status) {
       console.log("Status is ", status)
       const obj = {
-         color:
-            status === "pending" ? "red" : "black",
-         fontStyle:
-            status === "pending" ? "italic" : "normal",
+         color: status === "pending" ? "red" : "black",
+         fontStyle: status === "pending" ? "italic" : "normal",
       }
       return obj
    }
@@ -174,7 +171,13 @@ export default function UserPage(props) {
 
    const cellText = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell} style={getItemStyle(rowData?.status)}>
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={getItemStyle(rowData?.status)}
+         >
             {value}
          </p>
       )
@@ -182,7 +185,14 @@ export default function UserPage(props) {
 
    const cellTextStatus = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell} color="red" style={getStatusStyle(value)}>
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            color="red"
+            style={getStatusStyle(value)}
+         >
             {sentenceCase(value)}
          </p>
       )
@@ -190,7 +200,13 @@ export default function UserPage(props) {
 
    const cellDate = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell} style={getItemStyle(rowData?.status)}>
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={getItemStyle(rowData?.status)}
+         >
             {getDateFormatting(value)}
          </p>
       )
@@ -198,13 +214,22 @@ export default function UserPage(props) {
 
    const cellMoney = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell} style={getItemStyle(rowData?.status)}>
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={getItemStyle(rowData?.status)}
+         >
             {formatMoney.format(value)}
          </p>
       )
    }
 
    const transactionOptions = (value, rowData, rowIndex) => {
+      if (session?.user?.role !== "admin") {
+         return
+      }
       if (rowData?.status === "pending") {
          return (
             <div>
@@ -328,12 +353,14 @@ export default function UserPage(props) {
                      render={cellTextStatus}
                      width="6%"
                   />
-                  <Table.Column
-                     prop="actions"
-                     label="Actions"
-                     render={transactionOptions}
-                     width="250px"
-                  />
+                  {session?.user?.role === "admin" && (
+                     <Table.Column
+                        prop="actions"
+                        label="Actions"
+                        render={transactionOptions}
+                        width={"250px"}
+                     />
+                  )}
                </Table>
             )}
          </div>
