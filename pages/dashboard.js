@@ -70,6 +70,8 @@ export const getServerSideProps = async () => {
    )
    verified_users = verified_users?.sort((a, b) => a.name.localeCompare(b.name))
 
+   pending_transactions = pending_transactions?.sort((a, b) => a.user.name.localeCompare(b.user.name))
+
    console.log("unverified_users:", unverified_users)
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
