@@ -6,10 +6,12 @@ import {
    getDateFormatting,
    approveTransaction,
    denyTransaction,
+   formatMoney,
+   sentenceCase,
 } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
-import { Button, Text, useModal, Modal } from "@geist-ui/core"
+import { Button, Text, useModal, Modal, Table } from "@geist-ui/core"
 import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 import Router from "next/router"
 import NewTransactionContent from "../../components/NewTransactionContent"
@@ -130,25 +132,19 @@ export default function UserPage(props) {
    }
 
    function transactionSorter(a, b) {
-      var statusComp = tmap.get(a.status) - tmap.get(b.status)
-      if (statusComp !== 0) {
-         return statusComp
-      }
-      
+
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
       return date1.getTime() - date2.getTime()
    }
 
    function getStatusStyle(status) {
+      console.log("Status is ", status)
       const obj = {
          color:
-            status === "pending"
-               ? "red"
-               : status === "denied"
-               ? "Black"
-               : "green",
-         fontStyle: status === "pending" ? "italic" : "normal",
+            status === "pending" ? "red" : "black",
+         fontStyle:
+            status === "pending" ? "italic" : "normal",
       }
       return obj
    }
@@ -173,6 +169,67 @@ export default function UserPage(props) {
          })
       } catch (error) {
          console.log("error making user admin:", error)
+      }
+   }
+
+   const cellText = (value, rowData, rowIndex) => {
+      return (
+         <p auto scale={1 / 2} font="12px" className={styles.tableCell} style={getItemStyle(rowData?.status)}>
+            {value}
+         </p>
+      )
+   }
+
+   const cellTextStatus = (value, rowData, rowIndex) => {
+      return (
+         <p auto scale={1 / 2} font="12px" className={styles.tableCell} color="red" style={getStatusStyle(value)}>
+            {sentenceCase(value)}
+         </p>
+      )
+   }
+
+   const cellDate = (value, rowData, rowIndex) => {
+      return (
+         <p auto scale={1 / 2} font="12px" className={styles.tableCell} style={getItemStyle(rowData?.status)}>
+            {getDateFormatting(value)}
+         </p>
+      )
+   }
+
+   const cellMoney = (value, rowData, rowIndex) => {
+      return (
+         <p auto scale={1 / 2} font="12px" className={styles.tableCell} style={getItemStyle(rowData?.status)}>
+            {formatMoney.format(value)}
+         </p>
+      )
+   }
+
+   const transactionOptions = (value, rowData, rowIndex) => {
+      if (rowData?.status === "pending") {
+         return (
+            <div>
+               {rowData?.user?.name}
+               <Button
+                  type="secondary"
+                  auto
+                  scale={1 / 2}
+                  onClick={() => approveTransaction(rowData?.id)}
+               >
+                  Approve
+               </Button>
+               <Button
+                  type="abort"
+                  auto
+                  scale={1 / 2}
+                  onClick={() => denyTransaction(rowData?.id)}
+               >
+                  Deny
+               </Button>
+               <Button type="abort" auto scale={1 / 2}>
+                  View Details
+               </Button>
+            </div>
+         )
       }
    }
 
@@ -228,75 +285,56 @@ export default function UserPage(props) {
                New RaR or Transaction
             </Button>
             <Modal {...bindings}>
-               <NewTransactionContent setVisible={setVisible} uid={props.id} name={props.name} />
+               <NewTransactionContent
+                  setVisible={setVisible}
+                  uid={props.id}
+                  name={props.name}
+               />
             </Modal>
          </div>
-         <p>Transactions:</p>
 
          {(!props.transactions || props.transactions.length === 0) && (
             <div>No transactions found</div>
          )}
          <div>
             {props.transactions?.length !== 0 && (
-               <table className={styles.table}>
-                  <thead>
-                     <tr>
-                        <th className={styles.updatedCol}>Updated</th>
-                        <th className={styles.amountCol}>Amount</th>
-                        <th className={styles.typeCol}>Type</th>
-                        <th className={styles.descriptionCol}>Description</th>
-                        <th className={styles.statusCol}>Status</th>
-                        <th className={styles.actionCol}>Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     {props.transactions
-                        .sort(transactionSorter)
-                        .map((transaction) => (
-                           <tr>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {getDateFormatting(transaction.updatedAt)}
-                              </td>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {formatter.format(transaction.amount)}
-                              </td>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {transaction.type}
-                              </td>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {transaction.description}
-                              </td>
-                              <td style={getStatusStyle(transaction.status)}>
-                                 {toSentenceCase(transaction.status)}
-                              </td>
-                              <td>
-                                 {transaction.status === "pending" && (
-                                    <a
-                                       onClick={() =>
-                                          displayTransactionOverlay(
-                                             transaction.id
-                                          )
-                                       }
-                                    >
-                                       Edit/Approve
-                                    </a>
-                                 )}
-                                 {transaction.status === "approved" && (
-                                    <a
-                                       onClick={() =>
-                                          displayTransactionOverlay(
-                                             transaction.id
-                                          )
-                                       }
-                                    >
-                                       Edit
-                                    </a>
-                                 )}
-                              </td>
-                           </tr>
-                        ))}
-                  </tbody>
-               </table>
+               <Table data={props.transactions.sort(transactionSorter)}>
+                  <Table.Column
+                     prop="updatedAt"
+                     label="Updated"
+                     render={cellDate}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="amount"
+                     label="Amount"
+                     render={cellMoney}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="type"
+                     label="Type"
+                     render={cellText}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="description"
+                     label="Description"
+                     render={cellText}
+                  />
+                  <Table.Column
+                     prop="status"
+                     label="Status"
+                     render={cellTextStatus}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="actions"
+                     label="Actions"
+                     render={transactionOptions}
+                     width="250px"
+                  />
+               </Table>
             )}
          </div>
       </div>

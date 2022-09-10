@@ -4,9 +4,6 @@ import { prisma } from '../../../lib/prisma.js';
 export default async function handle(req, res) {
     const { uid, amount } = req.body
 
-    console.log("!!updating user: " + uid)
-    console.log("!!with balance: " + amount)
-
     const post1 = await prisma.user.update({
         where: { id: uid },
         data: {

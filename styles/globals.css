@@ -46,6 +46,10 @@
    --highlight-yellow: #fff500;
 }
 
+tr, td, tbody > *, .cell {
+   min-height: 32px!important;
+}
+
 html,
 body {
    padding: 0;

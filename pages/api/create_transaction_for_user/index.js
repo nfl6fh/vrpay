@@ -13,7 +13,7 @@ export default async function handle(req, res) {
    console.log("applyTo:", applyTo)
    // create transaction for single user
    if (applyTo == "na") {
-      const result = await prisma.user.findMany({
+      const result = await prisma.transaction.create({
          data: {
             user: {
                connect: {

@@ -99,3 +99,14 @@ export const approveTransaction = async (trans_id) => {
          console.log("error updating user:", error)
       }
    }
+
+export var formatMoney = new Intl.NumberFormat("en-US", {
+   style: "currency",
+   currency: "USD",
+})
+
+export var sentenceCase = (str) => {
+   return str.replace(/\w\S*/g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+   })
+}
