@@ -9,9 +9,10 @@ import {
 } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
-import { Button, Text } from "@geist-ui/core"
+import { Button, Text, useModal, Modal } from "@geist-ui/core"
 import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 import Router from "next/router"
+import NewTransactionContent from "../../components/NewTransactionContent"
 
 var formatter = new Intl.NumberFormat("en-US", {
    style: "currency",
@@ -74,6 +75,7 @@ export const getServerSideProps = async ({ params }) => {
 
 export default function UserPage(props) {
    const { data: session, status } = useSession()
+   const { visible, setVisible, bindings } = useModal()
 
    if (status === "loading") {
       return <Loading />
@@ -188,15 +190,16 @@ export default function UserPage(props) {
             <Button
                // style={{minWidth: "calc(14.5 * 16px)"}}
                icon={<Plus />}
-               onClick={() =>
-                  props.handleNewTransactionClick(props.id, props.name)
-               }
+               onClick={() => setVisible(true)}
                auto
                className={styles.newTransaction}
                type="success"
             >
                New RaR or Transaction
             </Button>
+            <Modal {...bindings}>
+               <NewTransactionContent setVisible={setVisible} uid={props.id} name={props.name} />
+            </Modal>
          </div>
          <p>Transactions:</p>
 
