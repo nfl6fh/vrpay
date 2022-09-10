@@ -6,10 +6,45 @@
    text-align: left!important;
    align-items: left!important;
    justify-content: flex-start!important;
+
+   margin-top: 24px;
 }
 
-.container > * {
-   justify-content: flex-start;
+.pendingPage {
+   max-width: 400px!important;
+   display: flex!important;
+   text-align: center;
+}
+
+.pendingContent {
+   margin-left: auto;
+   margin-right: auto;
+   text-align: left;
+}
+
+.buttonContainer {
+   width: 100%;
+   display: flex;
+
+   justify-content: center;
+}
+
+.saveButton {
+   margin-left: auto;
+   margin-right: auto;
+
+}
+
+.verifyingTitle {
+   margin-bottom: 8px;
+   text-align: left;
+}
+
+.roleSelection {
+   padding-top: 32px;
+   padding-bottom: 32px;
+
+   text-align: left;
 }
 
 .hasBackground {

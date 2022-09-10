@@ -95,6 +95,8 @@ export default function UserPage(props) {
    function getRoleFormatting(r) {
       if (r === null) {
          return ""
+      } else if (r === "") {
+         return "Athlete"
       }
       return r[0].toUpperCase() + r.slice(1) 
    }

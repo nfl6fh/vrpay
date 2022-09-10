@@ -26,6 +26,7 @@ export default async function handle(req, res) {
             description: description,
          },
       })
+      return res.json(res)
    } else if (applyTo == "all users") {
       const uids = await prisma.user.findMany({
          where: {
@@ -65,7 +66,7 @@ export default async function handle(req, res) {
          })
       }
 
-      return result
+      return res.json(res)
    } else if (applyTo == "all rookies") {
    }
 

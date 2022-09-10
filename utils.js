@@ -82,3 +82,20 @@ export const approveTransaction = async (trans_id) => {
          console.log("error updating balance:", error)
       }
  }
+
+ export const updateUserRole = async ( role, uid) => {
+      const body = { role, uid }
+   
+      try {
+         await fetch("/api/update_user_role", {
+            method: "POST",
+            headers: { "content-Type": "application/json"},
+            body: JSON.stringify(body),
+         })
+         .then((res) => {
+            Router.reload()
+         })
+      } catch (error) {
+         console.log("error updating user:", error)
+      }
+   }

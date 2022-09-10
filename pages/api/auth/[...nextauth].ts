@@ -36,6 +36,7 @@ const options = {
         session.uid = user?.id;
         session.role = user?.role;
         session.name = user?.name;
+        session.is_rookie = user?.is_rookie;
 
         //this is not ideal
         session.user_info = user
