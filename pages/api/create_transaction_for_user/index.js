@@ -13,7 +13,6 @@ export default async function handle(req, res) {
    console.log("applyTo:", applyTo)
    // create transaction for single user
    if (applyTo == "na") {
-    console.log("running2")
       const result = await prisma.user.findMany({
          data: {
             user: {
@@ -27,10 +26,8 @@ export default async function handle(req, res) {
          },
       })
       return res.json(res)
-   } else if (applyTo == "all users" || applyTo == "all rookies") {
+   } else if (applyTo) {
       var uids = []
-
-      console.log("running")
 
       if (applyTo === "all users") {
          uids = await prisma.user.findMany({
@@ -39,12 +36,17 @@ export default async function handle(req, res) {
             },
          })
       } else if (applyTo === "all rookies") {
-        console.log("getting all rookies")
-
          uids = await prisma.user.findMany({
             where: {
                is_verified: true,
                is_rookie: true,
+            },
+         })
+      } else if (applyTo === "all varsity") {
+         uids = await prisma.user.findMany({
+            where: {
+               is_verified: true,
+               is_rookie: false,
             },
          })
       } else {
@@ -85,7 +87,7 @@ export default async function handle(req, res) {
             },
          })
       }
-      console.log("running2")
+
       return res.json(res)
    }
 

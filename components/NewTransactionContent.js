@@ -50,6 +50,7 @@ export default function NewTransactionContent(props) {
                <Select placeholder="Choose one" onChange={handleDropdown} width={"100%"} initialValue={props.uid ? "na" : "all users"}>
                   <Select.Option value="all users">Apply transaction to all users</Select.Option>
                   <Select.Option value="all rookies">Apply transaction to all rookies</Select.Option>
+                  <Select.Option value="all varsity">Apply transaction to all varsity</Select.Option>
                </Select>
             </div>
          )}
