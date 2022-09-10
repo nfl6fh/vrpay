@@ -124,7 +124,7 @@ export default function UserPage(props) {
       
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
-      return date2.getTime() - date1.getTime()
+      return date1.getTime() - date2.getTime()
    }
 
    function getStatusStyle(status) {
