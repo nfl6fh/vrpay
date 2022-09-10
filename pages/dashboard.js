@@ -125,6 +125,23 @@ export default function Admin(props) {
       )
    }
 
+   const athleteName = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={{ cursor: "pointer", textDecoration: "underline"}}
+            onClick={() => {
+               Router.push("/u/[id]", `/u/${rowData?.id}`)
+            }}
+         >
+            {value}
+         </p>
+      )
+   }
+
    const cellMoney = (value, rowData, rowIndex) => {
       return (
          <p auto scale={1 / 2} font="12px" className={styles.tableCell}>
@@ -236,11 +253,7 @@ export default function Admin(props) {
                         label="Amount"
                         render={cellMoney}
                      />
-                     <Table.Column
-                        prop="type"
-                        label="Type"
-                        render={cellText}
-                     />
+                     <Table.Column prop="type" label="Type" render={cellText} />
                      <Table.Column
                         prop="description"
                         label="Description"
@@ -259,7 +272,7 @@ export default function Admin(props) {
 
             <h2 className={styles.sectionHeading}>Verified Users</h2>
             <Table data={props.verified_users}>
-               <Table.Column prop="name" label="Name" render={cellText} />
+               <Table.Column prop="name" label="Name" render={athleteName} />
                <Table.Column
                   prop="total_due"
                   label="Total Due"
