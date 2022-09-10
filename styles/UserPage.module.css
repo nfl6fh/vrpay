@@ -23,6 +23,11 @@
    font-weight: bold;
 }
 
+.role {
+   font-size: var(--text-size-small);
+   margin-left: 7.5px;
+}
+
 .gradYear,
 .totalDueContainer {
    font-size: var(--text-size-medium);
