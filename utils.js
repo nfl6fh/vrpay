@@ -110,3 +110,23 @@ export var sentenceCase = (str) => {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
    })
 }
+
+export function getRoleFormatting(role, is_rookie) {
+   var toReturn = ""
+
+   // if (!role && !is_rookie) {
+   //    return ""
+   // }
+
+   if (is_rookie) {
+      toReturn += "Rookie "
+   }
+   if (role === "") {
+      toReturn += "Athlete"
+   }
+   if (role === "admin") {
+      toReturn += "Admin"
+   }
+
+   return toReturn
+}

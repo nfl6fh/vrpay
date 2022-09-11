@@ -8,6 +8,7 @@ import {
    denyTransaction,
    formatMoney,
    sentenceCase,
+   getRoleFormatting,
 } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
@@ -101,26 +102,6 @@ export default function UserPage(props) {
          return ""
       }
       return "('" + gy.slice(gy.length - 2) + ")"
-   }
-
-   function getRoleFormatting(role, is_rookie) {
-      var toReturn = ""
-
-      if (!role && !is_rookie) {
-         return ""
-      }
-
-      if (is_rookie) {
-         toReturn += "Rookie "
-      }
-      if (role === "") {
-         toReturn += "Athlete"
-      }
-      if (role === "admin") {
-         toReturn += "Admin"
-      }
-
-      return toReturn
    }
 
    const removeUser = async (user_id) => {

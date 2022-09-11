@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { approveTransaction, denyTransaction, formatMoney } from "../utils.js"
+import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting } from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import NewTransactionContent from "../components/NewTransactionContent.js"
@@ -121,6 +121,15 @@ export default function Admin(props) {
       return (
          <Text auto scale={1 / 2} font="12px" className={styles.tableCell}>
             {value}
+         </Text>
+      )
+   }
+
+   const athleteRole = (value, rowData, rowIndex) => {
+      return (
+         <Text auto scale={1 / 2} font="14px" className={styles.tableCell}>
+            {/* {rowData?.is_rookie} */}
+            {getRoleFormatting(value, rowData.is_rookie)}
          </Text>
       )
    }
@@ -270,6 +279,7 @@ export default function Admin(props) {
             <h2 className={styles.sectionHeading}>Verified Users</h2>
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
+               <Table.Column prop="role" label="Role" width="10%" render={athleteRole} />
                <Table.Column
                   prop="total_due"
                   label="Total Due"
