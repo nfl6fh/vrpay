@@ -1,6 +1,6 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
    toSentenceCase,
    getDateFormatting,
@@ -85,6 +85,8 @@ export const getServerSideProps = async ({ params }) => {
 export default function UserPage(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
+   const [viewingDetails, setViewingDetails] = useState(false)
+   const [relevantTransaction, setRelevantTransaction] = useState(null)
 
    if (status === "loading") {
       return <Loading />
@@ -226,7 +228,11 @@ export default function UserPage(props) {
             scale={1 / 2}
             font="12px"
             className={styles.tableCell}
-            style={{justifyContent: "right", flexGrow: "1", ...getItemStyle(rowData?.status)}}
+            style={{
+               justifyContent: "right",
+               flexGrow: "1",
+               ...getItemStyle(rowData?.status),
+            }}
          >
             {formatMoney.format(value)}
          </p>
@@ -235,7 +241,15 @@ export default function UserPage(props) {
 
    const transactionOptions = (value, rowData, rowIndex) => {
       return (
-         <Text auto style={{ cursor: "pointer" }}>
+         <Text
+            auto
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+               setViewingDetails(true)
+               setRelevantTransaction(rowData)
+               setVisible(true)
+            }}
+         >
             Edit/Delete
          </Text>
       )
@@ -285,7 +299,10 @@ export default function UserPage(props) {
             <Button
                // style={{minWidth: "calc(14.5 * 16px)"}}
                icon={<Plus />}
-               onClick={() => setVisible(true)}
+               onClick={() => {
+                  setViewingDetails(false)
+                  setVisible(true)
+               }}
                auto
                className={styles.newTransaction}
                type="success"
@@ -293,11 +310,20 @@ export default function UserPage(props) {
                New RaR or Transaction
             </Button>
             <Modal {...bindings}>
-               <NewTransactionContent
-                  setVisible={setVisible}
-                  uid={props.id}
-                  name={props.name}
-               />
+               {viewingDetails ? (
+                  <TransactionDetailsContent
+                     transaction={relevantTransaction}
+                     setVisible={setVisible}
+                     uid={props.id}
+                     name={props.name}
+                  />
+               ) : (
+                  <NewTransactionContent
+                     setVisible={setVisible}
+                     uid={props.id}
+                     name={props.name}
+                  />
+               )}
             </Modal>
          </div>
 
