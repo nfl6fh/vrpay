@@ -11,7 +11,14 @@ import {
 } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
-import { Button, Text, useModal, Modal, Table } from "@geist-ui/core"
+import {
+   Button,
+   Text,
+   useModal,
+   Modal,
+   Table,
+   ButtonGroup,
+} from "@geist-ui/core"
 import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 import Router from "next/router"
 import NewTransactionContent from "../../components/NewTransactionContent"
@@ -219,7 +226,7 @@ export default function UserPage(props) {
             scale={1 / 2}
             font="12px"
             className={styles.tableCell}
-            style={getItemStyle(rowData?.status)}
+            style={{justifyContent: "right", flexGrow: "1", ...getItemStyle(rowData?.status)}}
          >
             {formatMoney.format(value)}
          </p>
@@ -227,35 +234,11 @@ export default function UserPage(props) {
    }
 
    const transactionOptions = (value, rowData, rowIndex) => {
-      if (session?.user?.role !== "admin") {
-         return
-      }
-      if (rowData?.status === "pending") {
-         return (
-            <div>
-               {rowData?.user?.name}
-               <Button
-                  type="secondary"
-                  auto
-                  scale={1 / 2}
-                  onClick={() => approveTransaction(rowData?.id)}
-               >
-                  Approve
-               </Button>
-               <Button
-                  type="abort"
-                  auto
-                  scale={1 / 2}
-                  onClick={() => denyTransaction(rowData?.id)}
-               >
-                  Deny
-               </Button>
-               <Button type="abort" auto scale={1 / 2}>
-                  View Details
-               </Button>
-            </div>
-         )
-      }
+      return (
+         <Text auto style={{ cursor: "pointer" }}>
+            Edit/Delete
+         </Text>
+      )
    }
 
    return (
@@ -323,17 +306,15 @@ export default function UserPage(props) {
          )}
          <div>
             {props.transactions?.length !== 0 && (
-               <Table data={props.transactions.sort(transactionSorter)}>
+               <Table
+                  data={props.transactions
+                     .sort(transactionSorter)
+                     .filter((transaction) => transaction.status !== "denied")}
+               >
                   <Table.Column
                      prop="updatedAt"
                      label="Updated"
                      render={cellDate}
-                     width="6%"
-                  />
-                  <Table.Column
-                     prop="amount"
-                     label="Amount"
-                     render={cellMoney}
                      width="6%"
                   />
                   <Table.Column
@@ -348,17 +329,23 @@ export default function UserPage(props) {
                      render={cellText}
                   />
                   <Table.Column
+                     prop="amount"
+                     label="Amount"
+                     render={cellMoney}
+                     width="6%"
+                  />
+                  <Table.Column
                      prop="status"
                      label="Status"
                      render={cellTextStatus}
                      width="6%"
                   />
-                  {session?.user?.role === "admin" && (
+                  {session?.role == "admin" && (
                      <Table.Column
                         prop="actions"
                         label="Actions"
                         render={transactionOptions}
-                        width={"250px"}
+                        width={"120px"}
                      />
                   )}
                </Table>
