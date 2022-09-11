@@ -124,7 +124,7 @@ export default function UserPage(props) {
    function transactionSorter(a, b) {
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
-      return date1.getTime() - date2.getTime()
+      return date2.getTime() - date1.getTime()
    }
 
    function getStatusStyle(status) {
