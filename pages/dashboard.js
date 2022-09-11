@@ -5,7 +5,7 @@ import Loading from "../components/Loading"
 import { useState } from "react"
 import { approveTransaction, denyTransaction, formatMoney } from "../utils.js"
 import Router from "next/router.js"
-import { Input, Button, Modal, useModal, Table } from "@geist-ui/core"
+import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import NewTransactionContent from "../components/NewTransactionContent.js"
 
 export const getServerSideProps = async () => {
@@ -119,9 +119,9 @@ export default function Admin(props) {
 
    const cellText = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell}>
+         <Text auto scale={1 / 2} font="12px" className={styles.tableCell}>
             {value}
-         </p>
+         </Text>
       )
    }
 
@@ -132,7 +132,7 @@ export default function Admin(props) {
             scale={1 / 2}
             font="12px"
             className={styles.tableCell}
-            style={{ cursor: "pointer", textDecoration: "underline"}}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
             onClick={() => {
                Router.push("/u/[id]", `/u/${rowData?.id}`)
             }}
@@ -144,7 +144,16 @@ export default function Admin(props) {
 
    const cellMoney = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell}>
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={{
+               justifyContent: "right",
+               flexGrow: "1",
+            }}
+         >
             {formatMoney.format(value)}
          </p>
       )
@@ -160,27 +169,9 @@ export default function Admin(props) {
 
    const transactionOptions = (value, rowData, rowIndex) => {
       return (
-         <div>
-            <Button
-               type="secondary"
-               auto
-               scale={1 / 2}
-               onClick={() => approveTransaction(rowData?.id)}
-            >
-               Approve
-            </Button>
-            <Button
-               type="secondary"
-               auto
-               scale={1 / 2}
-               onClick={() => denyTransaction(rowData?.id)}
-            >
-               Deny
-            </Button>
-            <Button type="secondary" auto scale={1 / 2}>
-               View Details
-            </Button>
-         </div>
+         <p auto style={{ cursor: "pointer" }}>
+            Edit/Delete
+         </p>
       )
    }
 
@@ -247,23 +238,29 @@ export default function Admin(props) {
                         prop="name"
                         label="Athlete"
                         render={transactionAthlete}
+                        width="12%"
                      />
                      <Table.Column
-                        prop="amount"
-                        label="Amount"
-                        render={cellMoney}
+                        prop="type"
+                        label="Type"
+                        render={cellText}
+                        width="6%"
                      />
-                     <Table.Column prop="type" label="Type" render={cellText} />
                      <Table.Column
                         prop="description"
                         label="Description"
                         render={cellText}
                      />
-                     {}
+                     <Table.Column
+                        prop="amount"
+                        label="Amount"
+                        render={cellMoney}
+                        width="8%"
+                     />
                      <Table.Column
                         prop="actions"
                         label="Actions"
-                        width="20%"
+                        width="8%"
                         render={transactionOptions}
                      />
                   </Table>
@@ -272,7 +269,7 @@ export default function Admin(props) {
 
             <h2 className={styles.sectionHeading}>Verified Users</h2>
             <Table data={props.verified_users}>
-               <Table.Column prop="name" label="Name" render={athleteName} />
+               <Table.Column prop="name" label="Athlete" render={athleteName} />
                <Table.Column
                   prop="total_due"
                   label="Total Due"
