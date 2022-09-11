@@ -22,6 +22,7 @@ import {
 import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 import Router from "next/router"
 import NewTransactionContent from "../../components/NewTransactionContent"
+import TransactionDetailsContent from "../../components/TransactionDetailsContent"
 
 var formatter = new Intl.NumberFormat("en-US", {
    style: "currency",
