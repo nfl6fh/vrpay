@@ -7,6 +7,7 @@ import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting } f
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import NewTransactionContent from "../components/NewTransactionContent.js"
+import TransactionDetailsContent from "../components/TransactionDetailsContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -74,6 +75,8 @@ export const getServerSideProps = async () => {
 export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
+   const [viewingDetails, setViewingDetails] = useState(false)
+   const [relevantTransaction, setRelevantTransaction] = useState(null)
 
    if (status === "loading") {
       return <Loading />
@@ -94,10 +97,6 @@ export default function Admin(props) {
       } catch (error) {
          console.log("error deleting user:", error)
       }
-   }
-
-   function userSorter(a, b) {
-      return b.total_due - a.total_due
    }
 
    const verifyUser = async (user_id) => {
@@ -178,9 +177,17 @@ export default function Admin(props) {
 
    const transactionOptions = (value, rowData, rowIndex) => {
       return (
-         <p auto style={{ cursor: "pointer" }}>
+         <Text
+            auto
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+               setViewingDetails(true)
+               setRelevantTransaction(rowData)
+               setVisible(true)
+            }}
+         >
             Edit/Delete
-         </p>
+         </Text>
       )
    }
 
