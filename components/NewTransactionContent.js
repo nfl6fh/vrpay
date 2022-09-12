@@ -31,7 +31,7 @@ export default function NewTransactionContent(props) {
                <b>Type</b>
                <Select
                   placeholder="Select a type"
-                  className={styles.inputSection}
+                  className={styles.inputType}
                   onChange={handleTypeDropdown}
                   width={"100%"}
                >
@@ -51,7 +51,7 @@ export default function NewTransactionContent(props) {
             </Input>
          </div>
          {!props.uid && (
-            <div className={styles.inputType}>
+            <div className={styles.inputSection}>
                <Select placeholder="Choose one" onChange={handleDropdown} width={"100%"} initialValue={props.uid ? "na" : "all users"}>
                   <Select.Option value="all users">Apply transaction to all users</Select.Option>
                   <Select.Option value="all rookies">Apply transaction to all rookies</Select.Option>
