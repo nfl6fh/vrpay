@@ -161,6 +161,7 @@ function convertToCSV(objArray) {
    }
 
    return str;
+<<<<<<< HEAD
 }
 
 export function getRoleFormatting(role, is_rookie) {
@@ -181,4 +182,6 @@ export function getRoleFormatting(role, is_rookie) {
    }
 
    return toReturn
+=======
+>>>>>>> refs/remotes/origin/master
 }
