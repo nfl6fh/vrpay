@@ -3,7 +3,10 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting, exportCSVFile } from "../utils.js"
+import {
+   formatMoney,
+   getRoleFormatting,
+} from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
@@ -197,10 +200,14 @@ export default function Admin(props) {
       return (
          <div className={styles.container}>
             <h1 className={styles.title}>Dashboard</h1>
-            <Button auto onClick={() => {
-               setViewingDetails(false)
-               setVisible(true)
-            }}>
+            <Button
+               auto
+               onClick={() => {
+                  setViewingDetails(false)
+                  setVisible(true)
+               }}
+               style={{ marginTop: "16px" }}
+            >
                New transaction
             </Button>
             <Modal {...bindings}>
@@ -212,9 +219,7 @@ export default function Admin(props) {
                      name={relevantName}
                   />
                ) : (
-                  <NewTransactionContent
-                     setVisible={setVisible}
-                  />
+                  <NewTransactionContent setVisible={setVisible} />
                )}
             </Modal>
             {props.unverified_users?.length > 0 && (
@@ -299,10 +304,15 @@ export default function Admin(props) {
                </div>
             )}
 
-            <h2 className={styles.sectionHeading}>Verified Users</h2>
+            <h2 className={styles.sectionHeading}>Athletes</h2>
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
-               <Table.Column prop="role" label="Role" width="10%" render={athleteRole} />
+               <Table.Column
+                  prop="role"
+                  label="Role"
+                  width="10%"
+                  render={athleteRole}
+               />
                <Table.Column
                   prop="total_due"
                   label="Total Due"

@@ -2,6 +2,7 @@ import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
 import { formatMoney, getDateFormatting, approveTransaction } from "../utils"
+import Router from "next/router"
 
 export default function NewTransactionContent(props) {
    return (
@@ -45,9 +46,11 @@ export default function NewTransactionContent(props) {
                   <Button
                      auto
                      type="success"
-                     onClick={() =>
-                        approveTransaction(props?.transaction?.description)
-                     }
+                     onClick={() => {
+                        approveTransaction(props?.transaction?.id)
+                        // TODO: Find a way to not put router here (put it in the function in utils)
+                        Router.reload()
+                     }}
                   >
                      Approve
                   </Button>
