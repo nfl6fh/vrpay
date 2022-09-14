@@ -27,7 +27,11 @@
    justify-content: right;
 }
 
-.type {
+.actions > * {
+   margin-left: 0.5em!important;
+}
+
+.label {
    display: block;
    font-weight: bold;
    color: #444;

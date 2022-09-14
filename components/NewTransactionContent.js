@@ -28,7 +28,7 @@ export default function NewTransactionContent(props) {
                </Input>
             </div>
             <div className={styles.inputGroup}>
-               <b className={styles.type}>Type</b>
+               <b className={styles.label}>Type</b>
                <Select
                   placeholder="Select a type"
                   className={styles.inputType}
