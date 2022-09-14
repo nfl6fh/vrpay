@@ -7,6 +7,7 @@ import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting, ex
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
+import NewTransactionContent from "../components/NewTransactionContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -74,10 +75,10 @@ export const getServerSideProps = async () => {
 export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
-   const [viewingDetails, setViewingDetails] = useState(false)
    const [relevantTransaction, setRelevantTransaction] = useState(null)
    const [relevantUID, setRelevantUID] = useState(null)
    const [relevantName, setRelevantName] = useState(null)
+   const [viewingDetails, setViewingDetails] = useState(false)
 
    if (status === "loading") {
       return <Loading />
@@ -184,8 +185,6 @@ export default function Admin(props) {
             onClick={() => {
                setViewingDetails(true)
                setRelevantTransaction(rowData)
-               setRelevantUID(rowData?.user?.id)
-               setRelevantName(rowData?.user?.name)
                setVisible(true)
             }}
          >
@@ -198,16 +197,25 @@ export default function Admin(props) {
       return (
          <div className={styles.container}>
             <h1 className={styles.title}>Dashboard</h1>
-            <Button auto onClick={() => setVisible(true)}>
+            <Button auto onClick={() => {
+               setViewingDetails(false)
+               setVisible(true)
+            }}>
                New transaction
             </Button>
             <Modal {...bindings}>
-               <TransactionDetailsContent
-                  transaction={relevantTransaction}
-                  setVisible={setVisible}
-                  uid={relevantUID}
-                  name={relevantName}
-               />
+               {viewingDetails ? (
+                  <TransactionDetailsContent
+                     transaction={relevantTransaction}
+                     setVisible={setVisible}
+                     uid={relevantUID}
+                     name={relevantName}
+                  />
+               ) : (
+                  <NewTransactionContent
+                     setVisible={setVisible}
+                  />
+               )}
             </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>

@@ -94,10 +94,6 @@ export default function UserPage(props) {
       return <Loading />
    }
 
-   //  useEffect(() => {
-   //     console.log("props:", props)
-   //  }, [])
-
    function getGradYearFormatting(gy) {
       if (gy === null) {
          return ""

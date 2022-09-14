@@ -1,7 +1,7 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
-import { formatMoney, getDateFormatting } from "../utils"
+import { formatMoney, getDateFormatting, approveTransaction } from "../utils"
 
 export default function NewTransactionContent(props) {
    return (
@@ -41,8 +41,14 @@ export default function NewTransactionContent(props) {
                <Button auto type="error">
                   Delete
                </Button>
-               {props.transaction.status === "pending" && (
-                  <Button auto type="success">
+               {props?.transaction?.status === "pending" && (
+                  <Button
+                     auto
+                     type="success"
+                     onClick={() =>
+                        approveTransaction(props?.transaction?.description)
+                     }
+                  >
                      Approve
                   </Button>
                )}

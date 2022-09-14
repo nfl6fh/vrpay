@@ -16,6 +16,9 @@ export function getDateFormatting(isoDate) {
 
 export const approveTransaction = async (trans_id) => {
     const body = { trans_id }
+
+    console.log("approving transaction " + trans_id )
+
     try {
        console.log(trans_id)
        await fetch("/api/approve_transaction", {
