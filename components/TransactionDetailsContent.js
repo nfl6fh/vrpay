@@ -11,7 +11,7 @@ export default function NewTransactionContent(props) {
       >
          <div className={styles.container}>
             <Modal.Title style={{ textTransform: "None" }}>
-               Viewing Transaction {props.name ? "for " + props.name : ""}
+               Transaction {props.name ? "for " + props.name : ""}
             </Modal.Title>
             <div className={styles.inputSection}>
                <div className={styles.inputGroup}>

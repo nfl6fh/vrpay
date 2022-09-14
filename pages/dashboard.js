@@ -6,7 +6,6 @@ import { useState } from "react"
 import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting, exportCSVFile } from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
-import NewTransactionContent from "../components/NewTransactionContent.js"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
 
 export const getServerSideProps = async () => {
@@ -77,6 +76,8 @@ export default function Admin(props) {
    const { visible, setVisible, bindings } = useModal()
    const [viewingDetails, setViewingDetails] = useState(false)
    const [relevantTransaction, setRelevantTransaction] = useState(null)
+   const [relevantUID, setRelevantUID] = useState(null)
+   const [relevantName, setRelevantName] = useState(null)
 
    if (status === "loading") {
       return <Loading />
@@ -183,10 +184,12 @@ export default function Admin(props) {
             onClick={() => {
                setViewingDetails(true)
                setRelevantTransaction(rowData)
+               setRelevantUID(rowData?.user?.id)
+               setRelevantName(rowData?.user?.name)
                setVisible(true)
             }}
          >
-            Edit/Delete
+            Edit/Approve
          </Text>
       )
    }
@@ -199,7 +202,12 @@ export default function Admin(props) {
                New transaction
             </Button>
             <Modal {...bindings}>
-               <NewTransactionContent setVisible={setVisible} />
+               <TransactionDetailsContent
+                  transaction={relevantTransaction}
+                  setVisible={setVisible}
+                  uid={relevantUID}
+                  name={relevantName}
+               />
             </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>

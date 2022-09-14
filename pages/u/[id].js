@@ -232,7 +232,7 @@ export default function UserPage(props) {
                setVisible(true)
             }}
          >
-            Edit/Delete
+            {rowData?.status === "pending" ? "Edit/Approve" : "View Details"}
          </Text>
       )
    }
