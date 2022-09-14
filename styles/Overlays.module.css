@@ -2,7 +2,7 @@
    text-align: left;
 }
 
-.inputSection {
+.inputSection, .inputType {
    display: flex;
    flex-direction: row;
    margin-top: 16px;

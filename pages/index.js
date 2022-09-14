@@ -6,12 +6,12 @@ import { userInfo } from "os"
 import Loading from "../components/Loading"
 import Router from "next/router"
 import { useEffect, useState } from "react"
-
-import { Button, Text, Input, Select } from "@geist-ui/core"
+import { updateUserRole } from "../utils"
+import { Button, Text, Input, Select, Page } from "@geist-ui/core"
 
 export default function Home() {
    const { data: session, status } = useSession()
-   const [role, setRole] = useState("1")
+   const [role, setRole] = useState("rookie")
    const [gradYear, setGradYear] = useState("")
 
    const handleRoleChange = (val) => {
@@ -20,7 +20,7 @@ export default function Home() {
    }
 
    const handleGradYearChange = (val) => {
-      setGradyear(val)
+      setGradYear(val)
       console.log(val)
    }
 
@@ -44,21 +44,42 @@ export default function Home() {
       } else {
          // pending page
          return (
-            <div className={styles.container}>
-               <main className={styles.main}>
-                  <Text h1>Your account is getting verified</Text>
-                  <Text p>Confirm the info below is correct (you cannot change this)</Text>
-                  <div>
-                     I am a{' '}
-                  <Select placeholder="Role" auto onChange={handleRoleChange} initialValue={'1'}>
-                     <Select.Option value="1">rookie athlete</Select.Option>
-                     <Select.Option value="2">varsity athlete</Select.Option>
-                     <Select.Option value="3">coach</Select.Option>
-                  </Select>
+            <Page className={styles.pendingPage}>
+               <div className={styles.pendingContent}>
+                  <Text h1 className={styles.verifyingTitle}>
+                     We're verifying your account
+                  </Text>
+                  <Text p className={styles.verifyingSubtitle}>
+                     While you're here, confirm the information below
+                  </Text>
+                  <div className={styles.roleSelection}>
+                     <span>I am a </span>
+                     <Select
+                        placeholder="Role"
+                        auto
+                        onChange={handleRoleChange}
+                        initialValue={session.is_rookie ? "rookie" : "varsity"}
+                     >
+                        <Select.Option value="rookie">
+                           rookie athlete
+                        </Select.Option>
+                        <Select.Option value="varsity">
+                           varsity athlete
+                        </Select.Option>
+                        <Select.Option value="coach">coach</Select.Option>
+                     </Select>
                   </div>
-                  <Button>Save</Button>
-               </main>
-            </div>
+                  <div className={styles.buttonContainer}>
+                     <Button
+                        className={styles.saveButton}
+                        style={{ textTransform: "None" }}
+                        onClick={() => updateUserRole(role, session.uid)}
+                     >
+                        Yea, that's correct
+                     </Button>
+                  </div>
+               </div>
+            </Page>
          )
       }
    } else {

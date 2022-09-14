@@ -1,18 +1,29 @@
 import styles from "../../styles/UserPage.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
    toSentenceCase,
    getDateFormatting,
    approveTransaction,
    denyTransaction,
+   formatMoney,
+   sentenceCase,
+   getRoleFormatting,
 } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
-import { Button, Text, useModal, Modal } from "@geist-ui/core"
+import {
+   Button,
+   Text,
+   useModal,
+   Modal,
+   Table,
+   ButtonGroup,
+} from "@geist-ui/core"
 import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 import Router from "next/router"
 import NewTransactionContent from "../../components/NewTransactionContent"
+import TransactionDetailsContent from "../../components/TransactionDetailsContent"
 
 var formatter = new Intl.NumberFormat("en-US", {
    style: "currency",
@@ -76,6 +87,8 @@ export const getServerSideProps = async ({ params }) => {
 export default function UserPage(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
+   const [viewingDetails, setViewingDetails] = useState(false)
+   const [relevantTransaction, setRelevantTransaction] = useState(null)
 
    if (status === "loading") {
       return <Loading />
@@ -90,13 +103,6 @@ export default function UserPage(props) {
          return ""
       }
       return "('" + gy.slice(gy.length - 2) + ")"
-   }
-
-   function getRoleFormatting(r) {
-      if (r === null) {
-         return ""
-      }
-      return r[0].toUpperCase() + r.slice(1) 
    }
 
    const removeUser = async (user_id) => {
@@ -117,24 +123,15 @@ export default function UserPage(props) {
    }
 
    function transactionSorter(a, b) {
-      var statusComp = tmap.get(a.status) - tmap.get(b.status)
-      if (statusComp !== 0) {
-         return statusComp
-      }
-      
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
-      return date1.getTime() - date2.getTime()
+      return date2.getTime() - date1.getTime()
    }
 
    function getStatusStyle(status) {
+      console.log("Status is ", status)
       const obj = {
-         color:
-            status === "pending"
-               ? "red"
-               : status === "denied"
-               ? "Black"
-               : "green",
+         color: status === "pending" ? "red" : "black",
          fontStyle: status === "pending" ? "italic" : "normal",
       }
       return obj
@@ -163,6 +160,83 @@ export default function UserPage(props) {
       }
    }
 
+   const cellText = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={getItemStyle(rowData?.status)}
+         >
+            {value}
+         </p>
+      )
+   }
+
+   const cellTextStatus = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            color="red"
+            style={getStatusStyle(value)}
+         >
+            {sentenceCase(value)}
+         </p>
+      )
+   }
+
+   const cellDate = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={getItemStyle(rowData?.status)}
+         >
+            {getDateFormatting(value)}
+         </p>
+      )
+   }
+
+   const cellMoney = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={{
+               justifyContent: "right",
+               flexGrow: "1",
+               ...getItemStyle(rowData?.status),
+            }}
+         >
+            {formatMoney.format(value)}
+         </p>
+      )
+   }
+
+   const transactionOptions = (value, rowData, rowIndex) => {
+      return (
+         <Text
+            auto
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+               setViewingDetails(true)
+               setRelevantTransaction(rowData)
+               setVisible(true)
+            }}
+         >
+            Edit/Delete
+         </Text>
+      )
+   }
+
    return (
       <div className={styles.container}>
          <div className={styles.header}>
@@ -172,7 +246,7 @@ export default function UserPage(props) {
                   {getGradYearFormatting(props.grad_year)}
                </p>
                <p className={styles.role}>
-                  {getRoleFormatting(props.role)}
+                  {getRoleFormatting(props.role, props.is_rookie)}
                </p>
             </div>
             <p className={styles.totalDueContainer}>
@@ -207,7 +281,10 @@ export default function UserPage(props) {
             <Button
                // style={{minWidth: "calc(14.5 * 16px)"}}
                icon={<Plus />}
-               onClick={() => setVisible(true)}
+               onClick={() => {
+                  setViewingDetails(false)
+                  setVisible(true)
+               }}
                auto
                className={styles.newTransaction}
                type="success"
@@ -215,75 +292,71 @@ export default function UserPage(props) {
                New RaR or Transaction
             </Button>
             <Modal {...bindings}>
-               <NewTransactionContent setVisible={setVisible} uid={props.id} name={props.name} />
+               {viewingDetails ? (
+                  <TransactionDetailsContent
+                     transaction={relevantTransaction}
+                     setVisible={setVisible}
+                     uid={props.id}
+                     name={props.name}
+                  />
+               ) : (
+                  <NewTransactionContent
+                     setVisible={setVisible}
+                     uid={props.id}
+                     name={props.name}
+                  />
+               )}
             </Modal>
          </div>
-         <p>Transactions:</p>
 
          {(!props.transactions || props.transactions.length === 0) && (
             <div>No transactions found</div>
          )}
          <div>
             {props.transactions?.length !== 0 && (
-               <table className={styles.table}>
-                  <thead>
-                     <tr>
-                        <th className={styles.updatedCol}>Updated</th>
-                        <th className={styles.amountCol}>Amount</th>
-                        <th className={styles.typeCol}>Type</th>
-                        <th className={styles.descriptionCol}>Description</th>
-                        <th className={styles.statusCol}>Status</th>
-                        <th className={styles.actionCol}>Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     {props.transactions
-                        .sort(transactionSorter)
-                        .map((transaction) => (
-                           <tr>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {getDateFormatting(transaction.updatedAt)}
-                              </td>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {formatter.format(transaction.amount)}
-                              </td>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {transaction.type}
-                              </td>
-                              <td style={getItemStyle(transaction.status)}>
-                                 {transaction.description}
-                              </td>
-                              <td style={getStatusStyle(transaction.status)}>
-                                 {toSentenceCase(transaction.status)}
-                              </td>
-                              <td>
-                                 {transaction.status === "pending" && (
-                                    <a
-                                       onClick={() =>
-                                          displayTransactionOverlay(
-                                             transaction.id
-                                          )
-                                       }
-                                    >
-                                       Edit/Approve
-                                    </a>
-                                 )}
-                                 {transaction.status === "approved" && (
-                                    <a
-                                       onClick={() =>
-                                          displayTransactionOverlay(
-                                             transaction.id
-                                          )
-                                       }
-                                    >
-                                       Edit
-                                    </a>
-                                 )}
-                              </td>
-                           </tr>
-                        ))}
-                  </tbody>
-               </table>
+               <Table
+                  data={props.transactions
+                     .sort(transactionSorter)
+                     .filter((transaction) => transaction.status !== "denied")}
+               >
+                  <Table.Column
+                     prop="updatedAt"
+                     label="Updated"
+                     render={cellDate}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="type"
+                     label="Type"
+                     render={cellText}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="description"
+                     label="Description"
+                     render={cellText}
+                  />
+                  <Table.Column
+                     prop="amount"
+                     label="Amount"
+                     render={cellMoney}
+                     width="6%"
+                  />
+                  <Table.Column
+                     prop="status"
+                     label="Status"
+                     render={cellTextStatus}
+                     width="6%"
+                  />
+                  {session?.role == "admin" && (
+                     <Table.Column
+                        prop="actions"
+                        label="Actions"
+                        render={transactionOptions}
+                        width={"120px"}
+                     />
+                  )}
+               </Table>
             )}
          </div>
       </div>

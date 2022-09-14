@@ -11,10 +11,9 @@ export default async function handle(req, res) {
    console.log("type:", type)
    console.log("description:", description)
    console.log("applyTo:", applyTo)
-
    // create transaction for single user
    if (applyTo == "na") {
-      const result = await prisma.user.findMany({
+      const result = await prisma.transaction.create({
          data: {
             user: {
                connect: {
@@ -26,12 +25,36 @@ export default async function handle(req, res) {
             description: description,
          },
       })
-   } else if (applyTo == "all users") {
-      const uids = await prisma.user.findMany({
-         where: {
-            is_verified: true,
-         },
-      })
+      return res.json(res)
+   } else if (applyTo) {
+      var uids = []
+
+      if (applyTo === "all users") {
+         uids = await prisma.user.findMany({
+            where: {
+               is_verified: true,
+            },
+         })
+      } else if (applyTo === "all rookies") {
+         uids = await prisma.user.findMany({
+            where: {
+               is_verified: true,
+               is_rookie: true,
+            },
+         })
+      } else if (applyTo === "all varsity") {
+         uids = await prisma.user.findMany({
+            where: {
+               is_verified: true,
+               is_rookie: false,
+            },
+         })
+      } else {
+         console.log("something went wrong")
+         return
+      }
+
+      console.log("uids:", uids)
 
       for (const user of uids) {
          const result = await prisma.transaction.create({
@@ -65,8 +88,7 @@ export default async function handle(req, res) {
          })
       }
 
-      return result
-   } else if (applyTo == "all rookies") {
+      return res.json(res)
    }
 
    // create transaction for all rookies

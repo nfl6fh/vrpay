@@ -10,6 +10,7 @@ export default function NewTransactionContent(props) {
    const [applyTo, setApplyTo] = useState(props.uid ? "na" : "all users")
 
    const handleDropdown = val => setApplyTo(val)
+   const handleTypeDropdown = val => setType(val)
 
    return (
       <div className={styles.container}>
@@ -27,13 +28,17 @@ export default function NewTransactionContent(props) {
                </Input>
             </div>
             <div className={styles.inputGroup}>
-               <Input
-                  className={styles.formInput}
-                  onChange={(e) => setType(e.target.value)}
+               <b>Type</b>
+               <Select
+                  placeholder="Select a type"
+                  className={styles.inputType}
+                  onChange={handleTypeDropdown}
                   width={"100%"}
                >
-                  <b>Type</b>
-               </Input>
+                  <Select.Option value="Dues">Dues</Select.Option>
+                  <Select.Option value="RaR">RaR</Select.Option>
+                  <Select.Option value="Other">Other</Select.Option>
+               </Select>
             </div>
          </div>
          <div className={styles.inputSection}>
@@ -50,6 +55,7 @@ export default function NewTransactionContent(props) {
                <Select placeholder="Choose one" onChange={handleDropdown} width={"100%"} initialValue={props.uid ? "na" : "all users"}>
                   <Select.Option value="all users">Apply transaction to all users</Select.Option>
                   <Select.Option value="all rookies">Apply transaction to all rookies</Select.Option>
+                  <Select.Option value="all varsity">Apply transaction to all varsity</Select.Option>
                </Select>
             </div>
          )}

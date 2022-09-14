@@ -3,20 +3,11 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { approveTransaction, denyTransaction } from "../utils.js"
+import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting, exportCSVFile } from "../utils.js"
 import Router from "next/router.js"
-import { Input, Button, Modal, useModal } from "@geist-ui/core"
+import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import NewTransactionContent from "../components/NewTransactionContent.js"
-
-// Create our number formatter.
-var formatter = new Intl.NumberFormat("en-US", {
-   style: "currency",
-   currency: "USD",
-
-   // These options are needed to round to whole numbers if that's what you want.
-   //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-})
+import TransactionDetailsContent from "../components/TransactionDetailsContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -70,7 +61,9 @@ export const getServerSideProps = async () => {
    )
    verified_users = verified_users?.sort((a, b) => a.name.localeCompare(b.name))
 
-   pending_transactions = pending_transactions?.sort((a, b) => a.user.name.localeCompare(b.user.name))
+   pending_transactions = pending_transactions?.sort((a, b) =>
+      a.user.name.localeCompare(b.user.name)
+   )
 
    console.log("unverified_users:", unverified_users)
    console.log("verified_users:", verified_users)
@@ -82,6 +75,8 @@ export const getServerSideProps = async () => {
 export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
+   const [viewingDetails, setViewingDetails] = useState(false)
+   const [relevantTransaction, setRelevantTransaction] = useState(null)
 
    if (status === "loading") {
       return <Loading />
@@ -104,10 +99,6 @@ export default function Admin(props) {
       }
    }
 
-   function userSorter(a, b) {
-      return b.total_due - a.total_due
-   }
-
    const verifyUser = async (user_id) => {
       const body = { user_id }
 
@@ -123,6 +114,81 @@ export default function Admin(props) {
       } catch (error) {
          console.log("error verifying user:", error)
       }
+   }
+
+   const cellText = (value, rowData, rowIndex) => {
+      return (
+         <Text auto scale={1 / 2} font="12px" className={styles.tableCell}>
+            {value}
+         </Text>
+      )
+   }
+
+   const athleteRole = (value, rowData, rowIndex) => {
+      return (
+         <Text auto scale={1 / 2} font="14px" className={styles.tableCell}>
+            {/* {rowData?.is_rookie} */}
+            {getRoleFormatting(value, rowData.is_rookie)}
+         </Text>
+      )
+   }
+
+   const athleteName = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => {
+               Router.push("/u/[id]", `/u/${rowData?.id}`)
+            }}
+         >
+            {value}
+         </p>
+      )
+   }
+
+   const cellMoney = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.tableCell}
+            style={{
+               justifyContent: "right",
+               flexGrow: "1",
+            }}
+         >
+            {formatMoney.format(value)}
+         </p>
+      )
+   }
+
+   const transactionAthlete = (value, rowData, rowIndex) => {
+      return (
+         <p auto scale={1 / 2} font="12px" className={styles.tableCell}>
+            {rowData?.user?.name}
+         </p>
+      )
+   }
+
+   const transactionOptions = (value, rowData, rowIndex) => {
+      return (
+         <Text
+            auto
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+               setViewingDetails(true)
+               setRelevantTransaction(rowData)
+               setVisible(true)
+            }}
+         >
+            Edit/Delete
+         </Text>
+      )
    }
 
    if (session?.is_verified && session.role === "admin") {
@@ -179,87 +245,55 @@ export default function Admin(props) {
             )}
 
             {props.pending_transactions?.length > 0 && (
-               <div className={styles.table}>
+               <div>
                   <h2 className={styles.sectionHeading}>
                      Pending Transactions
                   </h2>
-                  <table className={styles.table}>
-                     <thead>
-                        <tr>
-                           <th className={styles.updatedCol}>User</th>
-                           <th className={styles.amountCol}>Amount</th>
-                           <th className={styles.typeCol}>Type</th>
-                           <th className={styles.descriptionCol}>
-                              Description
-                           </th>
-                           <th className={styles.statusCol}>Actions</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {props.pending_transactions.map((transaction) => (
-                           <tr>
-                              <td>{transaction?.user?.name}</td>
-                              <td>{formatter.format(transaction.amount)}</td>
-                              <td>{transaction.type}</td>
-                              <td>{transaction.description}</td>
-                              <td className={styles.verifyTD}>
-                                 <a
-                                    className={styles.verifyButton}
-                                    onClick={() =>
-                                       approveTransaction(transaction.id)
-                                    }
-                                 >
-                                    Approve
-                                 </a>
-                                 <a
-                                    className={styles.verifyButton}
-                                    onClick={() =>
-                                       denyTransaction(transaction.id)
-                                    }
-                                 >
-                                    Deny
-                                 </a>
-                                 <a className={styles.verifyButton}>
-                                    View Details
-                                 </a>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </table>
+                  <Table data={props.pending_transactions}>
+                     <Table.Column
+                        prop="name"
+                        label="Athlete"
+                        render={transactionAthlete}
+                        width="12%"
+                     />
+                     <Table.Column
+                        prop="type"
+                        label="Type"
+                        render={cellText}
+                        width="6%"
+                     />
+                     <Table.Column
+                        prop="description"
+                        label="Description"
+                        render={cellText}
+                     />
+                     <Table.Column
+                        prop="amount"
+                        label="Amount"
+                        render={cellMoney}
+                        width="8%"
+                     />
+                     <Table.Column
+                        prop="actions"
+                        label="Actions"
+                        width="8%"
+                        render={transactionOptions}
+                     />
+                  </Table>
                </div>
             )}
 
             <h2 className={styles.sectionHeading}>Verified Users</h2>
-            <table className={styles.table}>
-               <thead>
-                  <tr className={styles.verifiedUsersTR}>
-                     <th>Name</th>
-                     <th className={styles.emailSection}>Total Due</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {props.verified_users
-                     .sort(userSorter)
-                     .map((user) => (
-                     <tr>
-                        <td>
-                           <div className={styles.nameSection}>
-                              <a
-                                 className={styles.tableName}
-                                 onClick={() => {
-                                    Router.push("/u/[id]", `/u/${user.id}`)
-                                 }}
-                              >
-                                 {user.name}
-                              </a>
-                           </div>
-                        </td>
-                        <td>{formatter.format(user.total_due)}</td>
-                     </tr>
-                  ))}
-               </tbody>
-            </table>
+            <Table data={props.verified_users}>
+               <Table.Column prop="name" label="Athlete" render={athleteName} />
+               <Table.Column prop="role" label="Role" width="10%" render={athleteRole} />
+               <Table.Column
+                  prop="total_due"
+                  label="Total Due"
+                  width="10%"
+                  render={cellMoney}
+               />
+            </Table>
          </div>
       )
    } else {
