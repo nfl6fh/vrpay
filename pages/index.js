@@ -20,7 +20,7 @@ export default function Home() {
    }
 
    const handleGradYearChange = (val) => {
-      setGradyear(val)
+      setGradYear(val)
       console.log(val)
    }
 

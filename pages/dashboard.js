@@ -3,10 +3,10 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { approveTransaction, denyTransaction, formatMoney, exportCSVFile } from "../utils.js"
+import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting, exportCSVFile } from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
-import NewTransactionContent from "../components/NewTransactionContent.js"
+import TransactionDetailsContent from "../components/TransactionDetailsContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -74,6 +74,10 @@ export const getServerSideProps = async () => {
 export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
+   const [viewingDetails, setViewingDetails] = useState(false)
+   const [relevantTransaction, setRelevantTransaction] = useState(null)
+   const [relevantUID, setRelevantUID] = useState(null)
+   const [relevantName, setRelevantName] = useState(null)
 
    if (status === "loading") {
       return <Loading />
@@ -94,10 +98,6 @@ export default function Admin(props) {
       } catch (error) {
          console.log("error deleting user:", error)
       }
-   }
-
-   function userSorter(a, b) {
-      return b.total_due - a.total_due
    }
 
    const verifyUser = async (user_id) => {
@@ -121,6 +121,15 @@ export default function Admin(props) {
       return (
          <Text auto scale={1 / 2} font="12px" className={styles.tableCell}>
             {value}
+         </Text>
+      )
+   }
+
+   const athleteRole = (value, rowData, rowIndex) => {
+      return (
+         <Text auto scale={1 / 2} font="14px" className={styles.tableCell}>
+            {/* {rowData?.is_rookie} */}
+            {getRoleFormatting(value, rowData.is_rookie)}
          </Text>
       )
    }
@@ -169,9 +178,19 @@ export default function Admin(props) {
 
    const transactionOptions = (value, rowData, rowIndex) => {
       return (
-         <p auto style={{ cursor: "pointer" }}>
-            Edit/Delete
-         </p>
+         <Text
+            auto
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+               setViewingDetails(true)
+               setRelevantTransaction(rowData)
+               setRelevantUID(rowData?.user?.id)
+               setRelevantName(rowData?.user?.name)
+               setVisible(true)
+            }}
+         >
+            Edit/Approve
+         </Text>
       )
    }
 
@@ -183,7 +202,12 @@ export default function Admin(props) {
                New transaction
             </Button>
             <Modal {...bindings}>
-               <NewTransactionContent setVisible={setVisible} />
+               <TransactionDetailsContent
+                  transaction={relevantTransaction}
+                  setVisible={setVisible}
+                  uid={relevantUID}
+                  name={relevantName}
+               />
             </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>
@@ -270,6 +294,7 @@ export default function Admin(props) {
             <h2 className={styles.sectionHeading}>Verified Users</h2>
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
+               <Table.Column prop="role" label="Role" width="10%" render={athleteRole} />
                <Table.Column
                   prop="total_due"
                   label="Total Due"

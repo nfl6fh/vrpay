@@ -2,7 +2,7 @@
    text-align: left;
 }
 
-.inputSection {
+.inputSection, .inputType {
    display: flex;
    flex-direction: row;
    margin-top: 16px;
@@ -25,6 +25,20 @@
    margin-top: 16px;
    width: 100%;
    justify-content: right;
+}
+
+.actions > * {
+   margin-left: 0.5em!important;
+}
+
+.label {
+   display: block;
+   font-weight: bold;
+   color: #444;
+   padding: 0 0 0 1px;
+   margin-bottom: 0.5em;
+   font-size: calc(0.875 * 16px);
+   line-height: 1.5;
 }
 
 @media (max-width: 750px) {

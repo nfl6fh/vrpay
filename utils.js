@@ -162,3 +162,23 @@ function convertToCSV(objArray) {
 
    return str;
 }
+
+export function getRoleFormatting(role, is_rookie) {
+   var toReturn = ""
+
+   // if (!role && !is_rookie) {
+   //    return ""
+   // }
+
+   if (is_rookie) {
+      toReturn += "Rookie "
+   }
+   if (role === "") {
+      toReturn += "Athlete"
+   }
+   if (role === "admin") {
+      toReturn += "Admin"
+   }
+
+   return toReturn
+}

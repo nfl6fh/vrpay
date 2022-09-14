@@ -8,6 +8,7 @@ import {
    denyTransaction,
    formatMoney,
    sentenceCase,
+   getRoleFormatting,
 } from "../../utils"
 import Loading from "../../components/Loading"
 import { prisma } from "../../lib/prisma.js"
@@ -104,26 +105,6 @@ export default function UserPage(props) {
       return "('" + gy.slice(gy.length - 2) + ")"
    }
 
-   function getRoleFormatting(role, is_rookie) {
-      var toReturn = ""
-
-      if (!role && !is_rookie) {
-         return ""
-      }
-
-      if (is_rookie) {
-         toReturn += "Rookie "
-      }
-      if (role === "") {
-         toReturn += "Athlete"
-      }
-      if (role === "admin") {
-         toReturn += "Admin"
-      }
-
-      return toReturn
-   }
-
    const removeUser = async (user_id) => {
       const body = { user_id }
 
@@ -144,7 +125,7 @@ export default function UserPage(props) {
    function transactionSorter(a, b) {
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
-      return date1.getTime() - date2.getTime()
+      return date2.getTime() - date1.getTime()
    }
 
    function getStatusStyle(status) {
@@ -251,7 +232,7 @@ export default function UserPage(props) {
                setVisible(true)
             }}
          >
-            Edit/Delete
+            {rowData?.status === "pending" ? "Edit/Approve" : "View Details"}
          </Text>
       )
    }
