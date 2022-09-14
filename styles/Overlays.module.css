@@ -27,6 +27,16 @@
    justify-content: right;
 }
 
+.type {
+   display: block;
+   font-weight: bold;
+   color: #444;
+   padding: 0 0 0 1px;
+   margin-bottom: 0.5em;
+   font-size: calc(0.875 * 16px);
+   line-height: 1.5;
+}
+
 @media (max-width: 750px) {
    .inputSection {
       flex-direction: column !important;

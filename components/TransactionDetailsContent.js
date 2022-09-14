@@ -25,7 +25,9 @@ export default function NewTransactionContent(props) {
                <p>{formatter.format(props?.transaction?.amount)}</p>
             </div>
             <div className={styles.inputGroup}>
-                  <b>Type</b>
+               <label>
+                  <b className={styles.type}>Type</b>
+               </label>
                   <p>{props?.transaction?.type}</p>
             </div>
          </div>
