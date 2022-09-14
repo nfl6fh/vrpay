@@ -16,9 +16,8 @@ export function getDateFormatting(isoDate) {
 
 export const approveTransaction = async (trans_id) => {
    const body = { trans_id }
-   
+
    try {
-      console.log("trans id: ", trans_id)
       await fetch("/api/approve_transaction", {
          method: "POST",
          headers: { "content-Type": "application/json" },
@@ -42,6 +41,7 @@ export const denyTransaction = async (trans_id) => {
          body: JSON.stringify(body),
       }).then((res) => {
          Router.reload()
+         console.log("res", res)
       })
    } catch (error) {
       console.log("error denying transaction:", error)
@@ -63,10 +63,11 @@ export const createTransactionForUser = async (
          headers: { "content-Type": "application/json" },
          body: JSON.stringify(body),
       }).then((res) => {
+         console.log("res", res)
          Router.reload()
       })
    } catch (error) {
-      console.log("error denying transaction:", error)
+      console.log("error creating transaction:", error)
    }
 }
 
@@ -78,8 +79,6 @@ export const updateBalance = async (uid, amount) => {
          method: "POST",
          headers: { "content-Type": "application/json" },
          body: JSON.stringify(body),
-      }).then((res) => {
-         Router.reload()
       })
    } catch (error) {
       console.log("error updating balance:", error)

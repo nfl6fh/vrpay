@@ -48,8 +48,7 @@ export default function NewTransactionContent(props) {
                      type="success"
                      onClick={() => {
                         approveTransaction(props?.transaction?.id)
-                        // TODO: Find a way to not put router here (put it in the function in utils)
-                        Router.reload()
+                        // have to figure out how to effectively reload when the page updates
                      }}
                   >
                      Approve

@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
 import { createTransactionForUser } from "../utils"
 
+import Router from "next/router"
+
 export default function NewTransactionContent(props) {
    const [amount, setAmount] = useState()
    const [type, setType] = useState()
