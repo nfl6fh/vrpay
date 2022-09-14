@@ -1,7 +1,7 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
-import { formatMoney, getDateFormatting, approveTransaction } from "../utils"
+import { formatMoney, getDateFormatting, approveTransaction, isTransactionValid } from "../utils"
 import Router from "next/router"
 
 export default function NewTransactionContent(props) {
