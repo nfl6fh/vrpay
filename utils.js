@@ -30,6 +30,22 @@ export const approveTransaction = async (trans_id) => {
    }
 }
 
+export const deleteTransaction = async (trans_id) => {
+   const body = { trans_id }
+
+   try {
+      await fetch("/api/delete_transaction", {
+         method: "POST",
+         headers: { "content-Type": "application/json" },
+         body: JSON.stringify(body),
+      }).then((res) => {
+         Router.reload()
+      })
+   } catch (error) {
+      console.log("error deleting transaction:", error)
+   }
+}
+
 export const denyTransaction = async (trans_id) => {
    const body = { trans_id }
 

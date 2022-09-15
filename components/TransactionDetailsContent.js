@@ -1,7 +1,7 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
-import { formatMoney, getDateFormatting, approveTransaction, isTransactionValid } from "../utils"
+import { formatMoney, getDateFormatting, approveTransaction, isTransactionValid, deleteTransaction } from "../utils"
 import Router from "next/router"
 
 export default function NewTransactionContent(props) {
@@ -39,7 +39,9 @@ export default function NewTransactionContent(props) {
                <Button auto type="abort">
                   Edit
                </Button>
-               <Button auto type="error">
+               <Button auto type="error" onClick={() => {
+                  deleteTransaction(props?.transaction?.id)
+               }}>
                   Delete
                </Button>
                {props?.transaction?.status === "pending" && (
@@ -48,7 +50,6 @@ export default function NewTransactionContent(props) {
                      type="success"
                      onClick={() => {
                         approveTransaction(props?.transaction?.id)
-                        // have to figure out how to effectively reload when the page updates
                      }}
                   >
                      Approve

@@ -46,6 +46,12 @@
    display: inline-block;
 }
 
+.belowName {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+}
+
 .userActions {
    display: flex;
    margin-top: 16px;

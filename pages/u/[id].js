@@ -252,59 +252,61 @@ export default function UserPage(props) {
                </span>
             </p>
          </div>
-
-         <div className={styles.userActions}>
-            {session?.role == "admin" && props.role != "admin" && (
-               <div className={styles.adminActions}>
-                  <Button
-                     auto
-                     icon={<ArrowUp />}
-                     onClick={() => makeAdmin(props.id)}
-                  >
-                     Make Admin
-                  </Button>
-                  <Button
-                     icon={<UserX />}
-                     type="error"
-                     ghost
-                     auto
-                     onClick={() => removeUser(props.id)}
-                  >
-                     Remove User
-                  </Button>
-               </div>
-            )}
-            <Button
-               // style={{minWidth: "calc(14.5 * 16px)"}}
-               icon={<Plus />}
-               onClick={() => {
-                  setViewingDetails(false)
-                  setVisible(true)
-               }}
-               auto
-               className={styles.newTransaction}
-               type="success"
-            >
-               New RaR or Transaction
-            </Button>
-            <Modal {...bindings}>
-               {viewingDetails ? (
-                  <TransactionDetailsContent
-                     transaction={relevantTransaction}
-                     setVisible={setVisible}
-                     uid={props.id}
-                     name={props.name}
-                  />
-               ) : (
-                  <NewTransactionContent
-                     setVisible={setVisible}
-                     uid={props.id}
-                     name={props.name}
-                  />
+         <div className={styles.belowName}>
+            <div>{props.email}</div>
+            <div className={styles.userActions}>
+               {session?.role == "admin" && props.role != "admin" && (
+                  <div className={styles.adminActions}>
+                     <Button
+                        auto
+                        icon={<ArrowUp />}
+                        onClick={() => makeAdmin(props.id)}
+                     >
+                        Make Admin
+                     </Button>
+                     <Button
+                        icon={<UserX />}
+                        type="error"
+                        ghost
+                        auto
+                        onClick={() => removeUser(props.id)}
+                     >
+                        Remove User
+                     </Button>
+                  </div>
                )}
-            </Modal>
+               <Button
+                  // style={{minWidth: "calc(14.5 * 16px)"}}
+                  icon={<Plus />}
+                  onClick={() => {
+                     setViewingDetails(false)
+                     setVisible(true)
+                  }}
+                  auto
+                  className={styles.newTransaction}
+                  type="success"
+               >
+                  New RaR or Transaction
+               </Button>
+               <Modal {...bindings}>
+                  {viewingDetails ? (
+                     <TransactionDetailsContent
+                        transaction={relevantTransaction}
+                        setVisible={setVisible}
+                        uid={props.id}
+                        name={props.name}
+                     />
+                  ) : (
+                     <NewTransactionContent
+                        setVisible={setVisible}
+                        uid={props.id}
+                        name={props.name}
+                     />
+                  )}
+               </Modal>
+            
+            </div>
          </div>
-
          {(!props.transactions || props.transactions.length === 0) && (
             <div>No transactions found</div>
          )}
