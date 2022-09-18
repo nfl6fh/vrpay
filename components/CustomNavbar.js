@@ -2,28 +2,31 @@ import styles from "../styles/CustomNavbar.module.css"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { userInfo } from "os"
 import { Router } from "next/router"
+import Link from "next/link"
 
 export default function CustomNavbar(props) {
    const { data: session, status } = useSession()
 
    return (
       <div className={styles.navbar}>
-         <a className={styles.brand} href="/">
-            VRPay
-         </a>
+         <Link href="/">
+            <a className={styles.brand}>
+               VRPay
+            </a>
+         </Link>
 
          <div className={styles.verifiedSessionButtons}>
             {session?.role == "admin" && (
-               <a href="/dashboard" className={styles.adminButton}>
-                  Admin
-               </a>
+               <Link href="/dashboard">
+                  <a className={styles.adminButton}>Admin</a>
+               </Link>
             )}
          </div>
 
          <div className={styles.navbarRight}>
             {session?.user && (
                <a
-                  className={styles.navButton} 
+                  className={styles.navButton}
                   href={`/api/auth/signout`}
                   onClick={(e) => {
                      e.preventDefault()
