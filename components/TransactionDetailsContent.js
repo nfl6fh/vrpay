@@ -12,6 +12,7 @@ import Router from "next/router"
 
 export default function NewTransactionContent(props) {
    const [isEditing, setIsEditing] = useState(false)
+   const [amount, setAmount] = useState()
 
    return (
       <div
@@ -83,6 +84,7 @@ export default function NewTransactionContent(props) {
                         deleteTransaction(props?.transaction?.id)
                      }
                   }}
+                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount))}
                >
                   {isEditing ? "Save" : "Delete"}
                </Button>
