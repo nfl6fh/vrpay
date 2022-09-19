@@ -7,6 +7,7 @@ import {
    approveTransaction,
    isTransactionValid,
    deleteTransaction,
+   updateTransaction,
 } from "../utils"
 import Router from "next/router"
 
@@ -78,7 +79,7 @@ export default function NewTransactionContent(props) {
                   type={isEditing ? "success" : "error"}
                   onClick={() => {
                      if (isEditing) {
-                        //handle save
+                        updateTransaction(props?.transaction?.id, parseFloat(amount)),
                         setIsEditing(false)
                      } else {
                         deleteTransaction(props?.transaction?.id)
