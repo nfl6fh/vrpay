@@ -101,7 +101,7 @@ export const updateTransaction = async (
          body: JSON.stringify(body),
       }).then((res) => {
          console.log("res", res)
-         Router.reload()
+         // Router.reload()
       })
    } catch (error) {
       console.log("error updating transaction:", error)

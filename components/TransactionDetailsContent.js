@@ -14,6 +14,7 @@ import Router from "next/router"
 export default function NewTransactionContent(props) {
    const [isEditing, setIsEditing] = useState(false)
    const [amount, setAmount] = useState()
+   const [isEdited, setIsEdited] = useState(false)
 
    return (
       <div
@@ -39,7 +40,7 @@ export default function NewTransactionContent(props) {
                      <div>
                         <b className={styles.label}>Amount</b>
 
-                        <p>{formatMoney.format(props?.transaction?.amount)}</p>
+                        <p>{formatMoney.format(isEdited ? amount : props?.transaction?.amount)}</p>
                      </div>
                   )}
                </div>
@@ -80,7 +81,8 @@ export default function NewTransactionContent(props) {
                   onClick={() => {
                      if (isEditing) {
                         updateTransaction(props?.transaction?.id, parseFloat(amount)),
-                        setIsEditing(false)
+                        setIsEditing(false),
+                        setIsEdited(true)
                      } else {
                         deleteTransaction(props?.transaction?.id)
                      }
