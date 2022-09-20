@@ -15,7 +15,7 @@ export default function NewTransactionContent(props) {
    const [isEditing, setIsEditing] = useState(false)
    const [amount, setAmount] = useState()
    const [isEdited, setIsEdited] = useState(false)
-
+   
    return (
       <div
          className={styles.container}
@@ -31,7 +31,7 @@ export default function NewTransactionContent(props) {
                      <Input
                         className={styles.formInput}
                         onChange={(e) => setAmount(e.target.value)}
-                        initialValue={props?.transaction?.amount}
+                        initialValue={isEdited ? amount : props?.transaction?.amount}
                         width={"100%"}
                      >
                         <b>Amount</b>
