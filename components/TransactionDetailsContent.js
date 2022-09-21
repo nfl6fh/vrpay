@@ -91,7 +91,7 @@ export default function NewTransactionContent(props) {
                >
                   {isEditing ? "Save" : "Delete"}
                </Button>
-               {props?.transaction?.status === "pending" && (
+               {props?.transaction?.status === "pending" && !isEditing && (
                   <Button
                      auto
                      type="success"
