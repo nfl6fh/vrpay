@@ -17,17 +17,19 @@ export default async function handle(req, res) {
       },
    })
 
-   // undo the transaction
-   var currDue = currTransaction.user.total_due
-   var currAmount = currTransaction.amount
-   const due = currDue + currAmount
+   if (currTransaction.status === "approved") {
+      // undo the transaction
+      var currDue = currTransaction.user.total_due
+      var currAmount = currTransaction.amount
+      const due = currDue + currAmount
 
-   const post1 = await prisma.user.update({
-      where: { id: currTransaction.user.id },
-      data: {
-         total_due: parseFloat(due),
-      },
-   })
+      const post1 = await prisma.user.update({
+         where: { id: currTransaction.user.id },
+         data: {
+            total_due: parseFloat(due),
+         },
+      })
+   }
 
    // delete the transaction
    const deletion = await prisma.transaction.delete({
