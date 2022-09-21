@@ -32,6 +32,18 @@ export const getServerSideProps = async () => {
       where: { is_verified: true },
    })
 
+   var today = new Date();
+   var mm = String(today.getMonth() + 1).padStart(2, '0');
+   var yyyy = today.getFullYear();
+   
+   var year = mm >= '06' ? yyyy : yyyy - 1;
+   var yearString = year.toString();
+
+   var graduating_users = await prisma.user.findMany({
+      where: { grad_year: yearString },
+   })
+
+
    unverified_users.map((user) => {
       if (user.createdAt !== null) {
          user.createdAt = user.createdAt.toString()
@@ -72,7 +84,7 @@ export const getServerSideProps = async () => {
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
 
-   return { props: { unverified_users, verified_users, pending_transactions } }
+   return { props: { unverified_users, verified_users, pending_transactions, graduating_users } }
 }
 
 export default function Admin(props) {
