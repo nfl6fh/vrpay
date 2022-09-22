@@ -91,7 +91,7 @@ export default function Home() {
                   VRPay
                </Text>
                <Text h4 className={styles.subtitle}>
-                  Cool name, huh?
+                  Cool name, eh?
                </Text>
                <br />
                <Button

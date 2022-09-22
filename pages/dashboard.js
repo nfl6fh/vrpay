@@ -3,10 +3,14 @@ import { prisma } from "../lib/prisma.js"
 import styles from "../styles/Admin.module.css"
 import Loading from "../components/Loading"
 import { useState } from "react"
-import { approveTransaction, denyTransaction, formatMoney, getRoleFormatting, exportCSVFile } from "../utils.js"
+import {
+   formatMoney,
+   getRoleFormatting,
+} from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
+import NewTransactionContent from "../components/NewTransactionContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -27,6 +31,18 @@ export const getServerSideProps = async () => {
    var verified_users = await prisma.user.findMany({
       where: { is_verified: true },
    })
+
+   var today = new Date();
+   var mm = String(today.getMonth() + 1).padStart(2, '0');
+   var yyyy = today.getFullYear();
+   
+   var year = mm >= '06' ? yyyy : yyyy - 1;
+   var yearString = year.toString();
+
+   var graduating_users = await prisma.user.findMany({
+      where: { grad_year: yearString },
+   })
+
 
    unverified_users.map((user) => {
       if (user.createdAt !== null) {
@@ -68,16 +84,16 @@ export const getServerSideProps = async () => {
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
 
-   return { props: { unverified_users, verified_users, pending_transactions } }
+   return { props: { unverified_users, verified_users, pending_transactions, graduating_users } }
 }
 
 export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
-   const [viewingDetails, setViewingDetails] = useState(false)
    const [relevantTransaction, setRelevantTransaction] = useState(null)
    const [relevantUID, setRelevantUID] = useState(null)
    const [relevantName, setRelevantName] = useState(null)
+   const [viewingDetails, setViewingDetails] = useState(false)
 
    if (status === "loading") {
       return <Loading />
@@ -184,8 +200,6 @@ export default function Admin(props) {
             onClick={() => {
                setViewingDetails(true)
                setRelevantTransaction(rowData)
-               setRelevantUID(rowData?.user?.id)
-               setRelevantName(rowData?.user?.name)
                setVisible(true)
             }}
          >
@@ -198,16 +212,27 @@ export default function Admin(props) {
       return (
          <div className={styles.container}>
             <h1 className={styles.title}>Dashboard</h1>
-            <Button auto onClick={() => setVisible(true)}>
+            <Button
+               auto
+               onClick={() => {
+                  setViewingDetails(false)
+                  setVisible(true)
+               }}
+               style={{ marginTop: "16px" }}
+            >
                New transaction
             </Button>
             <Modal {...bindings}>
-               <TransactionDetailsContent
-                  transaction={relevantTransaction}
-                  setVisible={setVisible}
-                  uid={relevantUID}
-                  name={relevantName}
-               />
+               {viewingDetails ? (
+                  <TransactionDetailsContent
+                     transaction={relevantTransaction}
+                     setVisible={setVisible}
+                     uid={relevantUID}
+                     name={relevantName}
+                  />
+               ) : (
+                  <NewTransactionContent setVisible={setVisible} />
+               )}
             </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>
@@ -291,10 +316,15 @@ export default function Admin(props) {
                </div>
             )}
 
-            <h2 className={styles.sectionHeading}>Verified Users</h2>
+            <h2 className={styles.sectionHeading}>Athletes</h2>
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
-               <Table.Column prop="role" label="Role" width="10%" render={athleteRole} />
+               <Table.Column
+                  prop="role"
+                  label="Role"
+                  width="10%"
+                  render={athleteRole}
+               />
                <Table.Column
                   prop="total_due"
                   label="Total Due"

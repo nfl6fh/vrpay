@@ -1,9 +1,21 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
-import { formatMoney, getDateFormatting } from "../utils"
+import {
+   formatMoney,
+   getDateFormatting,
+   approveTransaction,
+   isTransactionValid,
+   deleteTransaction,
+   updateTransaction,
+} from "../utils"
+import Router from "next/router"
 
 export default function NewTransactionContent(props) {
+   const [isEditing, setIsEditing] = useState(false)
+   const [amount, setAmount] = useState()
+   const [isEdited, setIsEdited] = useState(false)
+   
    return (
       <div
          className={styles.container}
@@ -15,8 +27,22 @@ export default function NewTransactionContent(props) {
             </Modal.Title>
             <div className={styles.inputSection}>
                <div className={styles.inputGroup}>
-                  <b className={styles.label}>Amount</b>
-                  <p>{formatMoney.format(props?.transaction?.amount)}</p>
+                  {isEditing ? (
+                     <Input
+                        className={styles.formInput}
+                        onChange={(e) => setAmount(e.target.value)}
+                        initialValue={isEdited ? amount : props?.transaction?.amount}
+                        width={"100%"}
+                     >
+                        <b>Amount</b>
+                     </Input>
+                  ) : (
+                     <div>
+                        <b className={styles.label}>Amount</b>
+
+                        <p>{formatMoney.format(isEdited ? amount : props?.transaction?.amount)}</p>
+                     </div>
+                  )}
                </div>
                <div className={styles.inputGroup}>
                   <b className={styles.label}>Type</b>
@@ -35,14 +61,44 @@ export default function NewTransactionContent(props) {
             </div>
 
             <div className={styles.actions}>
-               <Button auto type="abort">
-                  Edit
+               <Button
+                  auto
+                  type="abort"
+                  onClick={() => {
+                     if (isEditing) {
+                        setIsEditing(false)
+                        //handle cancel
+                     } else {
+                        setIsEditing(true)
+                     }
+                  }}
+               >
+                  {isEditing ? "Cancel" : "Edit"}
                </Button>
-               <Button auto type="error">
-                  Delete
+               <Button
+                  auto
+                  type={isEditing ? "success" : "error"}
+                  onClick={() => {
+                     if (isEditing) {
+                        updateTransaction(props?.transaction?.id, parseFloat(amount)),
+                        setIsEditing(false),
+                        setIsEdited(true)
+                     } else {
+                        deleteTransaction(props?.transaction?.id)
+                     }
+                  }}
+                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount))}
+               >
+                  {isEditing ? "Save" : "Delete"}
                </Button>
-               {props.transaction.status === "pending" && (
-                  <Button auto type="success">
+               {props?.transaction?.status === "pending" && !isEditing && (
+                  <Button
+                     auto
+                     type="success"
+                     onClick={() => {
+                        approveTransaction(props?.transaction?.id)
+                     }}
+                  >
                      Approve
                   </Button>
                )}

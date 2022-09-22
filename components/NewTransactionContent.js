@@ -1,7 +1,9 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
-import { createTransactionForUser } from "../utils"
+import { createTransactionForUser, isTransactionValid} from "../utils"
+
+import Router from "next/router"
 
 export default function NewTransactionContent(props) {
    const [amount, setAmount] = useState()
@@ -81,6 +83,7 @@ export default function NewTransactionContent(props) {
                      applyTo
                   )
                }}
+               disabled={!isTransactionValid(amount, type, description)}
             >
                Submit
             </Button>

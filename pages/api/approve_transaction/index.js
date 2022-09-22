@@ -35,4 +35,6 @@ export default async function handle(req, res) {
          total_due: parseFloat(due),
       },
    })
+
+   return res.json(post)
 }
