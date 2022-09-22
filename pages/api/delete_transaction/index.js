@@ -1,7 +1,7 @@
 import { prisma } from "../../../lib/prisma.js"
 import { updateBalance } from "../../../utils.js"
 
-// PUT /api/approve_transaction
+// PUT /api/delete_transaction
 export default async function handle(req, res) {
    const trans_id = req.body.trans_id
 
