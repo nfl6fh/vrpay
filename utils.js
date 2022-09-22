@@ -87,10 +87,7 @@ export const createTransactionForUser = async (
    }
 }
 
-export const updateTransaction = async (
-   transaction_id,
-   amount
-) => {
+export const updateTransaction = async (transaction_id, amount) => {
    const body = { transaction_id, amount }
    console.log("body", body)
 
