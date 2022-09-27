@@ -6,13 +6,13 @@ import { userInfo } from "os"
 import Loading from "../components/Loading"
 import Router from "next/router"
 import { useEffect, useState } from "react"
-import { updateUserRole } from "../utils"
+import { updateUserRole, generateGradYears } from "../utils"
 import { Button, Text, Input, Select, Page } from "@geist-ui/core"
 
 export default function Home() {
    const { data: session, status } = useSession()
    const [role, setRole] = useState("rookie")
-   const [gradYear, setGradYear] = useState("")
+   const [gradYear, setGradYear] = useState(String(new Date().getFullYear() + 4))
 
    const handleRoleChange = (val) => {
       setRole(val)
@@ -66,14 +66,36 @@ export default function Home() {
                         <Select.Option value="varsity">
                            varsity athlete
                         </Select.Option>
-                        <Select.Option value="coach">coach</Select.Option>
+                     </Select>
+                  </div>
+                  <div className={styles.roleSelection}>
+                     <span>Expected grad year:</span>
+                     <Select
+                        placeholder="Year"
+                        auto
+                        onChange={handleGradYearChange}
+                        initialValue={
+                           session.gradYear
+                              ? session.gradYear
+                              : String(new Date().getFullYear() + 4)
+                        }
+                     >
+                        {generateGradYears()
+                           .reverse()
+                           .map((year) => {
+                              return (
+                                 <Select.Option value={String(year.id)}>
+                                    {String(year.name)}
+                                 </Select.Option>
+                              )
+                           })}
                      </Select>
                   </div>
                   <div className={styles.buttonContainer}>
                      <Button
                         className={styles.saveButton}
                         style={{ textTransform: "None" }}
-                        onClick={() => updateUserRole(role, session.uid)}
+                        onClick={() => updateUserRole(role, gradYear, session.uid)}
                      >
                         Yea, that's correct
                      </Button>

@@ -101,8 +101,8 @@ export const updateBalance = async (uid, amount) => {
    }
 }
 
-export const updateUserRole = async (role, uid) => {
-   const body = { role, uid }
+export const updateUserRole = async (role, gradYear, uid) => {
+   const body = { role, gradYear, uid }
 
    try {
       await fetch("/api/update_user_role", {
@@ -214,4 +214,23 @@ export function isTransactionValid(amount, type, description) {
    } else {
       return false
    }
+}
+
+export function generateGradYears() {
+	var min = new Date().getFullYear();
+	var max = min + 5;
+	var years = [];
+
+	for (var i = max; i >= min; i--) {
+		years.push(i);
+	}
+
+	var toReturn = [];
+	for (var i in years) {
+		toReturn.push({ id: years[i], name: years[i] });
+	}
+
+	console.log(toReturn);
+
+	return toReturn;
 }
