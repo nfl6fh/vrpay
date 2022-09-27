@@ -2,6 +2,9 @@
    --text-size-large: 52px;
    --text-size-medium: 38px;
    --text-size-small: 24px;
+   --text-size-extra-small: 18px;
+   --text-size-tiny: 14px;
+   --text-size-smallest: 10px;
    --top-margin: 20px;
 
    --background: #fff;
