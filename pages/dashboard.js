@@ -135,7 +135,7 @@ export default function Admin(props) {
 
    const cellText = (value, rowData, rowIndex) => {
       return (
-         <Text auto scale={1 / 2} font="12px" className={styles.tableCell}>
+         <Text auto scale={1 / 2} font="12px">
             {value}
          </Text>
       )
@@ -143,7 +143,7 @@ export default function Admin(props) {
 
    const athleteRole = (value, rowData, rowIndex) => {
       return (
-         <Text auto scale={1 / 2} font="14px" className={styles.tableCell}>
+         <Text auto scale={1 / 2} font="14px">
             {/* {rowData?.is_rookie} */}
             {getRoleFormatting(value, rowData.is_rookie)}
          </Text>
@@ -156,7 +156,6 @@ export default function Admin(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={{ cursor: "pointer", textDecoration: "underline" }}
             onClick={() => {
                Router.push("/u/[id]", `/u/${rowData?.id}`)
@@ -224,7 +223,6 @@ export default function Admin(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -237,7 +235,7 @@ export default function Admin(props) {
 
    const transactionAthlete = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell}>
+         <p auto scale={1 / 2} font="12px">
             {rowData?.user?.name}
          </p>
       )
@@ -315,6 +313,7 @@ export default function Admin(props) {
                   </h2>
                   <Table data={props.pending_transactions}>
                      <Table.Column
+                        className={styles.tableCell}
                         prop="name"
                         label="Athlete"
                         render={transactionAthlete}
@@ -353,8 +352,9 @@ export default function Admin(props) {
                <Table.Column
                   prop="role"
                   label="Role"
-                  width="10%"
                   render={athleteRole}
+                  width="120px"
+                  scale="1/2"
                />
                <Table.Column
                   prop="total_due"

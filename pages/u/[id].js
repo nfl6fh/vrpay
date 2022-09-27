@@ -166,7 +166,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={getItemStyle(rowData?.status)}
          >
             {value}
@@ -180,7 +179,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             color="red"
             style={getStatusStyle(value)}
          >
@@ -195,7 +193,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={getItemStyle(rowData?.status)}
          >
             {getDateFormatting(value)}
@@ -209,7 +206,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -257,7 +253,7 @@ export default function UserPage(props) {
             </p>
          </div>
          <div className={styles.belowName}>
-            <div>{props.email}</div>
+            <div className={styles.email}>{props.email}</div>
             <div className={styles.userActions}>
                {session?.role == "admin" && props.role != "admin" && (
                   <div className={styles.adminActions}>
@@ -308,7 +304,6 @@ export default function UserPage(props) {
                      />
                   )}
                </Modal>
-            
             </div>
          </div>
          {(!props.transactions || props.transactions.length === 0) && (
@@ -333,11 +328,14 @@ export default function UserPage(props) {
                      render={cellText}
                      width="6%"
                   />
+
                   <Table.Column
                      prop="description"
                      label="Description"
                      render={cellText}
+                     className={styles.description}
                   />
+
                   <Table.Column
                      prop="amount"
                      label="Amount"
