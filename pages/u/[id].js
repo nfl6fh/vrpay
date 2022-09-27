@@ -24,6 +24,7 @@ import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
 import Router from "next/router"
 import NewTransactionContent from "../../components/NewTransactionContent"
 import TransactionDetailsContent from "../../components/TransactionDetailsContent"
+import { isTypeParameterDeclaration } from "typescript"
 
 var formatter = new Intl.NumberFormat("en-US", {
    style: "currency",
@@ -119,6 +120,9 @@ export default function UserPage(props) {
    }
 
    function transactionSorter(a, b) {
+      if (a.status !== b.status) {
+         return tmap.get(a.status) - tmap.get(b.status)
+      }
       const date1 = new Date(a.updatedAt)
       const date2 = new Date(b.updatedAt)
       return date2.getTime() - date1.getTime()
