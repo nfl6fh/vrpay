@@ -167,6 +167,57 @@ export default function Admin(props) {
       )
    }
 
+   const unverifiedName = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.nameSection}
+         >
+            {value}
+         </p>
+      )
+   }
+
+   const emailText = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            className={styles.emailSection}
+         >
+            {value}
+         </p>
+      )
+   }
+
+   const userActions = (value, rowData, rowIndex) => {
+      return (
+         <div className={styles.verifyTD}>
+            <Text
+               auto
+               scale={1 / 2}
+               font="14px"
+               className={styles.verifyButton}
+               onClick={() => verifyUser(user.id)}
+            >
+               Verify
+            </Text>
+            <Text
+               auto
+               scale={1 / 2}
+               font="14px"
+               className={styles.verifyButton}
+               onClick={() => deleteUser(user.id)}
+            >
+               Delete
+            </Text>
+         </div>
+      )
+      }
+
    const cellMoney = (value, rowData, rowIndex) => {
       return (
          <p
@@ -237,43 +288,23 @@ export default function Admin(props) {
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>
                   <h2 className={styles.sectionHeading}>Unverified Users</h2>
-                  <table className={styles.table}>
-                     <thead>
-                        <tr>
-                           <th>Name</th>
-                           <th className={styles.emailSection}>Email</th>
-                           <th className={styles.verifySection}>Actions</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {props.unverified_users.map((user) => (
-                           <tr>
-                              <td>
-                                 <div className={styles.nameSection}>
-                                    <p className={styles.tableName}>
-                                       {user.name}
-                                    </p>
-                                 </div>
-                              </td>
-                              <td>{user.email}</td>
-                              <td className={styles.verifyTD}>
-                                 <a
-                                    onClick={() => verifyUser(user.id)}
-                                    className={styles.verifyButton}
-                                 >
-                                    Verify
-                                 </a>
-                                 <a
-                                    onClick={() => deleteUser(user.id)}
-                                    className={styles.verifyButton}
-                                 >
-                                    Delete
-                                 </a>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </table>
+                  <Table data={props.unverified_users}>
+                     <Table.Column
+                        prop="name"
+                        label="Name"
+                        render={unverifiedName}
+                     />
+                     <Table.Column
+                        prop="email"
+                        label="Email"
+                        render={emailText}
+                     />
+                     <Table.Column
+                        prop="actions"
+                        label="Actions"
+                        render={userActions}
+                     />
+                  </Table>
                </div>
             )}
 
