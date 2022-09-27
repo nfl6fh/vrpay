@@ -87,6 +87,24 @@ export const createTransactionForUser = async (
    }
 }
 
+export const updateTransaction = async (transaction_id, amount) => {
+   const body = { transaction_id, amount }
+   console.log("body", body)
+
+   try {
+      await fetch("/api/update_transaction", {
+         method: "POST",
+         headers: { "content-Type": "application/json" },
+         body: JSON.stringify(body),
+      }).then((res) => {
+         console.log("res", res)
+         Router.reload()
+      })
+   } catch (error) {
+      console.log("error updating transaction:", error)
+   }
+}
+
 export const updateBalance = async (uid, amount) => {
    const body = { uid, amount }
 

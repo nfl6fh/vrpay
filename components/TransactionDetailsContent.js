@@ -7,12 +7,15 @@ import {
    approveTransaction,
    isTransactionValid,
    deleteTransaction,
+   updateTransaction,
 } from "../utils"
 import Router from "next/router"
 
 export default function NewTransactionContent(props) {
    const [isEditing, setIsEditing] = useState(false)
-
+   const [amount, setAmount] = useState()
+   const [isEdited, setIsEdited] = useState(false)
+   
    return (
       <div
          className={styles.container}
@@ -28,7 +31,7 @@ export default function NewTransactionContent(props) {
                      <Input
                         className={styles.formInput}
                         onChange={(e) => setAmount(e.target.value)}
-                        initialValue={props?.transaction?.amount}
+                        initialValue={isEdited ? amount : props?.transaction?.amount}
                         width={"100%"}
                      >
                         <b>Amount</b>
@@ -37,7 +40,7 @@ export default function NewTransactionContent(props) {
                      <div>
                         <b className={styles.label}>Amount</b>
 
-                        <p>{formatMoney.format(props?.transaction?.amount)}</p>
+                        <p>{formatMoney.format(isEdited ? amount : props?.transaction?.amount)}</p>
                      </div>
                   )}
                </div>
@@ -77,16 +80,18 @@ export default function NewTransactionContent(props) {
                   type={isEditing ? "success" : "error"}
                   onClick={() => {
                      if (isEditing) {
-                        //handle save
-                        setIsEditing(false)
+                        updateTransaction(props?.transaction?.id, parseFloat(amount)),
+                        setIsEditing(false),
+                        setIsEdited(true)
                      } else {
                         deleteTransaction(props?.transaction?.id)
                      }
                   }}
+                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount))}
                >
                   {isEditing ? "Save" : "Delete"}
                </Button>
-               {props?.transaction?.status === "pending" && (
+               {props?.transaction?.status === "pending" && !isEditing && (
                   <Button
                      auto
                      type="success"
