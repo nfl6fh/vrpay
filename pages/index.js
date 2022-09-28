@@ -29,6 +29,7 @@ export default function Home() {
    useEffect(() => {
       setEmail(session?.user?.email)
       setGradYear(session?.user?.gradYear)
+      setRole(session?.user?.is_rookie ? "rookie" : "varsity")
    }, [session])
 
    if (status === "loading") {
@@ -64,7 +65,7 @@ export default function Home() {
                            auto
                            onChange={handleRoleChange}
                            initialValue={
-                              session.is_rookie ? "rookie" : "varsity"
+                              role
                            }
                         >
                            <Select.Option value="rookie">
