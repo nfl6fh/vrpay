@@ -1,6 +1,7 @@
 import { prisma } from "../../../lib/prisma.js"
 
-// PUT /api/verify_user
+// PUT /api/update_user_role
+// this code is a mess
 export default async function handle(req, res) {
    const user_id = req.body.uid
    const role = req.body.role
@@ -43,6 +44,8 @@ export default async function handle(req, res) {
             where: { id: user_id },
             data: {
                is_rookie: false,
+               grad_year: String(gradYear),
+               email: String(email),
             },
          })
          .then((res) => {

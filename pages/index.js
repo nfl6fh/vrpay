@@ -12,7 +12,9 @@ import { Button, Text, Input, Select, Page } from "@geist-ui/core"
 export default function Home() {
    const { data: session, status } = useSession()
    const [role, setRole] = useState("rookie")
-   const [gradYear, setGradYear] = useState(String(new Date().getFullYear() + 4))
+   const [gradYear, setGradYear] = useState(
+      String(new Date().getFullYear() + 4)
+   )
    const [email, setEmail] = useState("")
 
    const handleRoleChange = (val) => {
@@ -21,10 +23,12 @@ export default function Home() {
 
    const handleGradYearChange = (val) => {
       setGradYear(val)
+   
    }
 
    useEffect(() => {
       setEmail(session?.user?.email)
+      setGradYear(session?.user?.gradYear)
    }, [session])
 
    if (status === "loading") {
@@ -51,54 +55,69 @@ export default function Home() {
                   <Text p className={styles.verifyingSubtitle}>
                      While you're here, confirm the information below
                   </Text>
-                  <div className={styles.roleSelection}>
-                     <span>I am a </span>
-                     <Select
-                        placeholder="Role"
-                        auto
-                        onChange={handleRoleChange}
-                        initialValue={session.is_rookie ? "rookie" : "varsity"}
-                     >
-                        <Select.Option value="rookie">
-                           rookie athlete
-                        </Select.Option>
-                        <Select.Option value="varsity">
-                           varsity athlete
-                        </Select.Option>
-                     </Select>
-                  </div>
-                  <div className={styles.roleSelection}>
-                     <span>Email</span>
-                     <Input initialValue={session?.user?.email} onChange={e => setEmail(e.target.value)}></Input>
-                  </div>
-                  <div className={styles.roleSelection}>
-                     <span>Expected grad year:</span>
-                     <Select
-                        placeholder="Year"
-                        auto
-                        onChange={handleGradYearChange}
-                        initialValue={
-                           session.gradYear
-                              ? session.gradYear
-                              : String(new Date().getFullYear() + 4)
-                        }
-                     >
-                        {generateGradYears()
-                           .reverse()
-                           .map((year) => {
-                              return (
-                                 <Select.Option value={String(year.id)}>
-                                    {String(year.name)}
-                                 </Select.Option>
-                              )
-                           })}
-                     </Select>
+                  <div className={styles.roleSection}>
+                     <div className={styles.roleSelection}>
+                        <pre>I am a </pre>
+                        <Select
+                           className={styles.inputOption}
+                           placeholder="Role"
+                           auto
+                           onChange={handleRoleChange}
+                           initialValue={
+                              session.is_rookie ? "rookie" : "varsity"
+                           }
+                        >
+                           <Select.Option value="rookie">
+                              rookie athlete
+                           </Select.Option>
+                           <Select.Option value="varsity">
+                              varsity athlete
+                           </Select.Option>
+                        </Select>
+                     </div>
+                     <div className={styles.roleSelection}>
+                        <pre>Email: </pre>
+                        <Input
+                           clearable
+                           width="100%"
+                           initialValue={session?.user?.email}
+                           onChange={(e) => setEmail(e.target.value)}
+                        />
+                     </div>
+                     <div className={styles.roleSelection}>
+                        <pre>Expected grad year: </pre>
+                        <Select
+                           placeholder="Year"
+                           onChange={handleGradYearChange}
+                           initialValue={
+                              session.gradYear
+                                 ? String(session.gradYear)
+                                 : String(new Date().getFullYear() + 4)
+                           }
+                        >
+                           {generateGradYears()
+                              .reverse()
+                              .map((year) => {
+                                 return (
+                                    <Select.Option value={String(year.id)}>
+                                       {String(year.name)}
+                                    </Select.Option>
+                                 )
+                              })}
+                        </Select>
+                     </div>
                   </div>
                   <div className={styles.buttonContainer}>
                      <Button
                         className={styles.saveButton}
                         style={{ textTransform: "None" }}
-                        onClick={() => updateUserRole(role, gradYear, email, session.uid)}
+                        onClick={() => {
+                           if (email !== "") {
+                              updateUserRole(role, gradYear, email, session.uid)
+                           } else {
+                              alert("Please enter a valid email")
+                           }
+                        }}
                      >
                         Yea, that's correct
                      </Button>
