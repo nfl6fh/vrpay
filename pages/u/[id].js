@@ -248,7 +248,7 @@ export default function UserPage(props) {
             <p className={styles.totalDueContainer}>
                Total due:{" "}
                <span className={styles.totalDue}>
-                  {formatter.format(props.total_due)}
+                  {formatMoney.format(props.total_due)}
                </span>
             </p>
          </div>

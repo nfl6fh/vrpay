@@ -138,6 +138,7 @@ export const updateUserRole = async (role, gradYear, email, uid) => {
 export var formatMoney = new Intl.NumberFormat("en-US", {
    style: "currency",
    currency: "USD",
+   maximumFractionDigits: 0,
 })
 
 export var sentenceCase = (str) => {
