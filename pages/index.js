@@ -6,26 +6,25 @@ import { userInfo } from "os"
 import Loading from "../components/Loading"
 import Router from "next/router"
 import { useEffect, useState } from "react"
-import { updateUserRole } from "../utils"
+import { updateUserRole, generateGradYears } from "../utils"
 import { Button, Text, Input, Select, Page } from "@geist-ui/core"
 
 export default function Home() {
    const { data: session, status } = useSession()
    const [role, setRole] = useState("rookie")
-   const [gradYear, setGradYear] = useState("")
+   const [gradYear, setGradYear] = useState(String(new Date().getFullYear() + 4))
+   const [email, setEmail] = useState("")
 
    const handleRoleChange = (val) => {
       setRole(val)
-      console.log(val)
    }
 
    const handleGradYearChange = (val) => {
       setGradYear(val)
-      console.log(val)
    }
 
    useEffect(() => {
-      console.log("session:", session)
+      setEmail(session?.user?.email)
    }, [session])
 
    if (status === "loading") {
@@ -66,14 +65,40 @@ export default function Home() {
                         <Select.Option value="varsity">
                            varsity athlete
                         </Select.Option>
-                        <Select.Option value="coach">coach</Select.Option>
+                     </Select>
+                  </div>
+                  <div className={styles.roleSelection}>
+                     <span>Email</span>
+                     <Input initialValue={session?.user?.email} onChange={e => setEmail(e.target.value)}></Input>
+                  </div>
+                  <div className={styles.roleSelection}>
+                     <span>Expected grad year:</span>
+                     <Select
+                        placeholder="Year"
+                        auto
+                        onChange={handleGradYearChange}
+                        initialValue={
+                           session.gradYear
+                              ? session.gradYear
+                              : String(new Date().getFullYear() + 4)
+                        }
+                     >
+                        {generateGradYears()
+                           .reverse()
+                           .map((year) => {
+                              return (
+                                 <Select.Option value={String(year.id)}>
+                                    {String(year.name)}
+                                 </Select.Option>
+                              )
+                           })}
                      </Select>
                   </div>
                   <div className={styles.buttonContainer}>
                      <Button
                         className={styles.saveButton}
                         style={{ textTransform: "None" }}
-                        onClick={() => updateUserRole(role, session.uid)}
+                        onClick={() => updateUserRole(role, gradYear, email, session.uid)}
                      >
                         Yea, that's correct
                      </Button>
