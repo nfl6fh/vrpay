@@ -228,7 +228,7 @@ export function isNumeric(str) {
 }
 
 export function isTransactionValid(amount, type, description) {
-   if (amount && isNumeric(amount) && type && description) {
+   if (amount && isNumeric(amount) && type && description && amount < 20000 && amount > -20000) {
       return true
    } else {
       return false
