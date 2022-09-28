@@ -101,8 +101,8 @@ export const updateBalance = async (uid, amount) => {
    }
 }
 
-export const updateUserRole = async (role, gradYear, uid) => {
-   const body = { role, gradYear, uid }
+export const updateUserRole = async (role, gradYear, email, uid) => {
+   const body = { role, gradYear, email, uid }
 
    try {
       await fetch("/api/update_user_role", {
@@ -229,8 +229,6 @@ export function generateGradYears() {
 	for (var i in years) {
 		toReturn.push({ id: years[i], name: years[i] });
 	}
-
-	console.log(toReturn);
 
 	return toReturn;
 }

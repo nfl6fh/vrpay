@@ -13,19 +13,18 @@ export default function Home() {
    const { data: session, status } = useSession()
    const [role, setRole] = useState("rookie")
    const [gradYear, setGradYear] = useState(String(new Date().getFullYear() + 4))
+   const [email, setEmail] = useState("")
 
    const handleRoleChange = (val) => {
       setRole(val)
-      console.log(val)
    }
 
    const handleGradYearChange = (val) => {
       setGradYear(val)
-      console.log(val)
    }
 
    useEffect(() => {
-      console.log("session:", session)
+      setEmail(session?.user?.email)
    }, [session])
 
    if (status === "loading") {
@@ -69,6 +68,10 @@ export default function Home() {
                      </Select>
                   </div>
                   <div className={styles.roleSelection}>
+                     <span>Email</span>
+                     <Input initialValue={session?.user?.email} onChange={e => setEmail(e.target.value)}></Input>
+                  </div>
+                  <div className={styles.roleSelection}>
                      <span>Expected grad year:</span>
                      <Select
                         placeholder="Year"
@@ -95,7 +98,7 @@ export default function Home() {
                      <Button
                         className={styles.saveButton}
                         style={{ textTransform: "None" }}
-                        onClick={() => updateUserRole(role, gradYear, session.uid)}
+                        onClick={() => updateUserRole(role, gradYear, email, session.uid)}
                      >
                         Yea, that's correct
                      </Button>

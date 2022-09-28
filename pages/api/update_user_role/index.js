@@ -5,6 +5,7 @@ export default async function handle(req, res) {
    const user_id = req.body.uid
    const role = req.body.role
    const gradYear = req.body.gradYear
+   const email = req.body.email
 
    console.log("user_id: " + user_id)
    console.log("role: " + role)
@@ -17,6 +18,7 @@ export default async function handle(req, res) {
             data: {
                is_rookie: true,
                grad_year: String(gradYear),
+               email: String(email),
             },
          })
          .then((res) => {
