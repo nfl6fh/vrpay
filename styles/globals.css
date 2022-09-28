@@ -54,7 +54,7 @@ tr, td, tbody > *, .cell {
 }
 
 html,
-body {
+body, pre {
    padding: 0;
    margin: 0;
    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
