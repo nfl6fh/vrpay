@@ -84,7 +84,7 @@ export const getServerSideProps = async () => {
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
 
-   return { props: { unverified_users, verified_users, pending_transactions, graduating_users } }
+   return { props: { unverified_users, verified_users, pending_transactions } }
 }
 
 export default function Admin(props) {
@@ -200,7 +200,7 @@ export default function Admin(props) {
                scale={1 / 2}
                font="14px"
                className={styles.verifyButton}
-               onClick={() => verifyUser(user.id)}
+               onClick={() => verifyUser(rowData.id)}
             >
                Verify
             </Text>
@@ -209,7 +209,7 @@ export default function Admin(props) {
                scale={1 / 2}
                font="14px"
                className={styles.verifyButton}
-               onClick={() => deleteUser(user.id)}
+               onClick={() => deleteUser(rowData.id)}
             >
                Delete
             </Text>
