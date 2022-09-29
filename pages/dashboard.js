@@ -257,6 +257,18 @@ export default function Admin(props) {
       )
    }
 
+   const userEmail = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+         >
+            {value}
+         </p>
+      )
+   }
+
    if (session?.is_verified && session.role === "admin") {
       return (
          <div className={styles.container}>
@@ -356,6 +368,12 @@ export default function Admin(props) {
             <h2 className={styles.sectionHeading}>Athletes</h2>
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
+               <Table.Column 
+                  prop="email" 
+                  label="Email" 
+                  render={userEmail} 
+                  width="20%"
+               />
                <Table.Column
                   prop="role"
                   label="Role"
