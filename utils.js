@@ -69,9 +69,10 @@ export const createTransactionForUser = async (
    amount,
    type,
    description,
-   applyTo
+   applyTo,
+   sessionName
 ) => {
-   const body = { uid, amount, type, description, applyTo }
+   const body = { uid, amount, type, description, applyTo, sessionName }
 
    try {
       await fetch("/api/create_transaction_for_user", {

@@ -4,13 +4,14 @@ import { updateBalance } from "../../../utils.js"
 
 // PUT /api/create_transaction_for_user
 export default async function handle(req, res) {
-   const { uid, amount, type, description, applyTo } = req.body
+   const { uid, amount, type, description, applyTo, sessionName } = req.body
 
    console.log("uid:", uid)
    console.log("amount:", amount)
    console.log("type:", type)
    console.log("description:", description)
    console.log("applyTo:", applyTo)
+   console.log("session:", sessionName)
    // create transaction for single user
    if (applyTo == "na") {
       const result = await prisma.transaction.create({
@@ -23,6 +24,8 @@ export default async function handle(req, res) {
             amount: parseInt(amount),
             type: type,
             description: description,
+            createdBy: sessionName,
+            lastEditedBy: sessionName,
          },
       })
       return res.json(res)
@@ -69,6 +72,9 @@ export default async function handle(req, res) {
                type: type,
                description: description,
                status: "approved",
+               createdBy: sessionName,
+               lastEditedBy: sessionName,
+               approvedBy: sessionName
             },
          })
          console.log("result: " + result)
