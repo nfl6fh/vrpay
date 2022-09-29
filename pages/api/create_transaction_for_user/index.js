@@ -27,6 +27,7 @@ export default async function handle(req, res) {
       })
       return res.json(res)
    } else if (applyTo) {
+      // create transaction for multiple users
       var uids = []
 
       if (applyTo === "all users") {
@@ -90,6 +91,4 @@ export default async function handle(req, res) {
 
       return res.json(res)
    }
-
-   // create transaction for all rookies
 }
