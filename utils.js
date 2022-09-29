@@ -138,6 +138,7 @@ export const updateUserRole = async (role, gradYear, email, uid) => {
 export var formatMoney = new Intl.NumberFormat("en-US", {
    style: "currency",
    currency: "USD",
+   maximumFractionDigits: 0,
 })
 
 export var sentenceCase = (str) => {
@@ -227,7 +228,7 @@ export function isNumeric(str) {
 }
 
 export function isTransactionValid(amount, type, description) {
-   if (amount && isNumeric(amount) && type && description) {
+   if (amount && isNumeric(amount) && type && description && amount < 20000 && amount > -20000) {
       return true
    } else {
       return false
