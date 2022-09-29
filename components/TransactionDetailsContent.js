@@ -1,5 +1,6 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
+import { useSession } from "next-auth/react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
 import {
    formatMoney,
@@ -12,6 +13,7 @@ import {
 import Router from "next/router"
 
 export default function NewTransactionContent(props) {
+   const { data: session, status } = useSession()
    const [isEditing, setIsEditing] = useState(false)
    const [amount, setAmount] = useState()
    const [isEdited, setIsEdited] = useState(false)
@@ -80,14 +82,14 @@ export default function NewTransactionContent(props) {
                   type={isEditing ? "success" : "error"}
                   onClick={() => {
                      if (isEditing) {
-                        updateTransaction(props?.transaction?.id, parseFloat(amount)),
+                        updateTransaction(props?.transaction?.id, parseFloat(amount), session.user.name),
                         setIsEditing(false),
                         setIsEdited(true)
                      } else {
                         deleteTransaction(props?.transaction?.id)
                      }
                   }}
-                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount))}
+                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount)) || isEdited}
                >
                   {isEditing ? "Save" : "Delete"}
                </Button>
@@ -96,8 +98,9 @@ export default function NewTransactionContent(props) {
                      auto
                      type="success"
                      onClick={() => {
-                        approveTransaction(props?.transaction?.id)
+                        approveTransaction(props?.transaction?.id, session.user.name)
                      }}
+                     disabled={isEdited}
                   >
                      Approve
                   </Button>

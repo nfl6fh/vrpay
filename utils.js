@@ -14,8 +14,8 @@ export function getDateFormatting(isoDate) {
    return month + "/" + day + "/" + year
 }
 
-export const approveTransaction = async (trans_id) => {
-   const body = { trans_id }
+export const approveTransaction = async (trans_id, sessionName) => {
+   const body = { trans_id, sessionName }
 
    try {
       await fetch("/api/approve_transaction", {
@@ -88,8 +88,8 @@ export const createTransactionForUser = async (
    }
 }
 
-export const updateTransaction = async (transaction_id, amount) => {
-   const body = { transaction_id, amount }
+export const updateTransaction = async (transaction_id, amount, sessionName) => {
+   const body = { transaction_id, amount, sessionName }
    console.log("body", body)
 
    try {
