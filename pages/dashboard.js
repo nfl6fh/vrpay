@@ -296,6 +296,13 @@ export default function Admin(props) {
                         prop="email"
                         label="Email"
                         render={emailText}
+                        width="12%"
+                     />
+                     <Table.Column
+                        prop="grad_year"
+                        label="Grad Year"
+                        render={emailText}
+                        width="6%"
                      />
                      <Table.Column
                         prop="actions"

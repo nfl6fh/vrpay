@@ -23,12 +23,11 @@ export default function Home() {
 
    const handleGradYearChange = (val) => {
       setGradYear(val)
-   
    }
 
    useEffect(() => {
       setEmail(session?.user?.email)
-      setGradYear(session?.user?.gradYear)
+      setGradYear(session?.user_info?.grad_year)
       setRole(session?.user?.is_rookie ? "rookie" : "varsity")
    }, [session])
 
@@ -64,9 +63,7 @@ export default function Home() {
                            placeholder="Role"
                            auto
                            onChange={handleRoleChange}
-                           initialValue={
-                              role
-                           }
+                           initialValue={role}
                         >
                            <Select.Option value="rookie">
                               rookie athlete
@@ -91,9 +88,7 @@ export default function Home() {
                            placeholder="Year"
                            onChange={handleGradYearChange}
                            initialValue={
-                              session.gradYear
-                                 ? String(session.gradYear)
-                                 : String(new Date().getFullYear() + 4)
+                              session?.user_info?.grad_year ?? String(new Date().getFullYear() + 4)
                            }
                         >
                            {generateGradYears()
