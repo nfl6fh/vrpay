@@ -4,11 +4,13 @@ import { updateBalance } from "../../../utils.js"
 // PUT /api/approve_transaction
 export default async function handle(req, res) {
    const trans_id = req.body.trans_id
+   const sessionName = req.body.sessionName
 
    const post = await prisma.transaction.update({
       where: { id: trans_id },
       data: {
          status: "approved",
+         approvedBy: sessionName
       },
    })
 

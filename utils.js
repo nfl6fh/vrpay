@@ -14,8 +14,8 @@ export function getDateFormatting(isoDate) {
    return month + "/" + day + "/" + year
 }
 
-export const approveTransaction = async (trans_id) => {
-   const body = { trans_id }
+export const approveTransaction = async (trans_id, sessionName) => {
+   const body = { trans_id, sessionName }
 
    try {
       await fetch("/api/approve_transaction", {
@@ -69,9 +69,10 @@ export const createTransactionForUser = async (
    amount,
    type,
    description,
-   applyTo
+   applyTo,
+   sessionName
 ) => {
-   const body = { uid, amount, type, description, applyTo }
+   const body = { uid, amount, type, description, applyTo, sessionName }
 
    try {
       await fetch("/api/create_transaction_for_user", {
@@ -87,8 +88,8 @@ export const createTransactionForUser = async (
    }
 }
 
-export const updateTransaction = async (transaction_id, amount) => {
-   const body = { transaction_id, amount }
+export const updateTransaction = async (transaction_id, amount, sessionName) => {
+   const body = { transaction_id, amount, sessionName }
    console.log("body", body)
 
    try {
@@ -128,7 +129,7 @@ export const updateUserRole = async (role, gradYear, email, uid) => {
          headers: { "content-Type": "application/json" },
          body: JSON.stringify(body),
       }).then((res) => {
-         Router.reload()
+         // Router.reload()
       })
    } catch (error) {
       console.log("error updating user:", error)

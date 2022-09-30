@@ -16,6 +16,7 @@ export default function Home() {
       String(new Date().getFullYear() + 4)
    )
    const [email, setEmail] = useState("")
+   const [submitted, setSubmitted] = useState(false)
 
    const handleRoleChange = (val) => {
       setRole(val)
@@ -106,10 +107,12 @@ export default function Home() {
                   <div className={styles.buttonContainer}>
                      <Button
                         className={styles.saveButton}
+                        disabled={submitted}
                         style={{ textTransform: "None" }}
                         onClick={() => {
                            if (email !== "") {
                               updateUserRole(role, gradYear, email, session.uid)
+                              setSubmitted(true)
                            } else {
                               alert("Please enter a valid email")
                            }
@@ -117,6 +120,18 @@ export default function Home() {
                      >
                         Yea, that's correct
                      </Button>
+                  </div>
+                  <div
+                     auto
+                     style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        paddingTop: 10,
+                     }}
+                  >
+                     <p>  
+                        {submitted ? "Your data has been saved" : ""}
+                     </p>
                   </div>
                </div>
             </Page>
