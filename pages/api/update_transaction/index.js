@@ -4,6 +4,7 @@ import { prisma } from "../../../lib/prisma.js";
 export default async function handle(req, res) {
   const transaction_id = req.body.transaction_id;
   const amount = req.body.amount;
+  const sessionName = req.body.sessionName;
 
   var curr_transaction = await prisma.transaction.findUnique({
     where: { id: transaction_id },
@@ -35,6 +36,7 @@ export default async function handle(req, res) {
     where: { id: transaction_id },
     data: {
       amount: amount,
+      lastEditedBy: sessionName
     },
   });
   res.json(post);

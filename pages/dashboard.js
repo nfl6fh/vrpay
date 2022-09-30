@@ -84,7 +84,7 @@ export const getServerSideProps = async () => {
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
 
-   return { props: { unverified_users, verified_users, pending_transactions, graduating_users } }
+   return { props: { unverified_users, verified_users, pending_transactions } }
 }
 
 export default function Admin(props) {
@@ -135,7 +135,7 @@ export default function Admin(props) {
 
    const cellText = (value, rowData, rowIndex) => {
       return (
-         <Text auto scale={1 / 2} font="12px" className={styles.tableCell}>
+         <Text auto scale={1 / 2} font="12px">
             {value}
          </Text>
       )
@@ -143,7 +143,7 @@ export default function Admin(props) {
 
    const athleteRole = (value, rowData, rowIndex) => {
       return (
-         <Text auto scale={1 / 2} font="14px" className={styles.tableCell}>
+         <Text auto scale={1 / 2} font="14px">
             {/* {rowData?.is_rookie} */}
             {getRoleFormatting(value, rowData.is_rookie)}
          </Text>
@@ -156,7 +156,6 @@ export default function Admin(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={{ cursor: "pointer", textDecoration: "underline" }}
             onClick={() => {
                Router.push("/u/[id]", `/u/${rowData?.id}`)
@@ -201,7 +200,7 @@ export default function Admin(props) {
                scale={1 / 2}
                font="14px"
                className={styles.verifyButton}
-               onClick={() => verifyUser(user.id)}
+               onClick={() => verifyUser(rowData.id)}
             >
                Verify
             </Text>
@@ -210,7 +209,7 @@ export default function Admin(props) {
                scale={1 / 2}
                font="14px"
                className={styles.verifyButton}
-               onClick={() => deleteUser(user.id)}
+               onClick={() => deleteUser(rowData.id)}
             >
                Delete
             </Text>
@@ -224,7 +223,23 @@ export default function Admin(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
+            style={{
+               justifyContent: "right",
+               flexGrow: "1",
+               color: value > 0 ? "red" : "black",
+            }}
+         >
+            {formatMoney.format(value)}
+         </p>
+      )
+   }
+
+   const cellMoneyTransaction = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -237,7 +252,7 @@ export default function Admin(props) {
 
    const transactionAthlete = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px" className={styles.tableCell}>
+         <p auto scale={1 / 2} font="12px">
             {rowData?.user?.name}
          </p>
       )
@@ -256,6 +271,18 @@ export default function Admin(props) {
          >
             Edit/Approve
          </Text>
+      )
+   }
+
+   const userEmail = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+         >
+            {value}
+         </p>
       )
    }
 
@@ -295,9 +322,23 @@ export default function Admin(props) {
                         render={unverifiedName}
                      />
                      <Table.Column
+                        prop="role"
+                        label="Role"
+                        render={athleteRole}
+                        width="120px"
+                        scale="1/2"
+                     />
+                     <Table.Column
                         prop="email"
                         label="Email"
                         render={emailText}
+                        width="12%"
+                     />
+                     <Table.Column
+                        prop="grad_year"
+                        label="Grad Year"
+                        render={emailText}
+                        width="6%"
                      />
                      <Table.Column
                         prop="actions"
@@ -315,6 +356,7 @@ export default function Admin(props) {
                   </h2>
                   <Table data={props.pending_transactions}>
                      <Table.Column
+                        className={styles.tableCell}
                         prop="name"
                         label="Athlete"
                         render={transactionAthlete}
@@ -334,7 +376,7 @@ export default function Admin(props) {
                      <Table.Column
                         prop="amount"
                         label="Amount"
-                        render={cellMoney}
+                        render={cellMoneyTransaction}
                         width="8%"
                      />
                      <Table.Column
@@ -351,10 +393,23 @@ export default function Admin(props) {
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
                <Table.Column
+                  prop="grad_year"
+                  label="Grad Year"
+                  render={emailText}
+                  width="6%"
+               />
+               <Table.Column 
+                  prop="email" 
+                  label="Email" 
+                  render={userEmail} 
+                  width="20%"
+               />
+               <Table.Column
                   prop="role"
                   label="Role"
-                  width="10%"
                   render={athleteRole}
+                  width="120px"
+                  scale="1/2"
                />
                <Table.Column
                   prop="total_due"

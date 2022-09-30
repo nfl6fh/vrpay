@@ -41,10 +41,17 @@
 }
 
 .roleSelection {
-   padding-top: 32px;
-   padding-bottom: 32px;
+   padding-top: 16px;
+   padding-bottom: 16px;
 
-   text-align: left;
+   display: flex;
+   align-items: center;
+   justify-content: flex-start;
+}
+
+.roleSection {
+   margin-top: 32px;
+   margin-bottom: 32px;
 }
 
 .hasBackground {
@@ -196,5 +203,16 @@
    .epLoadingContainer {
       padding-top: 1rem;
       padding-bottom: 1rem;
+   }
+
+   .pendingPage {
+      max-width: 95%!important;
+      width: 95%!important;
+   }
+
+   .roleSection {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
    }
 }

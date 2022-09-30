@@ -14,8 +14,8 @@ export function getDateFormatting(isoDate) {
    return month + "/" + day + "/" + year
 }
 
-export const approveTransaction = async (trans_id) => {
-   const body = { trans_id }
+export const approveTransaction = async (trans_id, sessionName) => {
+   const body = { trans_id, sessionName }
 
    try {
       await fetch("/api/approve_transaction", {
@@ -69,9 +69,10 @@ export const createTransactionForUser = async (
    amount,
    type,
    description,
-   applyTo
+   applyTo,
+   sessionName
 ) => {
-   const body = { uid, amount, type, description, applyTo }
+   const body = { uid, amount, type, description, applyTo, sessionName }
 
    try {
       await fetch("/api/create_transaction_for_user", {
@@ -87,8 +88,8 @@ export const createTransactionForUser = async (
    }
 }
 
-export const updateTransaction = async (transaction_id, amount) => {
-   const body = { transaction_id, amount }
+export const updateTransaction = async (transaction_id, amount, sessionName) => {
+   const body = { transaction_id, amount, sessionName }
    console.log("body", body)
 
    try {
@@ -119,8 +120,8 @@ export const updateBalance = async (uid, amount) => {
    }
 }
 
-export const updateUserRole = async (role, uid) => {
-   const body = { role, uid }
+export const updateUserRole = async (role, gradYear, email, uid) => {
+   const body = { role, gradYear, email, uid }
 
    try {
       await fetch("/api/update_user_role", {
@@ -128,7 +129,7 @@ export const updateUserRole = async (role, uid) => {
          headers: { "content-Type": "application/json" },
          body: JSON.stringify(body),
       }).then((res) => {
-         Router.reload()
+         // Router.reload()
       })
    } catch (error) {
       console.log("error updating user:", error)
@@ -138,6 +139,7 @@ export const updateUserRole = async (role, uid) => {
 export var formatMoney = new Intl.NumberFormat("en-US", {
    style: "currency",
    currency: "USD",
+   maximumFractionDigits: 0,
 })
 
 export var sentenceCase = (str) => {
@@ -227,9 +229,26 @@ export function isNumeric(str) {
 }
 
 export function isTransactionValid(amount, type, description) {
-   if (amount && isNumeric(amount) && type && description) {
+   if (amount && isNumeric(amount) && type && description && amount < 20000 && amount > -20000) {
       return true
    } else {
       return false
    }
+}
+
+export function generateGradYears() {
+	var min = new Date().getFullYear();
+	var max = min + 5;
+	var years = [];
+
+	for (var i = max; i >= min; i--) {
+		years.push(i);
+	}
+
+	var toReturn = [];
+	for (var i in years) {
+		toReturn.push({ id: years[i], name: years[i] });
+	}
+
+	return toReturn;
 }

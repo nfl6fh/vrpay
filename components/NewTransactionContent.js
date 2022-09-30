@@ -1,4 +1,5 @@
 import styles from "../styles/Overlays.module.css"
+import { useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from "react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
 import { createTransactionForUser, isTransactionValid} from "../utils"
@@ -6,6 +7,7 @@ import { createTransactionForUser, isTransactionValid} from "../utils"
 import Router from "next/router"
 
 export default function NewTransactionContent(props) {
+   const { data: session, status } = useSession()
    const [amount, setAmount] = useState()
    const [type, setType] = useState()
    const [description, setDescription] = useState()
@@ -16,7 +18,7 @@ export default function NewTransactionContent(props) {
 
    return (
       <div className={styles.container}>
-         <Modal.Title style={{ textTransform: "None" }}>
+         <Modal.Title className={styles.title} style={{ textTransform: "None" }}>
             New Transaction {props.name ? "for " + props.name : ""}
          </Modal.Title>
          <div className={styles.inputSection}>
@@ -80,7 +82,8 @@ export default function NewTransactionContent(props) {
                      parseInt(amount),
                      type,
                      description,
-                     applyTo
+                     applyTo,
+                     session.user.name
                   )
                }}
                disabled={!isTransactionValid(amount, type, description)}

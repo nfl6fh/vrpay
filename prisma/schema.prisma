@@ -57,7 +57,7 @@ model User {
   role        String  @default("")
 
   transactions Transaction[]
-  total_due    Float           @default(0)
+  total_due    Int           @default(0)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
@@ -66,14 +66,17 @@ model User {
 
 model Transaction {
   id             String @id @default(cuid())
-  amount         Float    @default(0)
+  amount         Int    @default(0)
   status         String @default("pending")
   type           String @default("")
   description    String @default("")
   semester       String @default("")
   turningInCheck String @default("")
 
-  user   User   @relation(fields: [userId], references: [id])
+  user           User   @relation(fields: [userId], references: [id])
+  createdBy      String @default("")
+  lastEditedBy   String @default("")
+  approvedBy     String @default("")
   userId String
 
   createdAt DateTime @default(now()) @map(name: "created_at")

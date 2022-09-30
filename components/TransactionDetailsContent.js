@@ -1,5 +1,6 @@
 import styles from "../styles/Overlays.module.css"
 import { useEffect, useRef, useState } from "react"
+import { useSession } from "next-auth/react"
 import { Input, Button, Modal, Select } from "@geist-ui/core"
 import {
    formatMoney,
@@ -12,6 +13,7 @@ import {
 import Router from "next/router"
 
 export default function NewTransactionContent(props) {
+   const { data: session, status } = useSession()
    const [isEditing, setIsEditing] = useState(false)
    const [amount, setAmount] = useState()
    const [isEdited, setIsEdited] = useState(false)
@@ -61,43 +63,48 @@ export default function NewTransactionContent(props) {
             </div>
 
             <div className={styles.actions}>
-               <Button
-                  auto
-                  type="abort"
-                  onClick={() => {
-                     if (isEditing) {
-                        setIsEditing(false)
-                        //handle cancel
-                     } else {
-                        setIsEditing(true)
-                     }
-                  }}
-               >
-                  {isEditing ? "Cancel" : "Edit"}
-               </Button>
-               <Button
-                  auto
-                  type={isEditing ? "success" : "error"}
-                  onClick={() => {
-                     if (isEditing) {
-                        updateTransaction(props?.transaction?.id, parseFloat(amount)),
-                        setIsEditing(false),
-                        setIsEdited(true)
-                     } else {
-                        deleteTransaction(props?.transaction?.id)
-                     }
-                  }}
-                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount))}
-               >
-                  {isEditing ? "Save" : "Delete"}
-               </Button>
-               {props?.transaction?.status === "pending" && !isEditing && (
+            {(props?.transaction?.status === "pending" || session?.role == "admin") && (
+                  <div>
+                     <Button
+                        auto
+                        type="abort"
+                        onClick={() => {
+                           if (isEditing) {
+                              setIsEditing(false)
+                              //handle cancel
+                           } else {
+                              setIsEditing(true)
+                           }
+                        }}
+                     >
+                        {isEditing ? "Cancel" : "Edit"}
+                     </Button>
+                     <Button
+                        auto
+                        type={isEditing ? "success" : "error"}
+                        onClick={() => {
+                           if (isEditing) {
+                              updateTransaction(props?.transaction?.id, parseFloat(amount), session.user.name),
+                              setIsEditing(false),
+                              setIsEdited(true)
+                           } else {
+                              deleteTransaction(props?.transaction?.id)
+                           }
+                        }}
+                        disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount)) || isEdited}
+                     >
+                        {isEditing ? "Save" : "Delete"}
+                     </Button>
+                  </div>
+               )}
+               {props?.transaction?.status === "pending" && !isEditing && session?.role == "admin" && (
                   <Button
                      auto
                      type="success"
                      onClick={() => {
-                        approveTransaction(props?.transaction?.id)
+                        approveTransaction(props?.transaction?.id, session.user.name)
                      }}
+                     disabled={isEdited}
                   >
                      Approve
                   </Button>

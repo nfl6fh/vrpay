@@ -166,7 +166,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={getItemStyle(rowData?.status)}
          >
             {value}
@@ -180,7 +179,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             color="red"
             style={getStatusStyle(value)}
          >
@@ -195,7 +193,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={getItemStyle(rowData?.status)}
          >
             {getDateFormatting(value)}
@@ -209,7 +206,6 @@ export default function UserPage(props) {
             auto
             scale={1 / 2}
             font="12px"
-            className={styles.tableCell}
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -232,7 +228,7 @@ export default function UserPage(props) {
                setVisible(true)
             }}
          >
-            {rowData?.status === "pending" ? "Edit/Approve" : "View Details"}
+            {rowData?.status === "pending" ? (session?.role == "admin" ? "Edit/Approve" : "Edit") : "View Details"}
          </Text>
       )
    }
@@ -251,13 +247,17 @@ export default function UserPage(props) {
             </div>
             <p className={styles.totalDueContainer}>
                Total due:{" "}
-               <span className={styles.totalDue}>
-                  {formatter.format(props.total_due)}
+               <span className={styles.totalDue}
+                  style={{
+                     color: props.total_due > 0 ? "red" : "black",
+                  }}
+               >
+                  {formatMoney.format(props.total_due)}
                </span>
             </p>
          </div>
          <div className={styles.belowName}>
-            <div>{props.email}</div>
+            <div className={styles.email}>{props.email}</div>
             <div className={styles.userActions}>
                {session?.role == "admin" && props.role != "admin" && (
                   <div className={styles.adminActions}>
@@ -308,7 +308,6 @@ export default function UserPage(props) {
                      />
                   )}
                </Modal>
-            
             </div>
          </div>
          {(!props.transactions || props.transactions.length === 0) && (
@@ -333,11 +332,14 @@ export default function UserPage(props) {
                      render={cellText}
                      width="6%"
                   />
+
                   <Table.Column
                      prop="description"
                      label="Description"
                      render={cellText}
+                     className={styles.description}
                   />
+
                   <Table.Column
                      prop="amount"
                      label="Amount"
@@ -350,14 +352,12 @@ export default function UserPage(props) {
                      render={cellTextStatus}
                      width="6%"
                   />
-                  {session?.role == "admin" && (
-                     <Table.Column
-                        prop="actions"
-                        label="Actions"
-                        render={transactionOptions}
-                        width={"120px"}
-                     />
-                  )}
+                  <Table.Column
+                     prop="actions"
+                     label="Actions"
+                     render={transactionOptions}
+                     width={"120px"}
+                  />
                </Table>
             )}
          </div>

@@ -33,10 +33,6 @@
    font-size: var(--text-size-medium);
 }
 
-.totalDue {
-   font-size: var(--text-size-large);
-}
-
 .gradYear,
 .totalDue {
    margin-left: 10px;
@@ -72,46 +68,6 @@
    background-color: red;
 }
 
-.table {
-   table-layout: fixed;
-   display: table;
-
-   border-collapse: collapse;
-   font-size: 16px;
-   width: 100%;
-   margin-bottom: 40px;
-}
-
-.table th {
-   border: 1px solid black;
-   padding-left: 8px;
-}
-
-.table td {
-   border: 1px solid grey;
-   align-items: vertical;
-   padding-left: 8px;
-   flex-grow: 1;
-
-   padding-top: .2rem;
-   padding-bottom: .2rem;
-}
-
-.table th {
-   padding-top: .7rem;
-   padding-bottom: .7rem;
-   text-align: left;
-   background-color: black;
-   color: white;
-
-   font-weight: bold;
-   font-size: 12px;
-}
-
-.table tr:hover {
-   background-color: #eee;
-}
-
 .updatedCol {
     width: 100px!important;
 }
@@ -130,4 +86,64 @@
 
 .actionCol {
    width: 120px!important;
+}
+
+@media (max-width: 1000px) {
+   .container {
+      width: 95vw;
+   }
+
+   .role {
+      display: none;
+   }
+
+   .email {
+      display: none;
+   }
+
+   .userActions {
+      width: 100%;
+   }
+
+   .totalDue, .totalDueContainer {
+      font-size: var(--text-size-small);
+   }
+
+   .name {
+      font-size: var(--text-size-medium);
+   }
+
+   .header {
+      flex-direction: column;
+   }
+
+   .userActions {
+      justify-content: flex-start!important;
+   }
+}
+
+@media (max-width: 600px) {
+   .name {
+      font-size: var(--text-size-small);
+   }
+
+   .totalDue, .totalDueContainer {
+      font-size: var(--text-size-extra-small);
+   }
+
+   .adminActions {
+      display: none;
+   }
+
+   .userActions > * {
+      margin-left: 0px!important;
+   }
+
+   .cell > * {
+      color: blue!important;
+   }
+
+   .description {
+      display: none;
+   }
 }
