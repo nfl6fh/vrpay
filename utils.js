@@ -129,7 +129,7 @@ export const updateUserRole = async (role, gradYear, email, uid) => {
          headers: { "content-Type": "application/json" },
          body: JSON.stringify(body),
       }).then((res) => {
-         Router.reload()
+         // Router.reload()
       })
    } catch (error) {
       console.log("error updating user:", error)
