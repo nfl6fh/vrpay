@@ -305,6 +305,13 @@ export default function Admin(props) {
                         render={unverifiedName}
                      />
                      <Table.Column
+                        prop="role"
+                        label="Role"
+                        render={athleteRole}
+                        width="120px"
+                        scale="1/2"
+                     />
+                     <Table.Column
                         prop="email"
                         label="Email"
                         render={emailText}
