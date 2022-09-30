@@ -247,7 +247,11 @@ export default function UserPage(props) {
             </div>
             <p className={styles.totalDueContainer}>
                Total due:{" "}
-               <span className={styles.totalDue}>
+               <span className={styles.totalDue}
+                  style={{
+                     color: props.total_due > 0 ? "red" : "black",
+                  }}
+               >
                   {formatMoney.format(props.total_due)}
                </span>
             </p>
