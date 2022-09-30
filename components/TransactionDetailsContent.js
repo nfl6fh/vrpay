@@ -63,37 +63,41 @@ export default function NewTransactionContent(props) {
             </div>
 
             <div className={styles.actions}>
-               <Button
-                  auto
-                  type="abort"
-                  onClick={() => {
-                     if (isEditing) {
-                        setIsEditing(false)
-                        //handle cancel
-                     } else {
-                        setIsEditing(true)
-                     }
-                  }}
-               >
-                  {isEditing ? "Cancel" : "Edit"}
-               </Button>
-               <Button
-                  auto
-                  type={isEditing ? "success" : "error"}
-                  onClick={() => {
-                     if (isEditing) {
-                        updateTransaction(props?.transaction?.id, parseFloat(amount), session.user.name),
-                        setIsEditing(false),
-                        setIsEdited(true)
-                     } else {
-                        deleteTransaction(props?.transaction?.id)
-                     }
-                  }}
-                  disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount)) || isEdited}
-               >
-                  {isEditing ? "Save" : "Delete"}
-               </Button>
-               {props?.transaction?.status === "pending" && !isEditing && (
+            {(props?.transaction?.status === "pending" || session?.role == "admin") && (
+                  <div>
+                     <Button
+                        auto
+                        type="abort"
+                        onClick={() => {
+                           if (isEditing) {
+                              setIsEditing(false)
+                              //handle cancel
+                           } else {
+                              setIsEditing(true)
+                           }
+                        }}
+                     >
+                        {isEditing ? "Cancel" : "Edit"}
+                     </Button>
+                     <Button
+                        auto
+                        type={isEditing ? "success" : "error"}
+                        onClick={() => {
+                           if (isEditing) {
+                              updateTransaction(props?.transaction?.id, parseFloat(amount), session.user.name),
+                              setIsEditing(false),
+                              setIsEdited(true)
+                           } else {
+                              deleteTransaction(props?.transaction?.id)
+                           }
+                        }}
+                        disabled={isEditing && !(!isNaN(parseFloat(amount)) && isFinite(amount)) || isEdited}
+                     >
+                        {isEditing ? "Save" : "Delete"}
+                     </Button>
+                  </div>
+               )}
+               {props?.transaction?.status === "pending" && !isEditing && session?.role == "admin" && (
                   <Button
                      auto
                      type="success"

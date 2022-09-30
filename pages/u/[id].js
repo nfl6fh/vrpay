@@ -228,7 +228,7 @@ export default function UserPage(props) {
                setVisible(true)
             }}
          >
-            {rowData?.status === "pending" ? "Edit/Approve" : "View Details"}
+            {rowData?.status === "pending" ? (session?.role == "admin" ? "Edit/Approve" : "Edit") : "View Details"}
          </Text>
       )
    }
@@ -247,7 +247,11 @@ export default function UserPage(props) {
             </div>
             <p className={styles.totalDueContainer}>
                Total due:{" "}
-               <span className={styles.totalDue}>
+               <span className={styles.totalDue}
+                  style={{
+                     color: props.total_due > 0 ? "red" : "black",
+                  }}
+               >
                   {formatMoney.format(props.total_due)}
                </span>
             </p>
@@ -348,14 +352,12 @@ export default function UserPage(props) {
                      render={cellTextStatus}
                      width="6%"
                   />
-                  {session?.role == "admin" && (
-                     <Table.Column
-                        prop="actions"
-                        label="Actions"
-                        render={transactionOptions}
-                        width={"120px"}
-                     />
-                  )}
+                  <Table.Column
+                     prop="actions"
+                     label="Actions"
+                     render={transactionOptions}
+                     width={"120px"}
+                  />
                </Table>
             )}
          </div>

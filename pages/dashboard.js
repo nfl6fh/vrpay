@@ -226,6 +226,23 @@ export default function Admin(props) {
             style={{
                justifyContent: "right",
                flexGrow: "1",
+               color: value > 0 ? "red" : "black",
+            }}
+         >
+            {formatMoney.format(value)}
+         </p>
+      )
+   }
+
+   const cellMoneyTransaction = (value, rowData, rowIndex) => {
+      return (
+         <p
+            auto
+            scale={1 / 2}
+            font="12px"
+            style={{
+               justifyContent: "right",
+               flexGrow: "1",
             }}
          >
             {formatMoney.format(value)}
@@ -359,7 +376,7 @@ export default function Admin(props) {
                      <Table.Column
                         prop="amount"
                         label="Amount"
-                        render={cellMoney}
+                        render={cellMoneyTransaction}
                         width="8%"
                      />
                      <Table.Column
