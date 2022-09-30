@@ -368,6 +368,12 @@ export default function Admin(props) {
             <h2 className={styles.sectionHeading}>Athletes</h2>
             <Table data={props.verified_users}>
                <Table.Column prop="name" label="Athlete" render={athleteName} />
+               <Table.Column
+                  prop="grad_year"
+                  label="Grad Year"
+                  render={emailText}
+                  width="6%"
+               />
                <Table.Column 
                   prop="email" 
                   label="Email" 
