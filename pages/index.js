@@ -130,7 +130,7 @@ export default function Home() {
                      }}
                   >
                      <p>  
-                        {submitted ? "Your data has been saved" : ""}
+                        {session.user_info.grad_year ? "Your data has been saved" : ""}
                      </p>
                   </div>
                </div>
