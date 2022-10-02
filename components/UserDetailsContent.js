@@ -7,8 +7,8 @@ import {
    getDateFormatting,
    approveTransaction,
    isTransactionValid,
-   deleteTransaction,
-   updateTransaction,
+   deleteUser,
+   updateUser,
    getRoleFormatting,
 } from "../utils"
 import Router from "next/router"
