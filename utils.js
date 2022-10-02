@@ -123,6 +123,22 @@ export const updateTransaction = async (transaction_id, amount, sessionName) => 
    }
 }
 
+export const updateUser = async (user_id, name, gradYear, role, email) => {
+   const body = { user_id, name, gradYear, role, email }
+
+   try {
+      await fetch("/api/update_user", {
+         method: "POST",
+         headers: { "content-Type": "application/json" },
+         body: JSON.stringify(body),
+      }).then((res) => {
+         Router.reload()
+      })
+   } catch (error) {
+      console.log("error updating user:", error)
+   }
+}
+
 export const updateBalance = async (uid, amount) => {
    const body = { uid, amount }
 

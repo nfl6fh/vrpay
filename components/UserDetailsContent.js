@@ -16,10 +16,10 @@ import Router from "next/router"
 export default function NewTransactionContent(props) {
    const { data: session, status } = useSession()
    const [isEditing, setIsEditing] = useState(false)
-   const [name, setName] = useState()
-   const [gradYear, setGradYear] = useState()
-   const [email, setEmail] = useState()
-   const [role, setRole] = useState()
+   const [name, setName] = useState(props.user.name)
+   const [gradYear, setGradYear] = useState(props.user.grad_year)
+   const [email, setEmail] = useState(props.user.email)
+   const [role, setRole] = useState(props.user.role)
    const [isEdited, setIsEdited] = useState(false)
    
    return (
@@ -45,14 +45,16 @@ export default function NewTransactionContent(props) {
                      </Input>
                 </div>
                 <div className={styles.inputGroup}>
-                    <Input
+                    {/* <Input
                         className={styles.formInput}
                         onChange={(e) => setRole(e.target.value)}
                         initialValue={isEdited ? role : getRoleFormatting(props?.user?.role)}
                         width={"100%"}
                      >
                         <b>Role</b>
-                     </Input>
+                     </Input> */}
+                    <b className={styles.label}>Role</b>
+                    <p>{getRoleFormatting(props?.user?.role)}</p>
                 </div>
                 <div className={styles.inputGroup}>
                     <Input
@@ -85,7 +87,7 @@ export default function NewTransactionContent(props) {
                     <div>
                         <b className={styles.label}>Name</b>
 
-                        <p>{isEdited ? amount : props?.user?.name}</p>
+                        <p>{isEdited ? name : props?.user?.name}</p>
                     </div>
                 </div>
                 <div className={styles.inputGroup}>
@@ -107,7 +109,7 @@ export default function NewTransactionContent(props) {
             )}
 
             <div className={styles.actions}>
-            {(props?.transaction?.status === "pending" || session?.role == "admin") && (
+            {true && (
                   <div>
                      <Button
                         auto
@@ -135,7 +137,7 @@ export default function NewTransactionContent(props) {
                               deleteUser(props?.user?.id)
                            }
                         }}
-                        // disabled={isEditing || isEdited}
+                        disabled={isEdited || isEditing && !name && !gradYear && !email} 
                      >
                         {isEditing ? "Save" : "Delete"}
                      </Button>
