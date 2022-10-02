@@ -29,42 +29,82 @@ export default function NewTransactionContent(props) {
       >
          <div className={styles.container}>
             <Modal.Title style={{ textTransform: "None" }}>
-               Details for user {props?.user?.name ? props.user.name : "no name"}
+               {isEditing ? "Editing d" : "D"}etails for user {props?.user?.name ? props.user.name : "no name"}
             </Modal.Title>
-            <div className={styles.inputSection}>
-               <div className={styles.inputGroup}>
-                  {isEditing ? (
-                     <Input
+            {isEditing ? (
+            <div>
+                <div className={styles.inputSection}>
+                <div className={styles.inputGroup}>
+                    <Input
                         className={styles.formInput}
                         onChange={(e) => setName(e.target.value)}
-                        initialValue={isEdited ? amount : props?.user?.name}
+                        initialValue={isEdited ? name : props?.user?.name}
                         width={"100%"}
                      >
                         <b>Name</b>
                      </Input>
-                  ) : (
-                     <div>
+                </div>
+                <div className={styles.inputGroup}>
+                    <Input
+                        className={styles.formInput}
+                        onChange={(e) => setRole(e.target.value)}
+                        initialValue={isEdited ? role : getRoleFormatting(props?.user?.role)}
+                        width={"100%"}
+                     >
+                        <b>Role</b>
+                     </Input>
+                </div>
+                <div className={styles.inputGroup}>
+                    <Input
+                        className={styles.formInput}
+                        onChange={(e) => setGradYear(e.target.value)}
+                        initialValue={isEdited ? gradYear : props?.user?.grad_year}
+                        width={"100%"}
+                     >
+                        <b>Grad Year</b>
+                     </Input>
+                </div>
+                </div>
+                <div className={styles.inputSection}>
+                <div className={styles.inputGroup}>
+                    <Input
+                        className={styles.formInput}
+                        onChange={(e) => setEmail(e.target.value)}
+                        initialValue={isEdited ? email : props?.user?.email}
+                        width={"100%"}
+                     >
+                        <b>Email</b>
+                     </Input>
+                </div>
+                </div>
+            </div>
+            ) : (
+            <div>
+                <div className={styles.inputSection}>
+                <div className={styles.inputGroup}>
+                    <div>
                         <b className={styles.label}>Name</b>
 
                         <p>{isEdited ? amount : props?.user?.name}</p>
-                     </div>
-                  )}
-               </div>
-               <div className={styles.inputGroup}>
-                  <b className={styles.label}>Role</b>
-                  <p>{getRoleFormatting(props?.user?.role)}</p>
-               </div>
-               <div className={styles.inputGroup}>
-                  <b className={styles.label}>Grad Year</b>
-                  <p>{props?.user?.grad_year}</p>
-               </div>
+                    </div>
+                </div>
+                <div className={styles.inputGroup}>
+                    <b className={styles.label}>Role</b>
+                    <p>{getRoleFormatting(props?.user?.role)}</p>
+                </div>
+                <div className={styles.inputGroup}>
+                    <b className={styles.label}>Grad Year</b>
+                    <p>{props?.user?.grad_year}</p>
+                </div>
+                </div>
+                <div className={styles.inputSection}>
+                <div className={styles.inputGroup}>
+                    <b className={styles.label}>Email</b>
+                    <p>{props?.user?.email}</p>
+                </div>
+                </div>
             </div>
-            <div className={styles.inputSection}>
-               <div className={styles.inputGroup}>
-                  <b className={styles.label}>Email</b>
-                  <p>{props?.user?.email}</p>
-               </div>
-            </div>
+            )}
 
             <div className={styles.actions}>
             {(props?.transaction?.status === "pending" || session?.role == "admin") && (
