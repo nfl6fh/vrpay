@@ -6,11 +6,13 @@ import { useState } from "react"
 import {
    formatMoney,
    getRoleFormatting,
+   deleteUser,
 } from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
 import NewTransactionContent from "../components/NewTransactionContent"
+import UserDetailsContent from "../components/UserDetailsContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -91,29 +93,14 @@ export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
    const [relevantTransaction, setRelevantTransaction] = useState(null)
+   const [relevantUser, setRelevantUser] = useState(null)
+   const [viewingUser, setViewingUser] = useState(false)
    const [relevantUID, setRelevantUID] = useState(null)
    const [relevantName, setRelevantName] = useState(null)
    const [viewingDetails, setViewingDetails] = useState(false)
 
    if (status === "loading") {
       return <Loading />
-   }
-
-   const deleteUser = async (user_id) => {
-      const body = { user_id }
-
-      try {
-         console.log(user_id)
-         await fetch("/api/delete_user", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-         }).then((res) => {
-            Router.reload()
-         })
-      } catch (error) {
-         console.log("error deleting user:", error)
-      }
    }
 
    const verifyUser = async (user_id) => {
@@ -213,6 +200,19 @@ export default function Admin(props) {
             >
                Delete
             </Text>
+            <Text
+               auto
+               scale={1 / 2}
+               font="14px"
+               className={styles.verifyButton}
+               onClick={() => {
+                  setViewingUser(true)
+                  setVisible(true)
+                  setRelevantUser(rowData)
+               }}
+            >
+               Edit
+            </Text>
          </div>
       )
       }
@@ -301,7 +301,13 @@ export default function Admin(props) {
                New transaction
             </Button>
             <Modal {...bindings}>
-               {viewingDetails ? (
+               {viewingUser ? (
+                  <UserDetailsContent
+                     user={relevantUser}
+                     setVisible={setVisible}
+                  />
+               ) : (
+               viewingDetails ? (
                   <TransactionDetailsContent
                      transaction={relevantTransaction}
                      setVisible={setVisible}
@@ -310,7 +316,7 @@ export default function Admin(props) {
                   />
                ) : (
                   <NewTransactionContent setVisible={setVisible} />
-               )}
+               ))}
             </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>
