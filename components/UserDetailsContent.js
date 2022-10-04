@@ -13,9 +13,8 @@ import {
 } from "../utils"
 import Router from "next/router"
 
-export default function NewTransactionContent(props) {
+export default function UserDetailsContent(props) {
    const { data: session, status } = useSession()
-   const [isEditing, setIsEditing] = useState(false)
    const [name, setName] = useState(props.user.name)
    const [gradYear, setGradYear] = useState(props.user.grad_year)
    const [email, setEmail] = useState(props.user.email)
@@ -25,13 +24,11 @@ export default function NewTransactionContent(props) {
    return (
       <div
          className={styles.container}
-         onClick={() => console.log("props", props)}
       >
          <div className={styles.container}>
             <Modal.Title style={{ textTransform: "None" }}>
-               {isEditing ? "Editing d" : "D"}etails for user {props?.user?.name ? props.user.name : "no name"}
+               Editing {props?.user?.name ? props.user.name : "no name"}
             </Modal.Title>
-            {isEditing ? (
             <div>
                 <div className={styles.inputSection}>
                 <div className={styles.inputGroup}>
@@ -45,14 +42,6 @@ export default function NewTransactionContent(props) {
                      </Input>
                 </div>
                 <div className={styles.inputGroup}>
-                    {/* <Input
-                        className={styles.formInput}
-                        onChange={(e) => setRole(e.target.value)}
-                        initialValue={isEdited ? role : getRoleFormatting(props?.user?.role)}
-                        width={"100%"}
-                     >
-                        <b>Role</b>
-                     </Input> */}
                     <b className={styles.label}>Role</b>
                     <p>{getRoleFormatting(props?.user?.role)}</p>
                 </div>
@@ -80,69 +69,30 @@ export default function NewTransactionContent(props) {
                 </div>
                 </div>
             </div>
-            ) : (
-            <div>
-                <div className={styles.inputSection}>
-                <div className={styles.inputGroup}>
-                    <div>
-                        <b className={styles.label}>Name</b>
-
-                        <p>{isEdited ? name : props?.user?.name}</p>
-                    </div>
-                </div>
-                <div className={styles.inputGroup}>
-                    <b className={styles.label}>Role</b>
-                    <p>{getRoleFormatting(props?.user?.role)}</p>
-                </div>
-                <div className={styles.inputGroup}>
-                    <b className={styles.label}>Grad Year</b>
-                    <p>{props?.user?.grad_year}</p>
-                </div>
-                </div>
-                <div className={styles.inputSection}>
-                <div className={styles.inputGroup}>
-                    <b className={styles.label}>Email</b>
-                    <p>{props?.user?.email}</p>
-                </div>
-                </div>
-            </div>
-            )}
 
             <div className={styles.actions}>
-            {true && (
                   <div>
                      <Button
                         auto
                         type="abort"
                         onClick={() => {
-                           if (isEditing) {
-                              setIsEditing(false)
-                              //handle cancel
-                           } else {
-                              setIsEditing(true)
-                           }
+                           props.setVisible(false)
                         }}
                      >
-                        {isEditing ? "Cancel" : "Edit"}
+                        Cancel
                      </Button>
                      <Button
                         auto
-                        type={isEditing ? "success" : "error"}
+                        type={"success"}
                         onClick={() => {
-                           if (isEditing) {
-                              updateUser(props?.user?.id, name, gradYear, role, email),
-                              setIsEditing(false),
+                              updateUser(props?.user?.id, name, gradYear, role, email)
                               setIsEdited(true)
-                           } else {
-                              deleteUser(props?.user?.id)
-                           }
                         }}
-                        disabled={isEdited || isEditing && !name && !gradYear && !email} 
+                        disabled={isEdited || (props?.user?.name == name && props?.user?.grad_year == gradYear && props?.user?.role == role && props?.user?.email == email)}
                      >
-                        {isEditing ? "Save" : "Delete"}
+                        Save
                      </Button>
                   </div>
-               )}
             </div>
          </div>
       </div>
