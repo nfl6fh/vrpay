@@ -226,8 +226,9 @@ export default function UserPage(props) {
             auto
             style={{ cursor: "pointer" }}
             onClick={() => {
-               setViewingDetails(true)
                setRelevantTransaction(rowData)
+               setViewingDetails(true)
+               setViewingUser(false)
                setVisible(true)
             }}
          >
@@ -298,6 +299,7 @@ export default function UserPage(props) {
                   icon={<Plus />}
                   onClick={() => {
                      setViewingDetails(false)
+                     setViewingUser(false)
                      setVisible(true)
                   }}
                   auto
@@ -317,11 +319,11 @@ export default function UserPage(props) {
                      <TransactionDetailsContent
                         transaction={relevantTransaction}
                         setVisible={setVisible}
-                        uid={relevantUID}
-                        name={relevantName}
+                        uid={props.id}
+                        name={props.name}
                      />
                   ) : (
-                     <NewTransactionContent setVisible={setVisible} />
+                     <NewTransactionContent setVisible={setVisible} uid={props.id} name={props.name} />
                   ))}
                </Modal>
             </div>
