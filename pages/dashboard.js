@@ -6,11 +6,13 @@ import { useState } from "react"
 import {
    formatMoney,
    getRoleFormatting,
+   deleteUser,
 } from "../utils.js"
 import Router from "next/router.js"
 import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
 import NewTransactionContent from "../components/NewTransactionContent"
+import UserDetailsContent from "../components/UserDetailsContent"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -91,29 +93,20 @@ export default function Admin(props) {
    const { data: session, status } = useSession()
    const { visible, setVisible, bindings } = useModal()
    const [relevantTransaction, setRelevantTransaction] = useState(null)
+   const [relevantUser, setRelevantUser] = useState(null)
+   const [viewingUser, setViewingUser] = useState(false)
    const [relevantUID, setRelevantUID] = useState(null)
    const [relevantName, setRelevantName] = useState(null)
    const [viewingDetails, setViewingDetails] = useState(false)
 
+   const width_name = "12%"
+   const width_gy = "8%"
+   const width_role = "120px"
+   const width_balance = "80px"
+   const width_actions = "180px"
+
    if (status === "loading") {
       return <Loading />
-   }
-
-   const deleteUser = async (user_id) => {
-      const body = { user_id }
-
-      try {
-         console.log(user_id)
-         await fetch("/api/delete_user", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-         }).then((res) => {
-            Router.reload()
-         })
-      } catch (error) {
-         console.log("error deleting user:", error)
-      }
    }
 
    const verifyUser = async (user_id) => {
@@ -135,7 +128,7 @@ export default function Admin(props) {
 
    const cellText = (value, rowData, rowIndex) => {
       return (
-         <Text auto scale={1 / 2} font="12px">
+         <Text auto scale={1 / 2}>
             {value}
          </Text>
       )
@@ -155,7 +148,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             style={{ cursor: "pointer", textDecoration: "underline" }}
             onClick={() => {
                Router.push("/u/[id]", `/u/${rowData?.id}`)
@@ -171,7 +163,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             className={styles.nameSection}
          >
             {value}
@@ -184,7 +175,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             className={styles.emailSection}
          >
             {value}
@@ -198,7 +188,6 @@ export default function Admin(props) {
             <Text
                auto
                scale={1 / 2}
-               font="14px"
                className={styles.verifyButton}
                onClick={() => verifyUser(rowData.id)}
             >
@@ -207,11 +196,23 @@ export default function Admin(props) {
             <Text
                auto
                scale={1 / 2}
-               font="14px"
                className={styles.verifyButton}
                onClick={() => deleteUser(rowData.id)}
             >
                Delete
+            </Text>
+            <Text
+               auto
+               scale={1 / 2}
+               font="14px"
+               className={styles.verifyButton}
+               onClick={() => {
+                  setViewingUser(true)
+                  setVisible(true)
+                  setRelevantUser(rowData)
+               }}
+            >
+               Edit
             </Text>
          </div>
       )
@@ -222,7 +223,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -239,7 +239,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -252,7 +251,7 @@ export default function Admin(props) {
 
    const transactionAthlete = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px">
+         <p auto scale={1 / 2}>
             {rowData?.user?.name}
          </p>
       )
@@ -279,7 +278,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
          >
             {value}
          </p>
@@ -301,7 +299,13 @@ export default function Admin(props) {
                New transaction
             </Button>
             <Modal {...bindings}>
-               {viewingDetails ? (
+               {viewingUser ? (
+                  <UserDetailsContent
+                     user={relevantUser}
+                     setVisible={setVisible}
+                  />
+               ) : (
+               viewingDetails ? (
                   <TransactionDetailsContent
                      transaction={relevantTransaction}
                      setVisible={setVisible}
@@ -310,7 +314,7 @@ export default function Admin(props) {
                   />
                ) : (
                   <NewTransactionContent setVisible={setVisible} />
-               )}
+               ))}
             </Modal>
             {props.unverified_users?.length > 0 && (
                <div className={styles.unverifiedUsersContainer}>
@@ -320,30 +324,30 @@ export default function Admin(props) {
                         prop="name"
                         label="Name"
                         render={unverifiedName}
+                        width={width_name}
                      />
                      <Table.Column
                         prop="role"
                         label="Role"
                         render={athleteRole}
-                        width="120px"
-                        scale="1/2"
-                     />
-                     <Table.Column
-                        prop="email"
-                        label="Email"
-                        render={emailText}
-                        width="12%"
+                        width={width_role}
                      />
                      <Table.Column
                         prop="grad_year"
                         label="Grad Year"
                         render={emailText}
-                        width="6%"
+                        width={width_gy}
+                     />
+                     <Table.Column
+                        prop="email"
+                        label="Email"
+                        render={emailText}
                      />
                      <Table.Column
                         prop="actions"
                         label="Actions"
                         render={userActions}
+                        width={width_actions}
                      />
                   </Table>
                </div>
@@ -360,13 +364,13 @@ export default function Admin(props) {
                         prop="name"
                         label="Athlete"
                         render={transactionAthlete}
-                        width="12%"
+                        width={width_name}
                      />
                      <Table.Column
                         prop="type"
                         label="Type"
                         render={cellText}
-                        width="6%"
+                        width={width_role}
                      />
                      <Table.Column
                         prop="description"
@@ -377,12 +381,12 @@ export default function Admin(props) {
                         prop="amount"
                         label="Amount"
                         render={cellMoneyTransaction}
-                        width="8%"
+                        width={width_balance}
                      />
                      <Table.Column
                         prop="actions"
                         label="Actions"
-                        width="8%"
+                        width="120px"
                         render={transactionOptions}
                      />
                   </Table>
@@ -391,31 +395,29 @@ export default function Admin(props) {
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
             <Table data={props.verified_users}>
-               <Table.Column prop="name" label="Athlete" render={athleteName} />
-               <Table.Column
-                  prop="grad_year"
-                  label="Grad Year"
-                  render={emailText}
-                  width="6%"
-               />
-               <Table.Column 
-                  prop="email" 
-                  label="Email" 
-                  render={userEmail} 
-                  width="20%"
-               />
+               <Table.Column prop="name" label="Athlete" render={athleteName} width={width_name}/>
                <Table.Column
                   prop="role"
                   label="Role"
                   render={athleteRole}
-                  width="120px"
-                  scale="1/2"
+                  width={width_role}
+               />
+               <Table.Column
+                  prop="grad_year"
+                  label="Grad Year"
+                  render={emailText}
+                  width={width_gy}
+               />
+               <Table.Column 
+                  prop="email" 
+                  label="Email" 
+                  render={userEmail}
                />
                <Table.Column
                   prop="total_due"
                   label="Total Due"
-                  width="10%"
                   render={cellMoney}
+                  width={width_balance}
                />
             </Table>
          </div>
