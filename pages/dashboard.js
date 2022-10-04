@@ -103,6 +103,7 @@ export default function Admin(props) {
    const width_gy = "8%"
    const width_role = "120px"
    const width_balance = "80px"
+   const width_actions = "180px"
 
    if (status === "loading") {
       return <Loading />
@@ -127,7 +128,7 @@ export default function Admin(props) {
 
    const cellText = (value, rowData, rowIndex) => {
       return (
-         <Text auto scale={1 / 2} font="12px">
+         <Text auto scale={1 / 2}>
             {value}
          </Text>
       )
@@ -147,7 +148,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             style={{ cursor: "pointer", textDecoration: "underline" }}
             onClick={() => {
                Router.push("/u/[id]", `/u/${rowData?.id}`)
@@ -163,7 +163,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             className={styles.nameSection}
          >
             {value}
@@ -176,7 +175,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             className={styles.emailSection}
          >
             {value}
@@ -190,7 +188,6 @@ export default function Admin(props) {
             <Text
                auto
                scale={1 / 2}
-               font="14px"
                className={styles.verifyButton}
                onClick={() => verifyUser(rowData.id)}
             >
@@ -199,7 +196,6 @@ export default function Admin(props) {
             <Text
                auto
                scale={1 / 2}
-               font="14px"
                className={styles.verifyButton}
                onClick={() => deleteUser(rowData.id)}
             >
@@ -227,7 +223,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -244,7 +239,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
             style={{
                justifyContent: "right",
                flexGrow: "1",
@@ -257,7 +251,7 @@ export default function Admin(props) {
 
    const transactionAthlete = (value, rowData, rowIndex) => {
       return (
-         <p auto scale={1 / 2} font="12px">
+         <p auto scale={1 / 2}>
             {rowData?.user?.name}
          </p>
       )
@@ -284,7 +278,6 @@ export default function Admin(props) {
          <p
             auto
             scale={1 / 2}
-            font="12px"
          >
             {value}
          </p>
@@ -331,30 +324,30 @@ export default function Admin(props) {
                         prop="name"
                         label="Name"
                         render={unverifiedName}
+                        width={width_name}
                      />
                      <Table.Column
                         prop="role"
                         label="Role"
                         render={athleteRole}
-                        width="120px"
-                        scale="1/2"
-                     />
-                     <Table.Column
-                        prop="email"
-                        label="Email"
-                        render={emailText}
-                        width="12%"
+                        width={width_role}
                      />
                      <Table.Column
                         prop="grad_year"
                         label="Grad Year"
                         render={emailText}
-                        width="6%"
+                        width={width_gy}
+                     />
+                     <Table.Column
+                        prop="email"
+                        label="Email"
+                        render={emailText}
                      />
                      <Table.Column
                         prop="actions"
                         label="Actions"
                         render={userActions}
+                        width={width_actions}
                      />
                   </Table>
                </div>
@@ -377,7 +370,7 @@ export default function Admin(props) {
                         prop="type"
                         label="Type"
                         render={cellText}
-                        width="6%"
+                        width={width_role}
                      />
                      <Table.Column
                         prop="description"
@@ -388,12 +381,12 @@ export default function Admin(props) {
                         prop="amount"
                         label="Amount"
                         render={cellMoneyTransaction}
-                        width="8%"
+                        width={width_balance}
                      />
                      <Table.Column
                         prop="actions"
                         label="Actions"
-                        width="8%"
+                        width="120px"
                         render={transactionOptions}
                      />
                   </Table>
