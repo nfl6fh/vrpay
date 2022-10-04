@@ -20,10 +20,11 @@ import {
    Table,
    ButtonGroup,
 } from "@geist-ui/core"
-import { UserX, Plus, ArrowUp } from "@geist-ui/icons"
+import { UserX, Plus, ArrowUp, User } from "@geist-ui/icons"
 import Router from "next/router"
 import NewTransactionContent from "../../components/NewTransactionContent"
 import TransactionDetailsContent from "../../components/TransactionDetailsContent"
+import UserDetailsContent from "../../components/UserDetailsContent"
 import { isTypeParameterDeclaration } from "typescript"
 
 var formatter = new Intl.NumberFormat("en-US", {
@@ -90,6 +91,8 @@ export default function UserPage(props) {
    const { visible, setVisible, bindings } = useModal()
    const [viewingDetails, setViewingDetails] = useState(false)
    const [relevantTransaction, setRelevantTransaction] = useState(null)
+   const [relevantUser, setRelevantUser] = useState(null)
+   const [viewingUser, setViewingUser] = useState(false)
 
    if (status === "loading") {
       return <Loading />
@@ -263,6 +266,17 @@ export default function UserPage(props) {
                   <div className={styles.adminActions}>
                      <Button
                         auto
+                        icon={<User />}
+                        onClick={() => {
+                           setViewingUser(true)
+                           setVisible(true)
+                           setRelevantUser(props)
+                        }}
+                     >
+                        Edit User
+                     </Button>
+                     <Button
+                        auto
                         icon={<ArrowUp />}
                         onClick={() => makeAdmin(props.id)}
                      >
@@ -293,20 +307,22 @@ export default function UserPage(props) {
                   New RaR or Transaction
                </Button>
                <Modal {...bindings}>
-                  {viewingDetails ? (
+                  {viewingUser ? (
+                     <UserDetailsContent
+                        user={relevantUser}
+                        setVisible={setVisible}
+                     />
+                  ) : (
+                  viewingDetails ? (
                      <TransactionDetailsContent
                         transaction={relevantTransaction}
                         setVisible={setVisible}
-                        uid={props.id}
-                        name={props.name}
+                        uid={relevantUID}
+                        name={relevantName}
                      />
                   ) : (
-                     <NewTransactionContent
-                        setVisible={setVisible}
-                        uid={props.id}
-                        name={props.name}
-                     />
-                  )}
+                     <NewTransactionContent setVisible={setVisible} />
+                  ))}
                </Modal>
             </div>
          </div>

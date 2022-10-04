@@ -14,6 +14,23 @@ export function getDateFormatting(isoDate) {
    return month + "/" + day + "/" + year
 }
 
+export const deleteUser = async (user_id) => {
+   const body = { user_id }
+
+   try {
+      console.log(user_id)
+      await fetch("/api/delete_user", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify(body),
+      }).then((res) => {
+         Router.reload()
+      })
+   } catch (error) {
+      console.log("error deleting user:", error)
+   }
+}
+
 export const approveTransaction = async (trans_id, sessionName) => {
    const body = { trans_id, sessionName }
 
@@ -103,6 +120,22 @@ export const updateTransaction = async (transaction_id, amount, sessionName) => 
       })
    } catch (error) {
       console.log("error updating transaction:", error)
+   }
+}
+
+export const updateUser = async (user_id, name, gradYear, role, email) => {
+   const body = { user_id, name, gradYear, role, email }
+
+   try {
+      await fetch("/api/update_user", {
+         method: "POST",
+         headers: { "content-Type": "application/json" },
+         body: JSON.stringify(body),
+      }).then((res) => {
+         Router.reload()
+      })
+   } catch (error) {
+      console.log("error updating user:", error)
    }
 }
 
