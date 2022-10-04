@@ -99,6 +99,11 @@ export default function Admin(props) {
    const [relevantName, setRelevantName] = useState(null)
    const [viewingDetails, setViewingDetails] = useState(false)
 
+   const width_name = "12%"
+   const width_gy = "8%"
+   const width_role = "120px"
+   const width_balance = "80px"
+
    if (status === "loading") {
       return <Loading />
    }
@@ -366,7 +371,7 @@ export default function Admin(props) {
                         prop="name"
                         label="Athlete"
                         render={transactionAthlete}
-                        width="12%"
+                        width={width_name}
                      />
                      <Table.Column
                         prop="type"
@@ -397,31 +402,29 @@ export default function Admin(props) {
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
             <Table data={props.verified_users}>
-               <Table.Column prop="name" label="Athlete" render={athleteName} />
-               <Table.Column
-                  prop="grad_year"
-                  label="Grad Year"
-                  render={emailText}
-                  width="6%"
-               />
-               <Table.Column 
-                  prop="email" 
-                  label="Email" 
-                  render={userEmail} 
-                  width="20%"
-               />
+               <Table.Column prop="name" label="Athlete" render={athleteName} width={width_name}/>
                <Table.Column
                   prop="role"
                   label="Role"
                   render={athleteRole}
-                  width="120px"
-                  scale="1/2"
+                  width={width_role}
+               />
+               <Table.Column
+                  prop="grad_year"
+                  label="Grad Year"
+                  render={emailText}
+                  width={width_gy}
+               />
+               <Table.Column 
+                  prop="email" 
+                  label="Email" 
+                  render={userEmail}
                />
                <Table.Column
                   prop="total_due"
                   label="Total Due"
-                  width="10%"
                   render={cellMoney}
+                  width={width_balance}
                />
             </Table>
          </div>
