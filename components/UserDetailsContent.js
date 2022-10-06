@@ -19,7 +19,6 @@ export default function UserDetailsContent(props) {
    const [gradYear, setGradYear] = useState(props.user.grad_year)
    const [email, setEmail] = useState(props.user.email)
    const [role, setRole] = useState(props.user.role)
-   const [isEdited, setIsEdited] = useState(false)
    
    return (
       <div
@@ -35,7 +34,7 @@ export default function UserDetailsContent(props) {
                     <Input
                         className={styles.formInput}
                         onChange={(e) => setName(e.target.value)}
-                        initialValue={isEdited ? name : props?.user?.name}
+                        initialValue={props?.user?.name}
                         width={"100%"}
                      >
                         <b>Name</b>
@@ -49,7 +48,7 @@ export default function UserDetailsContent(props) {
                     <Input
                         className={styles.formInput}
                         onChange={(e) => setGradYear(e.target.value)}
-                        initialValue={isEdited ? gradYear : props?.user?.grad_year}
+                        initialValue={props?.user?.grad_year}
                         width={"100%"}
                      >
                         <b>Grad Year</b>
@@ -61,7 +60,7 @@ export default function UserDetailsContent(props) {
                     <Input
                         className={styles.formInput}
                         onChange={(e) => setEmail(e.target.value)}
-                        initialValue={isEdited ? email : props?.user?.email}
+                        initialValue={props?.user?.email}
                         width={"100%"}
                      >
                         <b>Email</b>
@@ -86,9 +85,8 @@ export default function UserDetailsContent(props) {
                         type={"success"}
                         onClick={() => {
                               updateUser(props?.user?.id, name, gradYear, role, email)
-                              setIsEdited(true)
                         }}
-                        disabled={isEdited || (props?.user?.name == name && props?.user?.grad_year == gradYear && props?.user?.role == role && props?.user?.email == email)}
+                        disabled={props?.user?.name == name && props?.user?.grad_year == gradYear && props?.user?.role == role && props?.user?.email == email}
                      >
                         Save
                      </Button>
