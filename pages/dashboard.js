@@ -9,7 +9,7 @@ import {
    deleteUser,
 } from "../utils.js"
 import Router from "next/router.js"
-import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
+import { Input, Button, Modal, useModal, Table, Text, Radio } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
 import NewTransactionContent from "../components/NewTransactionContent"
 import UserDetailsContent from "../components/UserDetailsContent"
@@ -98,6 +98,11 @@ export default function Admin(props) {
    const [relevantUID, setRelevantUID] = useState(null)
    const [relevantName, setRelevantName] = useState(null)
    const [viewingDetails, setViewingDetails] = useState(false)
+   const [state, setState] = useState('names')
+   const handler = val => {
+      setState(val)
+      console.log(val)
+}
 
    const width_name = "12%"
    const width_gy = "8%"
@@ -394,7 +399,11 @@ export default function Admin(props) {
             )}
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
-            <Table data={props.verified_users}>
+            <Radio.Group value={state} onChange={handler} scale={1/2} useRow>
+               <Radio value="names">Sort by Name</Radio>
+               <Radio value="due">Sort by Total Due (descending)</Radio>
+            </Radio.Group>
+            <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) : props.verified_users?.sort((a, b) => a.name.localeCompare(b.name))}>
                <Table.Column prop="name" label="Athlete" render={athleteName} width={width_name}/>
                <Table.Column
                   prop="role"
