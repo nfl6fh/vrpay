@@ -402,8 +402,10 @@ export default function Admin(props) {
             <Radio.Group value={state} onChange={handler} scale={1/2} useRow>
                <Radio value="names">Sort by Name</Radio>
                <Radio value="due">Sort by Total Due (descending)</Radio>
+               <Radio value="year">Sort by Grad Year</Radio>
             </Radio.Group>
-            <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) : props.verified_users?.sort((a, b) => a.name.localeCompare(b.name))}>
+            <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
+               : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
                <Table.Column prop="name" label="Athlete" render={athleteName} width={width_name}/>
                <Table.Column
                   prop="role"
