@@ -127,6 +127,10 @@
       font-size: var(--text-size-small);
    }
 
+   .gradYear {
+      font-size: var(--text-size-extra-small);
+   }
+
    .totalDue, .totalDueContainer {
       font-size: var(--text-size-extra-small);
    }

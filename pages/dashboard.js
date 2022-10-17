@@ -399,11 +399,14 @@ export default function Admin(props) {
             )}
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
-            <Radio.Group value={state} onChange={handler} scale={1/2} useRow>
-               <Radio value="names">Sort by Name</Radio>
-               <Radio value="due">Sort by Total Due (descending)</Radio>
-               <Radio value="year">Sort by Grad Year</Radio>
-            </Radio.Group>
+            <div className={styles.sortSection}>
+               <p className={styles.sortTitle}>Sort by</p>
+               <Radio.Group value={state} onChange={handler} scale={1/2}>
+                  <Radio value="names">Name</Radio>
+                  <Radio value="due">Total Due (descending)</Radio>
+                  <Radio value="year">Grad Year</Radio>
+               </Radio.Group>
+            </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
                : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
                <Table.Column prop="name" label="Athlete" render={athleteName} width={width_name}/>
@@ -412,6 +415,7 @@ export default function Admin(props) {
                   label="Role"
                   render={athleteRole}
                   width={width_role}
+                  className={styles.roleColumn}
                />
                <Table.Column
                   prop="grad_year"
