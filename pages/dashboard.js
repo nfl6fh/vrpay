@@ -9,7 +9,7 @@ import {
    deleteUser,
 } from "../utils.js"
 import Router from "next/router.js"
-import { Input, Button, Modal, useModal, Table, Text } from "@geist-ui/core"
+import { Input, Button, Modal, useModal, Table, Text, Radio } from "@geist-ui/core"
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
 import NewTransactionContent from "../components/NewTransactionContent"
 import UserDetailsContent from "../components/UserDetailsContent"
@@ -98,6 +98,11 @@ export default function Admin(props) {
    const [relevantUID, setRelevantUID] = useState(null)
    const [relevantName, setRelevantName] = useState(null)
    const [viewingDetails, setViewingDetails] = useState(false)
+   const [state, setState] = useState('names')
+   const handler = val => {
+      setState(val)
+      console.log(val)
+}
 
    const width_name = "12%"
    const width_gy = "8%"
@@ -394,13 +399,23 @@ export default function Admin(props) {
             )}
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
-            <Table data={props.verified_users}>
+            <div className={styles.sortSection}>
+               <p className={styles.sortTitle}>Sort by</p>
+               <Radio.Group value={state} onChange={handler} scale={1/2}>
+                  <Radio value="names">Name</Radio>
+                  <Radio value="due">Total Due (descending)</Radio>
+                  <Radio value="year">Grad Year</Radio>
+               </Radio.Group>
+            </div>
+            <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
+               : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
                <Table.Column prop="name" label="Athlete" render={athleteName} width={width_name}/>
                <Table.Column
                   prop="role"
                   label="Role"
                   render={athleteRole}
                   width={width_role}
+                  className={styles.roleColumn}
                />
                <Table.Column
                   prop="grad_year"
