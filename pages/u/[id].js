@@ -213,6 +213,7 @@ export default function UserPage(props) {
                justifyContent: "right",
                flexGrow: "1",
                ...getItemStyle(rowData?.status),
+               color: value < 0 ? "red" : "black",
             }}
          >
             {formatMoney.format(value)}
