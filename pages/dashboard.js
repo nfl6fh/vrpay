@@ -74,10 +74,13 @@ export const getServerSideProps = async () => {
    })
 
    var total_owed = 0
+   var total_owed_by = 0
    var length = Object.keys(verified_users).length
    for (var i = 0; i < length; i++) {  
       if (verified_users[i].total_due > 0) {
          total_owed += verified_users[i].total_due
+      } else {
+         total_owed_by -= verified_users[i].total_due
       }
    }
 
@@ -95,7 +98,7 @@ export const getServerSideProps = async () => {
    console.log("pending_transactions:", pending_transactions)
    console.log("total_owed:", total_owed)
 
-   return { props: { unverified_users, verified_users, pending_transactions, total_owed } }
+   return { props: { unverified_users, verified_users, pending_transactions, total_owed, total_owed_by } }
 }
 
 export default function Admin(props) {
@@ -416,6 +419,7 @@ export default function Admin(props) {
                   <Radio value="year">Grad Year</Radio>
                </Radio.Group>
                <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
+               <p>Total owed by VRA: {formatMoney.format(props.total_owed_by)}</p>
             </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
                : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
