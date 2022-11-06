@@ -1,10 +1,11 @@
 import styles from "../styles/Overlays.module.css"
 import { useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from "react"
-import { Input, Button, Modal, Select } from "@geist-ui/core"
+import { Input, Button, Modal, Select, Checkbox } from "@geist-ui/core"
 import { createTransactionForUser, isTransactionValid} from "../utils"
 
 import Router from "next/router"
+import { convertCompilerOptionsFromJson } from "typescript"
 
 export default function NewTransactionContent(props) {
    const { data: session, status } = useSession()
@@ -12,9 +13,11 @@ export default function NewTransactionContent(props) {
    const [type, setType] = useState()
    const [description, setDescription] = useState()
    const [applyTo, setApplyTo] = useState(props.uid ? "na" : "all users")
+   const [submit, setSubmit] = useState(false)
 
    const handleDropdown = val => setApplyTo(val)
    const handleTypeDropdown = val => setType(val)
+   const handleCheckbox = val => setSubmit(!submit)
 
    return (
       <div className={styles.container}>
@@ -64,6 +67,12 @@ export default function NewTransactionContent(props) {
             </div>
          )}
 
+         {props.uid && (
+            <div className={styles.inputSection}>
+               <Checkbox onChange={handleCheckbox} checked={false}>I have turned in a check or venmoed the Treasurer for this transaction</Checkbox>
+            </div>
+         )}
+
          <div className={styles.actions}>
             <Button
                passive
@@ -86,7 +95,7 @@ export default function NewTransactionContent(props) {
                      session.user.name
                   )
                }}
-               disabled={!isTransactionValid(amount, type, description)}
+               disabled={!isTransactionValid(amount, type, description) || !submit}
             >
                Submit
             </Button>
