@@ -74,14 +74,11 @@ export const getServerSideProps = async () => {
    })
 
    var total_owed = 0
-   console.log(typeof verified_users[0].total_due)
-   // get length of verified users
    var length = Object.keys(verified_users).length
-
-   // loop through verified users
    for (var i = 0; i < length; i++) {  
-      // get the total owed for each user
-      total_owed += verified_users[i].total_due
+      if (verified_users[i].total_due > 0) {
+         total_owed += verified_users[i].total_due
+      }
    }
 
    unverified_users = unverified_users?.sort((a, b) =>
