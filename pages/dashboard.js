@@ -420,6 +420,7 @@ export default function Admin(props) {
                </Radio.Group>
                <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
                <p>Total owed by VRA: {formatMoney.format(props.total_owed_by)}</p>
+               <p>Total VRA balance: {formatMoney.format(props.total_owed - props.total_owed_by)}</p>
             </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
                : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
