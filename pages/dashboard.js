@@ -73,6 +73,17 @@ export const getServerSideProps = async () => {
       }
    })
 
+   var total_owed = 0
+   console.log(typeof verified_users[0].total_due)
+   // get length of verified users
+   var length = Object.keys(verified_users).length
+
+   // loop through verified users
+   for (var i = 0; i < length; i++) {  
+      // get the total owed for each user
+      total_owed += verified_users[i].total_due
+   }
+
    unverified_users = unverified_users?.sort((a, b) =>
       a.name.localeCompare(b.name)
    )
@@ -85,8 +96,9 @@ export const getServerSideProps = async () => {
    console.log("unverified_users:", unverified_users)
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
+   console.log("total_owed:", total_owed)
 
-   return { props: { unverified_users, verified_users, pending_transactions } }
+   return { props: { unverified_users, verified_users, pending_transactions, total_owed } }
 }
 
 export default function Admin(props) {
@@ -406,6 +418,7 @@ export default function Admin(props) {
                   <Radio value="due">Total Due (descending)</Radio>
                   <Radio value="year">Grad Year</Radio>
                </Radio.Group>
+               <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
             </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
                : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
@@ -438,6 +451,7 @@ export default function Admin(props) {
          </div>
       )
    } else {
+      Router.push("/")
       return <Loading />
    }
 }
