@@ -411,16 +411,33 @@ export default function Admin(props) {
             )}
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
-            <div className={styles.sortSection}>
-               <p className={styles.sortTitle}>Sort by</p>
-               <Radio.Group value={state} onChange={handler} scale={1/2}>
-                  <Radio value="names">Name</Radio>
-                  <Radio value="due">Total Due (descending)</Radio>
-                  <Radio value="year">Grad Year</Radio>
-               </Radio.Group>
-               <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
-               <p>Total owed by VRA: {formatMoney.format(props.total_owed_by)}</p>
-               <p>Total VRA balance: {formatMoney.format(props.total_owed - props.total_owed_by)}</p>
+            <div className={styles.tableHeader}>
+               <div className={styles.sortSection}>
+                  <p className={styles.sortTitle}>Sort by</p>
+                  <Radio.Group value={state} onChange={handler} scale={1/2}>
+                     <Radio value="names">Name</Radio>
+                     <Radio value="due">Total Due (descending)</Radio>
+                     <Radio value="year">Grad Year</Radio>
+                  </Radio.Group>
+               </div>
+               <div className={styles.sumFields}>
+                  <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
+                  <p>Total owed by VRA: {formatMoney.format(props.total_owed_by)}</p>
+                  <div>
+                     <p
+                        style={{
+                           marginRight: "4px",
+                        }}
+                     >
+                        Total VRA balance:
+                     </p>
+                     <p style={{
+                        color: props.total_owed - props.total_owed_by > 0 ? "red" : "green"
+                     }}>
+                        {formatMoney.format(props.total_owed_by - props.total_owed)}
+                     </p>
+                  </div>
+               </div>
             </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
                : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
