@@ -73,6 +73,17 @@ export const getServerSideProps = async () => {
       }
    })
 
+   var total_owed = 0
+   var total_owed_by = 0
+   var length = Object.keys(verified_users).length
+   for (var i = 0; i < length; i++) {  
+      if (verified_users[i].total_due > 0) {
+         total_owed += verified_users[i].total_due
+      } else {
+         total_owed_by -= verified_users[i].total_due
+      }
+   }
+
    unverified_users = unverified_users?.sort((a, b) =>
       a.name.localeCompare(b.name)
    )
@@ -85,8 +96,9 @@ export const getServerSideProps = async () => {
    console.log("unverified_users:", unverified_users)
    console.log("verified_users:", verified_users)
    console.log("pending_transactions:", pending_transactions)
+   console.log("total_owed:", total_owed)
 
-   return { props: { unverified_users, verified_users, pending_transactions } }
+   return { props: { unverified_users, verified_users, pending_transactions, total_owed, total_owed_by } }
 }
 
 export default function Admin(props) {
@@ -399,13 +411,33 @@ export default function Admin(props) {
             )}
 
             <h2 className={styles.sectionHeading}>Athletes</h2>
-            <div className={styles.sortSection}>
-               <p className={styles.sortTitle}>Sort by</p>
-               <Radio.Group value={state} onChange={handler} scale={1/2}>
-                  <Radio value="names">Name</Radio>
-                  <Radio value="due">Total Due (descending)</Radio>
-                  <Radio value="year">Grad Year</Radio>
-               </Radio.Group>
+            <div className={styles.tableHeader}>
+               <div className={styles.sortSection}>
+                  <p className={styles.sortTitle}>Sort by</p>
+                  <Radio.Group value={state} onChange={handler} scale={1/2}>
+                     <Radio value="names">Name</Radio>
+                     <Radio value="due">Total Due (descending)</Radio>
+                     <Radio value="year">Grad Year</Radio>
+                  </Radio.Group>
+               </div>
+               <div className={styles.sumFields}>
+                  <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
+                  <p>Total owed by VRA: {formatMoney.format(props.total_owed_by)}</p>
+                  <div>
+                     <p
+                        style={{
+                           marginRight: "4px",
+                        }}
+                     >
+                        Total VRA balance:
+                     </p>
+                     <p style={{
+                        color: props.total_owed - props.total_owed_by > 0 ? "red" : "green"
+                     }}>
+                        {formatMoney.format(props.total_owed_by - props.total_owed)}
+                     </p>
+                  </div>
+               </div>
             </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
                : state === "names" ? props.verified_users?.sort((a, b) => a.name.localeCompare(b.name)) : props.verified_users?.sort((a, b) => { return a.grad_year - b.grad_year })}>
@@ -438,6 +470,7 @@ export default function Admin(props) {
          </div>
       )
    } else {
+      Router.push("/")
       return <Loading />
    }
 }
