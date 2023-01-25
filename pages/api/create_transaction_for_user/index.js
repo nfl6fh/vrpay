@@ -28,7 +28,7 @@ export default async function handle(req, res) {
             lastEditedBy: sessionName,
          },
       })
-      return res.json(res)
+      return res.json(result)
    } else if (applyTo) {
       // create transaction for multiple users
       var uids = []
@@ -95,6 +95,6 @@ export default async function handle(req, res) {
          })
       }
 
-      return res.json(res)
+      return res.json("success")
    }
 }
