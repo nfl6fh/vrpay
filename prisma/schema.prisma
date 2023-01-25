@@ -53,15 +53,34 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  is_verified Boolean @default(false)
-  role        String  @default("")
+  is_verified   Boolean @default(false)
+  role          String  @default("")
 
   transactions Transaction[]
   total_due    Int           @default(0)
+<<<<<<< HEAD
+=======
+
+  extraWorkouts ExtraWorkout[]
+  total_work    Int           @default(0)
+>>>>>>> 31f2be8 (added extra work data schema)
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   @@map(name: "users")
+}
+
+model ExtraWorkout {
+  id            String @id @default(cuid())
+  time          Int    @default(0)
+  description   String @default("")
+  date          String @default("")
+  user          User   @relation(fields: [userId], references: [id])
+  userId        String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  @@map(name: "extraWorkouts")
 }
 
 model Transaction {
