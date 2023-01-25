@@ -95,7 +95,7 @@ export default function NewTransactionContent(props) {
                      session.user.name
                   )
                }}
-               disabled={!isTransactionValid(amount, type, description) || !submit}
+               disabled={!isTransactionValid(amount, type, description) || props.uid && !submit}
             >
                Submit
             </Button>
