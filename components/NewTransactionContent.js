@@ -67,7 +67,7 @@ export default function NewTransactionContent(props) {
             </div>
          )}
 
-         {props.uid && (
+         {props.uid && session?.role != "admin" && (
             <div className={styles.inputSection}>
                <Checkbox onChange={handleCheckbox} checked={false}>I have turned in a check or venmoed the Treasurer for this transaction</Checkbox>
             </div>
@@ -95,7 +95,7 @@ export default function NewTransactionContent(props) {
                      session.user.name
                   )
                }}
-               disabled={!isTransactionValid(amount, type, description) || !submit}
+               disabled={!isTransactionValid(amount, type, description) || props.uid && session?.role != "admin" && !submit}
             >
                Submit
             </Button>

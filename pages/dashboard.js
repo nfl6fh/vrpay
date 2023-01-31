@@ -74,13 +74,10 @@ export const getServerSideProps = async () => {
    })
 
    var total_owed = 0
-   var total_owed_by = 0
    var length = Object.keys(verified_users).length
    for (var i = 0; i < length; i++) {  
       if (verified_users[i].total_due > 0) {
          total_owed += verified_users[i].total_due
-      } else {
-         total_owed_by -= verified_users[i].total_due
       }
    }
 
@@ -98,7 +95,7 @@ export const getServerSideProps = async () => {
    console.log("pending_transactions:", pending_transactions)
    console.log("total_owed:", total_owed)
 
-   return { props: { unverified_users, verified_users, pending_transactions, total_owed, total_owed_by } }
+   return { props: { unverified_users, verified_users, pending_transactions, total_owed} }
 }
 
 export default function Admin(props) {
@@ -422,21 +419,6 @@ export default function Admin(props) {
                </div>
                <div className={styles.sumFields}>
                   <p>Total owed to VRA: {formatMoney.format(props.total_owed)}</p>
-                  <p>Total owed by VRA: {formatMoney.format(props.total_owed_by)}</p>
-                  <div>
-                     <p
-                        style={{
-                           marginRight: "4px",
-                        }}
-                     >
-                        Total VRA balance:
-                     </p>
-                     <p style={{
-                        color: props.total_owed - props.total_owed_by > 0 ? "red" : "green"
-                     }}>
-                        {formatMoney.format(props.total_owed_by - props.total_owed)}
-                     </p>
-                  </div>
                </div>
             </div>
             <Table auto data={state === "due" ? props.verified_users?.sort((a, b) => { return b.total_due - a.total_due }) 
