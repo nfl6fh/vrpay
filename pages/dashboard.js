@@ -14,6 +14,7 @@ import { Input, Button, Modal, Checkbox, useModal, Table, Text, Radio } from "@g
 import TransactionDetailsContent from "../components/TransactionDetailsContent"
 import NewTransactionContent from "../components/NewTransactionContent"
 import UserDetailsContent from "../components/UserDetailsContent"
+import DeleteUserConfirmation from "../components/DeleteUserConfirmation"
 
 export const getServerSideProps = async () => {
    var unverified_users = await prisma.user.findMany({
@@ -109,6 +110,7 @@ export default function Admin(props) {
    const [relevantName, setRelevantName] = useState(null)
    const [viewingDetails, setViewingDetails] = useState(false)
    const [state, setState] = useState('names')
+   const [viewingDelete, setViewingDelete] = useState(false)
    const handler = val => {
       setState(val)
       console.log(val)
@@ -213,7 +215,12 @@ export default function Admin(props) {
                auto
                scale={1 / 2}
                className={styles.verifyButton}
-               onClick={() => deleteUser(rowData.id)}
+               onClick={() => {
+                  setViewingDelete(true)
+                  setVisible(true)
+                  setRelevantUser(rowData)
+                  setViewingUser(true)
+               }}
             >
                Delete
             </Text>
@@ -337,11 +344,17 @@ export default function Admin(props) {
             </Button>
             <Modal {...bindings}>
                {viewingUser ? (
+                  viewingDelete ? (
+                     <DeleteUserConfirmation
+                        user={relevantUser}
+                        setVisible={setVisible}
+                     />
+                  ) : (
                   <UserDetailsContent
                      user={relevantUser}
                      setVisible={setVisible}
                   />
-               ) : (
+               )) : (
                   viewingDetails ? (
                      <TransactionDetailsContent
                         transaction={relevantTransaction}
