@@ -23,7 +23,7 @@ export default function DeleteUserConfirmation(props) {
             <div className={styles.inputSection}>
                 <div className={styles.actions}>
                     <Button
-                        onClick={() => {deleteUser(props.user.id); Router.reload()}}
+                        onClick={() => {deleteUser(props.user.id)}}
                         type="error"
                         style={{ width: "100%" }}
                     >
